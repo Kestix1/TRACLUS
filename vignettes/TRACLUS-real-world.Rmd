@@ -1,0 +1,155 @@
+---
+title: "Real-World Example: Hurricane Tracks"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Real-World Example: Hurricane Tracks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Overview
+
+This vignette demonstrates TRACLUS on geographic trajectory data using
+Atlantic hurricane tracks in HURDAT2 format. The bundled dataset
+contains **826 named Atlantic storms from 1950 to 2004** with over
+22,000 track points. No internet connection is required.
+
+## Reading HURDAT2 data
+
+The `tc_read_hurdat2()` function parses NOAA's HURDAT2 Best-Track format,
+converting West longitudes to negative values and filtering storms with
+fewer than a minimum number of track points:
+
+```{r read-hurdat2}
+library(TRACLUS)
+
+filepath <- system.file("extdata", "hurdat2_1950_2004.txt",
+                        package = "TRACLUS")
+storms <- tc_read_hurdat2(filepath, min_points = 3)
+cat("Storms:", length(unique(storms$storm_id)), "\n")
+cat("Points:", nrow(storms), "\n")
+head(storms)
+```
+
+## Working with a subset
+
+The full dataset contains hundreds of storms. For demonstration and
+interactive exploration, it is practical to work with a subset.
+Use `min_points` to select only storms with long tracks (which tend
+to be the most significant hurricanes):
+
+```{r subset}
+# Select only storms with >= 80 track points (long-lived storms)
+long_storms <- tc_read_hurdat2(filepath, min_points = 80)
+cat("Long-lived storms:", length(unique(long_storms$storm_id)), "\n")
+cat("Points:", nrow(long_storms), "\n")
+```
+
+## Creating trajectory objects
+
+For geographic data, set `coord_type = "geographic"`. The x-column must
+contain longitude and the y-column must contain latitude:
+
+```{r trajectories}
+trj <- tc_trajectories(long_storms, traj_id = "storm_id",
+                       x = "lon", y = "lat",
+                       coord_type = "geographic")
+trj
+```
+
+```{r plot-trj}
+plot(trj)
+```
+
+## Full pipeline
+
+With geographic data, distances are in **metres**. TRACLUS offers three
+methods for geographic data (set via the `method` argument in
+`tc_trajectories()`):
+
+- `"projected"` *(default)*: Equirectangular projection to metres, then
+  euclidean distances. 5–10× faster than haversine with < 2 % error for
+  regional datasets such as Atlantic hurricane tracks. Recommended for most
+  use cases.
+- `"haversine"`: Exact great-circle distances. Use for global datasets or
+  when maximum accuracy is required.
+- `"euclidean"`: Raw degree values treated as Cartesian. Only for paper
+  replication.
+
+A reasonable `eps` for Atlantic hurricanes is in the range of hundreds of
+kilometres:
+
+```{r pipeline}
+# method = "projected" is the default — fast and accurate for regional data
+result <- tc_traclus(trj, eps = 500000, min_lns = 3)
+result
+```
+
+```{r plot-result}
+plot(result)
+```
+
+```{r summary}
+summary(result)
+```
+
+## Interactive Leaflet map
+
+If the `leaflet` package is installed, `tc_leaflet()` creates an
+interactive map with multiple tile layers and hover labels:
+
+```{r leaflet, eval = requireNamespace("leaflet", quietly = TRUE)}
+tc_leaflet(result)
+```
+
+The map supports three base layers (CartoDB Positron, OpenStreetMap,
+Esri World Imagery) and can be further customised via standard
+`leaflet` piping.
+
+## Step-by-step with inspection
+
+For more control, run each step individually:
+
+```{r step-by-step}
+parts <- tc_partition(trj)
+parts
+
+clust <- tc_cluster(parts, eps = 500000, min_lns = 3)
+clust
+
+repr <- tc_represent(clust)
+repr
+```
+
+Each intermediate object can be plotted or mapped independently:
+
+```{r plot-parts}
+plot(parts)
+```
+
+```{r leaflet-parts, eval = requireNamespace("leaflet", quietly = TRUE)}
+tc_leaflet(parts)
+```
+
+## Scaling to the full dataset
+
+For production analyses with all 800+ storms, the clustering step
+involves O(n²) pairwise distance comparisons and may take several
+minutes. Consider:
+
+- Using `method = "projected"` (the default) to reduce computation time
+  by 5–10× compared to `"haversine"` with negligible accuracy loss.
+- Using `tc_estimate_params()` on the full partitions to find good
+  starting parameters.
+- Pre-filtering storms by year range or geographic region.
+- Starting with a higher `min_points` threshold to reduce the number
+  of segments.

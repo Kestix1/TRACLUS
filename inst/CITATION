@@ -1,0 +1,34 @@
+bibentry(
+  bibtype  = "InProceedings",
+  title    = "Trajectory Clustering: A Partition-and-Group Framework",
+  author   = c(
+    person("Jae-Gil", "Lee"),
+    person("Jiawei", "Han"),
+    person("Kyu-Young", "Whang")
+  ),
+  booktitle = "Proceedings of the 2007 ACM SIGMOD International Conference on Management of Data",
+  year     = "2007",
+  pages    = "593--604",
+  doi      = "10.1145/1247480.1247546",
+  textVersion = paste(
+    "Lee, J.-G., Han, J., & Whang, K.-Y. (2007).",
+    "Trajectory Clustering: A Partition-and-Group Framework.",
+    "In Proceedings of the 2007 ACM SIGMOD International Conference",
+    "on Management of Data (pp. 593-604).",
+    "DOI: 10.1145/1247480.1247546"
+  )
+)
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "TRACLUS: Trajectory Clustering in R",
+  author   = person("Martin", "Hoblisch"),
+  year     = "2026",
+  note     = "R package",
+  url      = "https://github.com/MartinHoblisch/TRACLUS",
+  textVersion = paste(
+    "Hoblisch, M. (2026).",
+    "TRACLUS: Trajectory Clustering in R.",
+    "R package. https://github.com/MartinHoblisch/TRACLUS"
+  )
+)

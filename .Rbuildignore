@@ -1,0 +1,17 @@
+^\.github$
+^docs$
+^dev$
+^pkgdown$
+^README\.Rmd$
+^LICENSE\.md$
+^\.lintr$
+^traclus_spec_final\.md$
+^traclus_structure\.md$
+^traclus_implementation_prompt\.md$
+^_pkgdown\.yml$
+^TRACLUS\.Rproj$
+^\.Rproj\.user$
+^\.claude$
+^figure$
+^todo\.md$
+^traclus_audit_prompt\.md$

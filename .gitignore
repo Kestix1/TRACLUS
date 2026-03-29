@@ -1,0 +1,36 @@
+# R package build artifacts
+*.o
+*.so
+*.dll
+*.dylib
+src/*.o
+src/*.so
+src/*.dll
+src/symbols.rds
+
+# R session
+.Rhistory
+.Rdata
+.RData
+.Ruserdata
+.Rproj.user
+
+# Package build
+*.tar.gz
+*.Rcheck/
+
+# Plot artifacts from test runs
+Rplots.pdf
+
+# pkgdown site (built by GitHub Actions, not committed)
+docs/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+.httr-oauth
+.quarto

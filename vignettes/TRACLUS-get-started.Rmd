@@ -1,0 +1,209 @@
+---
+title: "Getting Started with TRACLUS"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with TRACLUS}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Overview
+
+The **TRACLUS** package implements the trajectory clustering algorithm by
+Lee, Han & Whang (SIGMOD 2007). The algorithm works in three phases:
+
+1. **Partition** trajectories into line segments using Minimum Description
+   Length (MDL).
+2. **Cluster** segments via DBSCAN density-based spatial clustering.
+3. **Represent** each cluster with a representative trajectory using a
+   sweep-line algorithm.
+
+This vignette walks through the complete workflow using the built-in toy
+dataset.
+
+## Setup
+
+```{r setup}
+library(TRACLUS)
+```
+
+## Step 1: Load and prepare data
+
+TRACLUS expects a data.frame with columns for trajectory ID, x-coordinate,
+and y-coordinate. The built-in `traclus_toy` dataset contains 6 euclidean
+trajectories:
+
+```{r load-data}
+head(traclus_toy)
+
+trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
+                       x = "x", y = "y", coord_type = "euclidean")
+trj
+```
+
+Visualise the raw trajectories:
+
+```{r plot-trajectories}
+plot(trj)
+```
+
+## Step 2: Partition trajectories
+
+MDL-based partitioning splits each trajectory at characteristic points
+where the trajectory changes direction significantly:
+
+```{r partition}
+parts <- tc_partition(trj)
+parts
+```
+
+```{r plot-partitions}
+plot(parts)
+```
+
+The black X markers show the characteristic points selected by the
+MDL criterion. Each trajectory is now represented as a sequence of
+line segments.
+
+## Step 3: Cluster segments
+
+DBSCAN groups similar line segments into clusters. Two key parameters
+control the result:
+
+- **`eps`**: Maximum distance between segments to be considered neighbours.
+- **`min_lns`**: Minimum number of neighbouring segments to form a cluster.
+
+```{r cluster}
+clust <- tc_cluster(parts, eps = 25, min_lns = 3)
+clust
+```
+
+```{r plot-clusters}
+plot(clust)
+```
+
+Segments that do not belong to any cluster are classified as **noise**
+(shown as dashed grey lines).
+
+## Step 4: Generate representative trajectories
+
+The sweep-line algorithm creates a representative trajectory for each
+cluster by averaging the contributing segments:
+
+```{r represent}
+repr <- tc_represent(clust)
+repr
+```
+
+```{r plot-representatives}
+plot(repr)
+```
+
+Use `show_clusters = TRUE` to see the cluster segments in colour
+alongside the representatives:
+
+```{r plot-repr-clusters}
+plot(repr, show_clusters = TRUE)
+```
+
+## One-call pipeline
+
+For convenience, `tc_traclus()` runs the entire pipeline in a single call:
+
+```{r traclus-wrapper}
+result <- tc_traclus(trj, eps = 25, min_lns = 3)
+result
+```
+
+```{r plot-traclus}
+plot(result)
+```
+
+## Inspecting results
+
+Every object has `print()`, `summary()`, and `plot()` methods:
+```{r summary}
+summary(result)
+```
+
+## Trial-and-error: re-clustering with different parameters
+
+A key design feature of TRACLUS is that each phase returns a **new
+object** without modifying its input. This means you can re-use the
+same `tc_partitions` object to try different `eps` and `min_lns`
+values — no need to re-partition every time:
+```{r trial-and-error}
+# Partition once
+parts <- tc_partition(trj)
+
+# Try different clustering parameters on the same partitions
+clust_tight  <- tc_cluster(parts, eps = 15, min_lns = 3)
+clust_medium <- tc_cluster(parts, eps = 25, min_lns = 3)
+clust_wide   <- tc_cluster(parts, eps = 40, min_lns = 2)
+
+cat(sprintf("eps=15: %d cluster(s), %.0f%% noise\n",
+            clust_tight$n_clusters, clust_tight$noise_ratio * 100))
+cat(sprintf("eps=25: %d cluster(s), %.0f%% noise\n",
+            clust_medium$n_clusters, clust_medium$noise_ratio * 100))
+cat(sprintf("eps=40: %d cluster(s), %.0f%% noise\n",
+            clust_wide$n_clusters, clust_wide$noise_ratio * 100))
+```
+
+This makes parameter exploration fast and convenient. See
+`vignette("TRACLUS-parameter-guide")` for systematic guidance on
+choosing good values.
+
+## Which `coord_type` do I need?
+
+When creating trajectories with `tc_trajectories()`, the `coord_type`
+argument tells TRACLUS how to measure distances:
+| Your data | `coord_type` | `eps` units |
+|-----------|--------------|-------------|
+| Synthetic / simulation (arbitrary x, y) | `"euclidean"` | Same as your coordinates |
+| GPS tracks, ship routes, flight paths (lon, lat in degrees) | `"geographic"` | **Metres** |
+| OpenStreetMap or any WGS-84 source | `"geographic"` | **Metres** |
+
+**Coordinate convention for geographic data:** `x` = longitude (−180
+to 180), `y` = latitude (−90 to 90). This follows the mathematical
+convention (x = horizontal axis). If your data has latitude first,
+swap the column assignments:
+
+```r
+# Latitude-first data? Just swap x and y:
+trj <- tc_trajectories(df, traj_id = "id",
+                       x = "longitude", y = "latitude",
+                       coord_type = "geographic")
+```
+
+TRACLUS will warn you if it detects that x and y might be swapped
+(e.g., all x values in [−90, 90] while y values are outside that
+range).
+
+For geographic data, you can also control *how* distances are computed
+with the optional `method` argument:
+
+- `method = "projected"` *(default)*: 5–10× faster than haversine with
+  < 2 % error. Recommended for most regional datasets.
+- `method = "haversine"`: Exact great-circle distances. Use for global
+  datasets or when maximum accuracy is needed.
+
+See `vignette("TRACLUS-spherical-geometry")` for a full comparison of
+the three available methods.
+
+## Next steps
+
+- See `vignette("TRACLUS-real-world")` for an example with real hurricane
+  track data.
+- See `vignette("TRACLUS-parameter-guide")` for guidance on choosing
+  `eps` and `min_lns`.
+- See `vignette("TRACLUS-spherical-geometry")` for details on geographic
+  (spherical) distance calculations.

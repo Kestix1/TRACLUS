@@ -1,0 +1,59 @@
+url: https://martinhoblisch.github.io/TRACLUS
+
+template:
+  bootstrap: 5
+
+reference:
+  - title: "Workflow"
+    desc: "Core TRACLUS pipeline functions"
+    contents:
+      - tc_trajectories
+      - tc_partition
+      - tc_cluster
+      - tc_represent
+      - tc_traclus
+
+  - title: "Helpers"
+    desc: "Parameter estimation and data import"
+    contents:
+      - tc_estimate_params
+      - tc_read_hurdat2
+
+  - title: "Distance Functions"
+    desc: "Exported distance components"
+    contents:
+      - tc_dist_perpendicular
+      - tc_dist_parallel
+      - tc_dist_angle
+      - tc_dist_segments
+
+  - title: "Visualisation"
+    desc: "Plot methods and interactive maps"
+    contents:
+      - starts_with("plot.")
+      - tc_leaflet
+
+  - title: "Print and Summary"
+    desc: "S3 print and summary methods"
+    contents:
+      - starts_with("print.")
+      - starts_with("summary.")
+
+  - title: "Data"
+    desc: "Included datasets"
+    contents:
+      - traclus_toy
+
+  - title: "Package"
+    contents:
+      - TRACLUS-package
+
+articles:
+  - title: "Getting Started"
+    contents:
+      - TRACLUS-get-started
+  - title: "Guides"
+    contents:
+      - TRACLUS-real-world
+      - TRACLUS-parameter-guide
+      - TRACLUS-spherical-geometry
