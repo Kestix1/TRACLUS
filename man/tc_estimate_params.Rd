@@ -65,6 +65,9 @@ eps.
 }
 
 The estimated \code{min_lns} is \verb{ceiling(mean neighbourhood size at optimal eps) + 1}.
+This typically yields values of 5 or higher, consistent with the paper's
+recommendation (Section 4.4). Values below 3 are rarely appropriate and
+can produce degenerate representatives — see \code{\link[=tc_represent]{tc_represent()}} for details.
 }
 \note{
 This function does not break the pipe chain — it accepts a

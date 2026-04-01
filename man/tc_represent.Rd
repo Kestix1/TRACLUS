@@ -53,6 +53,17 @@ gamma operates in meters, consistent with eps.
 Clusters that produce fewer than 2 waypoints are degraded to noise.
 The remaining cluster IDs are renumbered (1..K) and the segments
 data.frame is updated accordingly.
+
+\strong{Trajectory diversity check (deviation from paper):} The sweep-line
+checks segment density (\code{count >= min_lns}, per Paper Figure 15) AND
+additionally requires at least 2 distinct trajectories among the
+active segments at each waypoint position. This prevents degenerate
+representatives from consecutive segments of a single trajectory
+whose shared characteristic points create artificial count peaks
+via entry-before-exit tie-breaking. The check only affects results
+when \code{min_lns < 3}; at higher values, the segment density threshold
+is already sufficient. See \code{vignette("algorithm-details")} for a
+detailed explanation.
 }
 \examples{
 trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",

@@ -4,10 +4,10 @@
 #include <Rcpp.h>
 
 // Mean Earth radius in meters (WGS-84 mean)
-static const double EARTH_RADIUS_M = 6371000.0;
+constexpr double EARTH_RADIUS_M = 6371000.0;
 
 // Numerical guard for acos clamping
-static const double SPHERE_ZERO_THRESHOLD = 1e-15;
+constexpr double SPHERE_ZERO_THRESHOLD = 1e-15;
 
 // Convert degrees to radians
 double deg2rad(double deg);

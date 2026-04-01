@@ -15,12 +15,7 @@
 
 \method{plot}{tc_clusters}(x, ...)
 
-\method{plot}{tc_representatives}(
-  x,
-  show_clusters = FALSE,
-  legend_pos = "bottomright",
-  ...
-)
+\method{plot}{tc_representatives}(x, show_clusters = FALSE, legend_pos = "bottomright", ...)
 
 \method{plot}{tc_traclus}(x, ...)
 }

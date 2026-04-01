@@ -61,6 +61,13 @@ when the accumulated distance already exceeds \code{eps}.
 The DBSCAN modification from the paper: noise segments CAN be absorbed
 into a cluster during expansion, but they do NOT trigger further
 expansion (Paper Figure 12, Lines 23-26).
+
+\strong{Choosing \code{min_lns}:} The paper recommends \code{min_lns} =
+avg|N_eps(L)| + 1 to 3, typically yielding values of 5–9 (Section
+4.4). Use \code{\link[=tc_estimate_params]{tc_estimate_params()}} for a data-driven starting point.
+Values below 3 can lead to clusters dominated by a single trajectory
+and degenerate representative trajectories — see \code{\link[=tc_represent]{tc_represent()}}
+details for the trajectory diversity check that mitigates this.
 }
 \examples{
 trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",

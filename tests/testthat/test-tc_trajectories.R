@@ -365,6 +365,33 @@ test_that("sf input without CRS stops", {
   )
 })
 
+test_that("sf input with consecutive duplicate points: warning and correct point count", {
+  skip_if_not_installed("sf")
+
+  # Build an sf POINT object (CRS 4326) with consecutive duplicates in traj "A"
+  pts <- data.frame(
+    storm_id = c("A", "A", "A", "A", "B", "B", "B"),
+    lon = c(-80, -80, -78, -76,   # A: point 1 duplicated consecutively
+            -82, -79, -76),
+    lat = c(25, 25, 27, 29,
+            24, 26, 28)
+  )
+  sf_pts <- sf::st_as_sf(pts, coords = c("lon", "lat"), crs = 4326)
+
+  expect_warning(
+    trj <- tc_trajectories(sf_pts, traj_id = "storm_id", verbose = FALSE),
+    "duplicate"
+  )
+
+  # A had 4 points: 1 duplicate removed → 3 points remain
+  a_pts <- trj$data[trj$data$traj_id == "A", ]
+  expect_equal(nrow(a_pts), 3L)
+
+  # B had no duplicates → all 3 points retained
+  b_pts <- trj$data[trj$data$traj_id == "B", ]
+  expect_equal(nrow(b_pts), 3L)
+})
+
 # --- Edge cases ---
 
 test_that("two-point trajectories are valid", {

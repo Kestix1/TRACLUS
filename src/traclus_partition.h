@@ -6,7 +6,7 @@
 // Partition bias constant (Paper Section 4.1.3)
 // Additive constant on costnopar to suppress over-partitioning.
 // The paper recommends increasing partition length by 20-30%.
-static const double PARTITION_BIAS = 1.0;
+constexpr double PARTITION_BIAS = 1.0;
 
 // Safe log2: log2(max(x, 1.0)) to avoid negative values (Paper delta = 1)
 double safe_log2(double x);

@@ -101,6 +101,33 @@ test_that("trajectory of identical points is removed after dedup", {
   expect_false("B" %in% unique(trj$data$traj_id))
 })
 
+# --- P13: Antimeridian End-to-End Pipeline ---
+
+test_that("antimeridian crossing: warning issued and tc_partitions object returned", {
+  # Two trajectories that cross the antimeridian (lon jump > 180 deg)
+  df <- data.frame(
+    traj_id = c(rep("CROSS_A", 4), rep("CROSS_B", 4)),
+    x = c(178, 179, -179, -178,   # A crosses antimeridian
+          170, 175, 179, -179),    # B crosses antimeridian
+    y = c(40, 41, 41, 40,
+          35, 36, 37, 38)
+  )
+
+  expect_warning(
+    trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
+                           coord_type = "geographic", method = "haversine",
+                           verbose = FALSE),
+    "antimeridian"
+  )
+
+  expect_s3_class(trj, "tc_trajectories")
+  expect_equal(trj$n_trajectories, 2L)
+
+  parts <- tc_partition(trj, verbose = FALSE)
+  expect_s3_class(parts, "tc_partitions")
+  expect_gte(parts$n_segments, 2L)
+})
+
 # --- S12: tc_trajectories class check on data ---
 
 test_that("tc_trajectories rejects non-data.frame input", {

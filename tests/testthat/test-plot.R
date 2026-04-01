@@ -254,6 +254,65 @@ test_that("plot.tc_representatives draws noise (incl. degraded) without error", 
   expect_no_error(plot(repr, show_clusters = TRUE))
 })
 
+# =============================================================================
+# Legend suppression with >10 clusters
+# =============================================================================
+
+test_that("plot.tc_clusters suppresses legend when >10 clusters", {
+  wf <- make_full_workflow()
+  clust <- wf$clust
+
+  # Need >= 11 segments for 11 distinct cluster IDs; pad if necessary
+  n_target <- 11L
+  if (nrow(clust$segments) < n_target) {
+    extra <- clust$segments[rep(1L, n_target - nrow(clust$segments)), ]
+    clust$segments <- rbind(clust$segments, extra)
+    rownames(clust$segments) <- NULL
+  }
+  clust$segments$cluster_id <- seq_len(n_target)
+  clust$n_clusters <- n_target
+  clust$n_noise <- 0L
+
+  expect_message(plot(clust), "Legend suppressed")
+})
+
+test_that("plot.tc_representatives suppresses legend when >10 clusters", {
+  wf <- make_full_workflow()
+  repr <- wf$repr
+
+  n_target <- 11L
+
+  # Pad segments in repr and inner clusters reference to n_target rows
+  if (nrow(repr$segments) < n_target) {
+    extra <- repr$segments[rep(1L, n_target - nrow(repr$segments)), ]
+    repr$segments <- rbind(repr$segments, extra)
+    rownames(repr$segments) <- NULL
+  }
+  if (nrow(repr$clusters$segments) < n_target) {
+    extra_c <- repr$clusters$segments[
+      rep(1L, n_target - nrow(repr$clusters$segments)), ]
+    repr$clusters$segments <- rbind(repr$clusters$segments, extra_c)
+    rownames(repr$clusters$segments) <- NULL
+  }
+
+  new_ids <- seq_len(n_target)
+  repr$segments$cluster_id <- new_ids
+  repr$n_clusters <- n_target
+  repr$n_noise <- 0L
+
+  # Inner clusters reference: same IDs, same length → viridis(11) maps to 11 names
+  repr$clusters$segments$cluster_id <- new_ids
+  repr$clusters$n_clusters <- n_target
+
+  # Representatives: 2 waypoints per cluster
+  repr$representatives <- do.call(rbind, lapply(new_ids, function(cid) {
+    data.frame(cluster_id = cid, point_id = 1:2,
+               rx = c(0, 10), ry = c(cid, cid))
+  }))
+
+  expect_message(plot(repr), "Legend suppressed")
+})
+
 test_that("tc_leaflet rejects euclidean data", {
   wf <- make_full_workflow()
   expect_error(tc_leaflet(wf$trj), "only available for geographic")
@@ -387,6 +446,22 @@ test_that("tc_leaflet.tc_partitions adds circle markers when show_points = TRUE"
   call_methods2 <- vapply(result2$x$calls, `[[`, character(1), "method")
   expect_false("addMarkers" %in% call_methods2,
                info = "show_points = FALSE should suppress cross markers")
+})
+
+test_that("tc_leaflet works with method='projected'", {
+  skip_if_not_installed("leaflet")
+
+  geo <- generate_geo_trajectories()
+  trj <- suppressMessages(
+    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
+                    coord_type = "geographic", method = "projected")
+  )
+  # Leaflet renders original lon/lat — projected method only affects distance
+  result <- expect_no_warning(tc_leaflet(trj))
+  expect_s3_class(result, "leaflet")
+
+  call_methods <- vapply(result$x$calls, `[[`, character(1), "method")
+  expect_true("addPolylines" %in% call_methods)
 })
 
 test_that("tc_leaflet.tc_traclus dispatches to tc_representatives", {

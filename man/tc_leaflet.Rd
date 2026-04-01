@@ -27,8 +27,8 @@ tc_leaflet(x, ...)
 \item{...}{Additional arguments (method-specific, see individual methods).}
 
 \item{show_points}{Logical; if \code{TRUE} (default for \code{tc_partitions}),
-characteristic points are drawn as small black circle markers at
-segment endpoints.}
+characteristic points are drawn as black cross markers at segment
+endpoints (matching the base \code{plot()} style).}
 
 \item{show_clusters}{Logical; if \code{FALSE} (default), cluster member segments
 are drawn in grey and only representatives are highlighted in colour.

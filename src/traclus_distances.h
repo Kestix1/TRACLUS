@@ -4,7 +4,7 @@
 #include <Rcpp.h>
 
 // Numerical guard: values below this are treated as zero
-static const double ZERO_THRESHOLD = 1e-15;
+constexpr double ZERO_THRESHOLD = 1e-15;
 
 // Euclidean distance between two 2D points
 double euclidean_dist(double x1, double y1, double x2, double y2);

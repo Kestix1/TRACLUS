@@ -127,7 +127,15 @@
       "Bash(\"/c/Program Files/R/R-4.4.3/bin/Rscript.exe\" \"C:/R/TRACLUS/test_estimate_params.R\")",
       "Bash(Rscript.exe -e \"content <- readLines\\(''C:/R/TRACLUS/docs/search.json''\\); hits <- grep\\(''highlight'', content, value=TRUE\\); cat\\(length\\(hits\\), ''lines with highlight\\\\n''\\)\")",
       "Bash(grep -o '.\\\\{0,80\\\\}highlight.\\\\{0,80\\\\}' \"C:/R/TRACLUS/docs/search.json\")",
-      "Bash(grep -o '.\\\\{0,40\\\\}highlight.\\\\{0,80\\\\}' \"C:/R/TRACLUS/docs/traclus_spec_final.html\")"
+      "Bash(grep -o '.\\\\{0,40\\\\}highlight.\\\\{0,80\\\\}' \"C:/R/TRACLUS/docs/traclus_spec_final.html\")",
+      "Bash(R --version)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(/tmp/verify_changes.txt:*)",
+      "Read(//tmp/**)",
+      "Bash(cmd //c \"Rscript -e \"\"devtools::test\\(\\)\"\"\")",
+      "Bash(cmd //c \"where Rscript\")",
+      "Bash(\"/c/Program Files/R/R-4.4.3/bin/Rscript\" -e \"devtools::test\\(\\)\")"
     ]
   }
 }

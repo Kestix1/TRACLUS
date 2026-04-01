@@ -11,7 +11,7 @@ clustering, and summarizing trajectory data. The algorithm works in three
 phases: (1) partition trajectories into line segments using minimum
 description length (MDL), (2) cluster segments using density-based spatial
 clustering (DBSCAN), and (3) generate representative trajectories using a
-sweep-line algorithm. Supports both euclidean and spherical (haversine)
+sweep-line algorithm. Supports euclidean, spherical (haversine), and equirectangular-projected
 distance calculations.
 }
 \references{

@@ -4,10 +4,6 @@
 #include "traclus_distances.h"
 #include "traclus_spherical.h"
 
-// Check for RcppProgress availability (header-only library)
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 #include <progress.hpp>
 #include <progress_bar.hpp>
 

@@ -169,3 +169,22 @@ test_that("verbose = FALSE suppresses message", {
     tc_estimate_params(parts, verbose = FALSE)
   )
 })
+
+# =============================================================================
+# method = "projected"
+# =============================================================================
+
+test_that("tc_estimate_params with method='projected' returns meter-scale eps", {
+  geo <- generate_geo_trajectories()
+  trj <- suppressMessages(
+    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
+                    coord_type = "geographic", method = "projected")
+  )
+  parts <- suppressMessages(tc_partition(trj))
+  est <- suppressMessages(tc_estimate_params(parts))
+
+  # eps must be in meters: clearly > 1 (not in degree scale < 1)
+  expect_gt(est$eps, 100)
+  # method propagated into the tc_estimate object
+  expect_equal(est$method, "projected")
+})

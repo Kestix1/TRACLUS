@@ -21,7 +21,7 @@ drawn in full colour with representatives overlaid.}
 drawn as black X markers.}
 
 \item{...}{Additional arguments passed to \code{\link[=plot]{plot()}} / \code{\link[=segments]{segments()}}.
-Use to override standard parameters like \code{main}, \code{xlim}, \code{ylim}.}
+Use to override default parameters like \code{main}, \code{xlim}, \code{ylim}.}
 }
 \value{
 \code{x}, invisibly.

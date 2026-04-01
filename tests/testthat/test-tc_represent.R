@@ -169,6 +169,21 @@ test_that("0 clusters input produces warning and empty representatives", {
   expect_equal(nrow(repr$representatives), 0)
 })
 
+test_that("extremely large min_lns produces 0 clusters and empty representatives", {
+  # min_lns = 1000000L means the sweep-line can never reach the threshold,
+  # so all clusters fail and are degraded to noise. No warning is issued
+  # by this path (warning only fires when n_clusters == 0 at input).
+  clust <- make_test_clusters()
+  skip_if(clust$n_clusters == 0L, "Toy data produced no clusters")
+
+  repr <- suppressMessages(suppressWarnings(
+    tc_represent(clust, min_lns = 1000000L)
+  ))
+  expect_equal(repr$n_clusters, 0L)
+  expect_true(all(is.na(repr$segments$cluster_id)))
+  expect_equal(nrow(repr$representatives), 0L)
+})
+
 test_that("large gamma suppresses waypoints, may fail clusters", {
   clust <- make_test_clusters()
 
