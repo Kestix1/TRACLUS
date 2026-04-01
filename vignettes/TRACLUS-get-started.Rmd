@@ -151,11 +151,14 @@ clust_medium <- tc_cluster(parts, eps = 25, min_lns = 3)
 clust_wide   <- tc_cluster(parts, eps = 40, min_lns = 2)
 
 cat(sprintf("eps=15: %d cluster(s), %.0f%% noise\n",
-            clust_tight$n_clusters, clust_tight$noise_ratio * 100))
+            clust_tight$n_clusters,
+            100 * clust_tight$n_noise / nrow(clust_tight$segments)))
 cat(sprintf("eps=25: %d cluster(s), %.0f%% noise\n",
-            clust_medium$n_clusters, clust_medium$noise_ratio * 100))
+            clust_medium$n_clusters,
+            100 * clust_medium$n_noise / nrow(clust_medium$segments)))
 cat(sprintf("eps=40: %d cluster(s), %.0f%% noise\n",
-            clust_wide$n_clusters, clust_wide$noise_ratio * 100))
+            clust_wide$n_clusters,
+            100 * clust_wide$n_noise / nrow(clust_wide$segments)))
 ```
 
 This makes parameter exploration fast and convenient. See
