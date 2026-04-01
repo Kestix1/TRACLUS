@@ -15,8 +15,9 @@
 \code{x}, invisibly.
 }
 \description{
-Displays the entropy curve across the eps grid with the optimal
-value marked by a red circle.
+Displays the entropy curve across the eps grid for visual inspection.
+Use the shape of the curve — pronounced drops or elbows — to choose
+an appropriate \code{eps} value.
 }
 \examples{
 \donttest{

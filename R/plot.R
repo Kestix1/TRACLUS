@@ -446,8 +446,9 @@ plot.tc_traclus <- function(x, ...) {
 
 #' Plot method for tc_estimate objects
 #'
-#' Displays the entropy curve across the eps grid with the optimal
-#' value marked by a red circle.
+#' Displays the entropy curve across the eps grid for visual inspection.
+#' Use the shape of the curve — pronounced drops or elbows — to choose
+#' an appropriate `eps` value.
 #'
 #' @param x A `tc_estimate` object from [tc_estimate_params()].
 #' @param ... Additional arguments passed to [plot()].
@@ -469,20 +470,13 @@ plot.tc_estimate <- function(x, ...) {
   plot_args <- .merge_plot_args(
     list(
       x = df$eps, y = df$entropy,
-      type = "l", lwd = 1.5,
+      type = "b", lwd = 1.5,
       xlab = "eps", ylab = "Entropy",
       main = "Parameter Estimation: Entropy vs. eps"
     ),
     user_args
   )
   do.call(graphics::plot, plot_args)
-
-  # Mark optimal point with red circle
-  graphics::points(x$eps, min(df$entropy), col = "red", pch = 1,
-                   cex = 2, lwd = 2)
-  graphics::text(x$eps, min(df$entropy),
-                 labels = sprintf("eps = %.4g", x$eps),
-                 pos = 4, col = "red", cex = 0.8)
 
   invisible(x)
 }
