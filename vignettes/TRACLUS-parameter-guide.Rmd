@@ -133,9 +133,10 @@ est
 plot(est)
 ```
 
-The red circle marks the optimal `eps` value. Use these estimates as a
-starting point, then refine based on domain knowledge and visual
-inspection.
+The plot shows the entropy across all tested eps values. Inspect it
+visually — a pronounced drop or elbow in the curve is often a more
+reliable guide than the minimum. Use the estimates as a starting point,
+then refine based on domain knowledge.
 
 ## Using estimated parameters
 
