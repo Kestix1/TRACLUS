@@ -1,16 +1,16 @@
 # TRACLUS Test Coverage Audit
 
 <!-- Phase 1: Zeilenstruktur aufgebaut 2026-04-02 -->
-<!-- Phase 2: Matrix füllen — in Arbeit -->
-<!-- Phase 3: Synthese — ausstehend -->
+<!-- Phase 2: Matrix füllen — abgeschlossen 2026-04-02 -->
+<!-- Phase 3: Synthese — abgeschlossen 2026-04-02 -->
 
 ## Status
 
 | Phase | Status | Session | Offene Testdateien |
 |-------|--------|---------|-------------------|
 | 1: Zeilenstruktur | ✓ erledigt | 2026-04-02 | — |
-| 2: Matrix füllen | ✗ ausstehend | 2026-04-02 | thrd |
-| 3: Synthese | ✗ ausstehend | — | — |
+| 2: Matrix füllen | ✓ erledigt | 2026-04-02 | — |
+| 3: Synthese | ✓ erledigt | 2026-04-02 | — |
 
 ---
 
@@ -312,17 +312,17 @@
 
 | # | Verhalten | Quelle | tdis | tsph | tcpp | thlp | tprt | tclst | trpr | test | ttrj | ttrc | tedg | tgld | twfl | tplt | tprs | thrd |
 |---|-----------|--------|------|------|------|------|------|-------|------|------|------|------|------|------|------|------|------|------|
-| J01 | Datei nicht gefunden → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| J02 | Latitude N/S → korrekte Vorzeichen (+/-) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| J03 | Longitude E/W → korrekte Vorzeichen (+/-) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| J04 | Ungültige Richtung → NA → Punkt gefiltert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| J05 | min_points Filter: Stürme mit < min_points → entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| J06 | min_points Filter: Stürme mit >= min_points → behalten | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| J07 | min_points = 1 → alle Stürme mit >= 1 Punkt behalten | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| J08 | Ungültiger min_points-Typ → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| J09 | Output kompatibel mit tc_trajectories (storm_id, lon, lat Spalten) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ |
-| J10 | .parse_hurdat2_coord: skalare Eingabe | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| J11 | .parse_hurdat2_coord_vec: vektorisierte Eingabe konsistent mit skalarer | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| J01 | Datei nicht gefunden → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
+| J02 | Latitude N/S → korrekte Vorzeichen (+/-) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
+| J03 | Longitude E/W → korrekte Vorzeichen (+/-) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
+| J04 | Ungültige Richtung → NA → Punkt gefiltert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
+| J05 | min_points Filter: Stürme mit < min_points → entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
+| J06 | min_points Filter: Stürme mit >= min_points → behalten | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
+| J07 | min_points = 1 → alle Stürme mit >= 1 Punkt behalten | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
+| J08 | Ungültiger min_points-Typ → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
+| J09 | Output kompatibel mit tc_trajectories (storm_id, lon, lat Spalten) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ♻ |
+| J10 | .parse_hurdat2_coord: skalare Eingabe | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
+| J11 | .parse_hurdat2_coord_vec: vektorisierte Eingabe konsistent mit skalarer | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ |
 
 ### K — Integration & Pipeline
 
@@ -348,25 +348,153 @@
 
 ## Befunde: Redundanzen
 
-*Wird in Phase 3 befüllt.*
+### R1 — test-print-summary.R (tprs) fast vollständig redundant
+
+7 von ~9 relevanten Tests sind ♻ gegenüber den Modul-Testdateien:
+
+| Zeilen | Redundant gegenüber |
+|--------|---------------------|
+| I01 print.tc_trajectories invisible | ttrj |
+| I03 print.tc_partitions invisible | tprt |
+| I04 print.tc_clusters eps-Unit | tclst |
+| I05 print.tc_representatives invisible | trpr |
+| I08 summary.tc_partitions Segment-Längen | tprt |
+| I10 summary.tc_representatives Waypoints | trpr |
+| I24 print.tc_clusters Non-default Gewichte | tclst |
+
+Nur I02, I06, I07, I09 bieten marginalen Mehrwert (Ausgabe-Content statt nur invisible/kein Error).
+
+### R2 — test-helpers.R (thlp): Distanzvalidierungstests redundant
+
+A28, A29, A37 — Input-Validierung (numeric length-2, finite Koordinaten, ungültiger method) wird in tdis explizit abgedeckt. thlp-Tests prüfen dieselben Error-Conditions ohne zusätzlichen Kontext.
+
+### R3 — test-workflow-integration.R (twfl): Projektions-Pipeline redundant
+
+E10, E11 (equirectangular-Projektion vor/nach Partitionierung) und E19 (haversine Partitionierung) werden durch tgld abgedeckt. K08 (Pipe-Operator kompatibel) wird durch tprt abgedeckt.
+
+### R4 — test-tc_traclus.R (ttrc): Pipeline-Konsistenz redundant
+
+- D23, D25, D32 (Preprocessing-Prüfungen) sind in ttrj abgedeckt.
+- K04 (Reference Chain) wird durch trpr abgedeckt.
+- K10 (tc_traclus erbt tc_representatives) und K14 (Euclidean Vollpipeline) werden durch tgld abgedeckt.
+
+### R5 — Kleinere Einzelredundanzen
+
+- B03 (Haversine Identische Punkte) in tedg → tsph deckt ab.
+- D40 (.truncate_ids) in ttrj → thlp deckt ab.
+- J09 (Output kompatibel mit tc_trajectories) in thrd → twfl deckt ab.
 
 ---
 
 ## Befunde: Fehlende Tests
 
-*Wird in Phase 3 befüllt.*
+### CRITICAL
+
+| # | Zeile | Beschreibung |
+|---|-------|-------------|
+| C-1 | A33 / F13 | **Alle Gewichte = 0 → degenerierter Distanzfall.** tc_dist_segments gibt 0 für alle Paare zurück → alle Segmente in ε-Nachbarschaft → ein einziger Riesencluster. Kann bei automatischer Parameterwahl auftreten. Undokumentiert und ungetestet. |
+| C-2 | H01 | **Entropy-Formel** (-Σ p_i × log2(p_i)) korrekt implementiert. Einzige Grundlage für tc_estimate_params-Empfehlungen; Formelkorrektheit wird nie direkt verifiziert (nur dass Output eps-Werte enthält). |
+| C-3 | K15 | **Geographic Vollpipeline (haversine)** fehlt komplett: Kein End-to-End-Test von tc_trajectories → tc_partition → tc_cluster → tc_represent mit coord_type='geographic'. Test in thrd endet vor Clustering. |
+| C-4 | C07 / C08 | **Early Termination: spezifische Abbruchpunkte** (accumulated > eps nach d_perp allein; nach d_perp+d_par). C09 prüft nur partial >= full, nicht welche Komponente auslöst. Stille Korrektheitsabweichungen möglich. |
+
+### HIGH
+
+| # | Zeile | Beschreibung |
+|---|-------|-------------|
+| H-1 | A10 | d_perp: l1 = l2 = 0 (beide Projektionen auf Li = 0) → Lehmer-Mittel 0/0; erwartetes Ergebnis: 0. |
+| H-2 | A26 | d_angle: Null-Länge Li (len_i < 1e-15) → erwartet len_j. Asymmetrie zu A25 (Null-Länge Lj → 0), kein Test. |
+| H-3 | B08 | Bearing: Identische Punkte (Δlat=0, Δlon=0) → atan2(0,0). Kein Crash-Test. |
+| H-4 | B11 / B14 | Numerische Sicherheit sphärisch: sin_xt auf [-1,1] geklemmt (B11) und cos_xt < 1e-15 Guard (B14). |
+| H-5 | B23 / B24 | d_angle_sph: Null-Länge Lj → 0 und Null-Länge Li → len_j. Analoge Lücken zu A25/A26. |
+| H-6 | C10 / C11 / C12 | Early Termination: w_perp/w_par/w_angle = 0 → jeweilige Distanzkomponente gar nicht berechnet. |
+| H-7 | D04 | coord_type ungültig (z.B. 'cartesian') → Error. D01–D03 nur ⚠ (R-Standardfehler). |
+| H-8 | D05 / D06 | x-Spalte / y-Spalte nicht in Daten → Error. Fehlen komplett (D07 für traj_id ist vorhanden). |
+| H-9 | E09 | Alle Segmente zero-length nach Partitionierung → Error. E08 (einige zero-length) nur ⚠. |
+| H-10 | H04 | eps_grid degeneriert (q5 >= q95): Fallback-Logik nicht getestet. |
+| H-11 | H07 | min_lns-Schätzungsformel: ceiling(mean_nb_size @ optimal_eps) + 1. Nur Output-Präsenz (H09) geprüft. |
+| H-12 | K03 | tc_traclus() Ergebnis identisch mit manueller Kette tc_partition |> tc_cluster |> tc_represent. Kein Konsistenztest. |
+
+### MEDIUM
+
+| # | Zeile | Beschreibung |
+|---|-------|-------------|
+| M-1 | B26 / B27 | Haversine-Koordinaten außerhalb Gültigkeitsbereich (Lat > 90, Lon > 180) → warning. |
+| M-2 | D09 | y-Spalte nicht numerisch → Error. D08 (x-Spalte) ist vorhanden, D09 fehlt. |
+| M-3 | D18 / D19 | sf-Objekt mit Z/M-Dimensionen (→ message) und mit nicht-POINT-Geometrie (→ Error). |
+| M-4 | D24 | Nicht-aufeinanderfolgende Duplikate → sollen NICHT entfernt werden. Dieses bewusste Nicht-Filtern hat keinen Test. |
+| M-5 | D29 / D30 | geographic + x außerhalb [-180,180] bzw. y außerhalb [-90,90] → warning. |
+| M-6 | G13 | Geographic + Haversine: per-Cluster-Zentrumprojektion. Nur ⚠ in twfl, keine explizite Verifikation der lat_mean-Berechnung pro Cluster. |
+| M-7 | I23 | tc_leaflet: > 10 Cluster → message statt Legend. Einzige I-Zeile ohne jegliche Abdeckung. |
+
+### LOW
+
+| # | Zeile | Beschreibung |
+|---|-------|-------------|
+| L-1 | A38 | Distanz-Dreiecksungleichung kann verletzt werden (kein Test, aber als Regressionsdokumentation sinnvoll). |
+| L-2 | D01–D03 | Fehlende Pflichtparameter (x, y, coord_type) → nur ⚠ via R-Standardfehler; kein paketspezifischer Error-Message-Test. |
+| L-3 | B20 | d_angle_sph: Bearing-Differenz auf [0°, 180°] normalisiert — nur ⚠ in tsph (implizit durch d_angle_sph-Tests). |
 
 ---
 
 ## Befunde: Weitere Punkte
 
-*Wird in Phase 3 befüllt.*
+### W1 — test-print-summary.R: Refokussierung empfohlen
+
+tprs ist in der aktuellen Form fast wertlos (7/9 Tests redundant). Empfehlung: Datei auf Grenzfälle fokussieren, die in Modul-Testdateien nicht abgedeckt sind — z.B. 0 Cluster im Output, degenerate Objekte, oder die Ausgabe-Inhalte (Formatierung, Zahlen) statt nur `invisible()`.
+
+### W2 — Fehlende Matrixzeile für filepath-Typvalidierung in J
+
+"invalid filepath type gives error" (tc_read_hurdat2(123)) ist in thrd vorhanden, hat aber keine entsprechende J-Matrixzeile. Die Prüfung auf nicht-character filepath ist ein eigenes Verhalten (J01 deckt nur file-not-found ab).
+
+### W3 — Einziger Performance-Test im gesamten Paket
+
+"parser reads large file in reasonable time" (thrd) ist der einzige systemische Performance-Test. Kein Performance-Test für Partitionierung, Clustering oder Repräsentation bei großen Datensätzen. Für ein trajectory-clustering-Paket relevant.
+
+### W4 — Implizite D01/D02/D03-Fehlerbehandlung
+
+Fehlende Pflichtparameter in tc_trajectories erzeugen R-Standard-Fehler ohne paketspezifische Fehlermeldung. Inconsistent mit der Sorgfalt in D07–D40 (alle paketspezifisch mit klaren Fehlermeldungen).
+
+### W5 — G05 Entry/Exit Tie-Breaking ist abgedeckt (kein Handlungsbedarf)
+
+Im Plan als "wahrscheinliche Lücke" markiert. trgr hat ✓ für G05. Kein Handlungsbedarf.
+
+### W6 — tgld vs. ttrc Overlap bei Euclidean Vollpipeline
+
+test-golden-scenarios.R und test-tc_traclus.R testen beide die euklidische Vollpipeline (K14 ♻). Empfehlung: ttrc auf geographic/parametervariationen fokussieren; tgld als einziger Hüter von K14.
 
 ---
 
 ## Executive Summary
 
-*Wird nach Phase 3 befüllt.*
+**Gesamtbild:** Die Testsuite umfasst 16 Testdateien mit ~244 testbaren Verhaltenseinheiten in der Coverage Matrix.
+
+| Kategorie | Anzahl | Anteil |
+|-----------|--------|--------|
+| Explizit getestet (≥1 ✓) | ~192 | ~79 % |
+| Nur implizit abgedeckt (⚠ only) | ~19 | ~8 % |
+| Keine Abdeckung (all ✗) | ~33 | ~14 % |
+| Redundante Testzellen (♻) | ~24 Zellen | — |
+
+**Top-Lücken (CRITICAL):**
+
+1. **Geographic Vollpipeline (K15)** — Das Paket hat keine End-to-End-Tests mit `coord_type='geographic'`. Alle Vollpipeline-Tests sind euklidisch.
+2. **Alle Gewichte = 0 (A33/F13)** — Degenerierter Fall; kann bei automatischer Parameterwahl unbemerkt auftreten.
+3. **Entropy-Formel (H01)** — tc_estimate_params gibt Parameter zurück, aber die Formelkorrektheit wird nie direkt verifiziert.
+4. **Early Termination Abbruchpunkte (C07/C08)** — Nur Gesamt-Property (partial >= full) getestet, nicht die spezifischen Abbruchstellen.
+
+**Top-Redundanzen:**
+
+1. **test-print-summary.R** — 7 von ~9 relevanten Tests redundant gegenüber Modul-Testdateien.
+2. **test-tc_traclus.R** — Mehrere Pipeline-Tests redundant gegenüber tgld und trpr.
+3. **test-workflow-integration.R** — Projektions-Pipeline redundant gegenüber tgld/tprt.
+
+**Empfehlungen Priorität:**
+
+1. `test-geographic-pipeline.R` neu anlegen (K15 + G13 + geografische Vollpipeline)
+2. Gewicht=0-Test hinzufügen (A33/F13)
+3. Entropy-Formel direkt testen (H01)
+4. test-print-summary.R auf sinnvolle Grenzfälle refokussieren
+5. Fehlende Input-Validierungstests nachziehen (D05/D06/D09, H-7 bis H-9)
 
 | Metrik | Wert |
 |--------|------|

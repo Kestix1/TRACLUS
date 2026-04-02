@@ -135,7 +135,8 @@
       "Read(//tmp/**)",
       "Bash(cmd //c \"Rscript -e \"\"devtools::test\\(\\)\"\"\")",
       "Bash(cmd //c \"where Rscript\")",
-      "Bash(\"/c/Program Files/R/R-4.4.3/bin/Rscript\" -e \"devtools::test\\(\\)\")"
+      "Bash(\"/c/Program Files/R/R-4.4.3/bin/Rscript\" -e \"devtools::test\\(\\)\")",
+      "Bash(\"/c/Program Files/R/R-4.4.3/bin/Rscript.exe\" -e \"load\\(''C:/R/TRACLUS/data/traclus_toy.rda''\\); print\\(traclus_toy\\)\")"
     ]
   }
 }

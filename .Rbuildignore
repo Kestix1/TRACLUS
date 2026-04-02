@@ -11,3 +11,4 @@
 ^\.Rproj\.user$
 ^\.claude$
 ^dev$
+^data-raw$

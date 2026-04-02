@@ -1,5 +1,5 @@
 devtools::load_all()
-data <- read.csv2("C:/R/TRACLUS/dev/traclus_toy - Kopie.csv")
+data <- read.csv("data-raw/traclus_toy.csv")
 data <- tc_trajectories(data, traj_id = "traj_id",
                        x = "x", y = "y", coord_type = "euclidean")
 
