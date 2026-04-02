@@ -9,7 +9,7 @@
 | Phase | Status | Session | Offene Testdateien |
 |-------|--------|---------|-------------------|
 | 1: Zeilenstruktur | ✓ erledigt | 2026-04-02 | — |
-| 2: Matrix füllen | ✗ ausstehend | 2026-04-02 | tprs, thrd |
+| 2: Matrix füllen | ✗ ausstehend | 2026-04-02 | thrd |
 | 3: Synthese | ✗ ausstehend | — | — |
 
 ---
@@ -282,16 +282,16 @@
 
 | # | Verhalten | Quelle | tdis | tsph | tcpp | thlp | tprt | tclst | trpr | test | ttrj | ttrc | tedg | tgld | twfl | tplt | tprs | thrd |
 |---|-----------|--------|------|------|------|------|------|-------|------|------|------|------|------|------|------|------|------|------|
-| I01 | print.tc_trajectories: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I02 | print.tc_trajectories: n_trajectories, n_points, method gezeigt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I03 | print.tc_partitions: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I04 | print.tc_clusters: eps-Unit korrekt (meters vs. coords) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I05 | print.tc_representatives: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I06 | print.tc_traclus: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I07 | summary.tc_trajectories: min/median/max Punkte pro Trajektorie | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I08 | summary.tc_partitions: Segment-Längen-Statistik | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I09 | summary.tc_clusters: n_segs + n_trajs pro Cluster | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I10 | summary.tc_representatives: Waypoints pro Representative | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| I01 | print.tc_trajectories: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ |
+| I02 | print.tc_trajectories: n_trajectories, n_points, method gezeigt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ |
+| I03 | print.tc_partitions: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ |
+| I04 | print.tc_clusters: eps-Unit korrekt (meters vs. coords) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ |
+| I05 | print.tc_representatives: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ |
+| I06 | print.tc_traclus: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ |
+| I07 | summary.tc_trajectories: min/median/max Punkte pro Trajektorie | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ |
+| I08 | summary.tc_partitions: Segment-Längen-Statistik | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ |
+| I09 | summary.tc_clusters: n_segs + n_trajs pro Cluster | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ |
+| I10 | summary.tc_representatives: Waypoints pro Representative | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ |
 | I11 | plot.tc_trajectories: läuft ohne Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
 | I12 | plot.tc_partitions: show_points=TRUE zeigt charakteristische Punkte | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ |
 | I13 | plot.tc_clusters: Noise-Segmente grau/gestrichelt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ |
@@ -305,7 +305,7 @@
 | I21 | tc_leaflet: show_points Parameter in tc_leaflet.tc_partitions | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
 | I22 | tc_leaflet: method='projected' kompatibel | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
 | I23 | tc_leaflet: > 10 Cluster → message statt Legend | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I24 | print.tc_clusters: Non-default Gewichte gezeigt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| I24 | print.tc_clusters: Non-default Gewichte gezeigt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ |
 | I25 | Alle S3-print-Methoden: kein Error bei 0 Clustern | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ |
 
 ### J — Daten-I/O (HURDAT2)
@@ -341,7 +341,7 @@
 | K11 | verbose=TRUE durch alle 3 Pipeline-Schritte propagiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | K12 | w_perp, w_par, w_angle durch gesamte Pipeline | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | K13 | Parameter-Validierung in tc_traclus vor Berechnung → early Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K14 | Euclidean Vollpipeline: tc_traclus gibt gültiges Ergebnis | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✓ | ♻ | ✗ | ✗ | ✗ |
+| K14 | Euclidean Vollpipeline: tc_traclus gibt gültiges Ergebnis | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✓ | ♻ | ✗ | ⚠ | ✗ |
 | K15 | Geographic Vollpipeline (haversine): tc_traclus gibt gültiges Ergebnis | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 
 ---
