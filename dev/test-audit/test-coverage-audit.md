@@ -9,7 +9,7 @@
 | Phase | Status | Session | Offene Testdateien |
 |-------|--------|---------|-------------------|
 | 1: Zeilenstruktur | ✓ erledigt | 2026-04-02 | — |
-| 2: Matrix füllen | ✗ ausstehend | 2026-04-02 | test, ttrj, ttrc, tedg, twfl, tplt, tprs, thrd |
+| 2: Matrix füllen | ✗ ausstehend | 2026-04-02 | twfl, tplt, tprs, thrd |
 | 3: Synthese | ✗ ausstehend | — | — |
 
 ---
@@ -92,11 +92,11 @@
 
 | # | Verhalten | Quelle | tdis | tsph | tcpp | thlp | tprt | tclst | trpr | test | ttrj | ttrc | tedg | tgld | twfl | tplt | tprs | thrd |
 |---|-----------|--------|------|------|------|------|------|-------|------|------|------|------|------|------|------|------|------|------|
-| B01 | Haversine: Nicht-Negativität (>= 0 immer) | Code | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| B01 | Haversine: Nicht-Negativität (>= 0 immer) | Code | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | B02 | Haversine: Symmetrie d(p1,p2) = d(p2,p1) | Code | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| B03 | Haversine: Identische Punkte → 0 | Code | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| B04 | Haversine: Antipodal (nahe π×R ≈ 20015 km) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| B05 | Haversine: a auf [0,1] geklemmt vor asin (numerische Sicherheit) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| B03 | Haversine: Identische Punkte → 0 | Code | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| B04 | Haversine: Antipodal (nahe π×R ≈ 20015 km) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| B05 | Haversine: a auf [0,1] geklemmt vor asin (numerische Sicherheit) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | B06 | Bearing: Normalisierung auf [0, 360) | Code | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | B07 | Bearing: 0° (Nord), 90° (Ost), 180° (Süd), 270° (West) | Code | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | B08 | Bearing: Identische Punkte (undefined) → kein Crash | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
@@ -147,46 +147,46 @@
 
 | # | Verhalten | Quelle | tdis | tsph | tcpp | thlp | tprt | tclst | trpr | test | ttrj | ttrc | tedg | tgld | twfl | tplt | tprs | thrd |
 |---|-----------|--------|------|------|------|------|------|-------|------|------|------|------|------|------|------|------|------|------|
-| D01 | Fehlender x-Parameter → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D02 | Fehlender y-Parameter → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D03 | Fehlender coord_type → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D01 | Fehlender x-Parameter → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D02 | Fehlender y-Parameter → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D03 | Fehlender coord_type → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D04 | coord_type ungültig (nicht euclidean/geographic) → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D05 | x-Spalte nicht in Daten → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D06 | y-Spalte nicht in Daten → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D07 | traj_id-Spalte nicht in Daten → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D08 | x-Spalte nicht numerisch → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D07 | traj_id-Spalte nicht in Daten → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D08 | x-Spalte nicht numerisch → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D09 | y-Spalte nicht numerisch → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D10 | data nicht data.frame/tibble/sf → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D11 | coord_type='euclidean' + method='haversine' → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D12 | coord_type='euclidean' + method='projected' → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D13 | coord_type='geographic' + method=NULL → default='haversine' | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D14 | coord_type='geographic' + method='projected' → akzeptiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D15 | coord_type='geographic' + method='euclidean' → message+akzeptiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D16 | sf-Objekt ohne CRS → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D17 | sf-Objekt mit POINT-Geometrie → Koordinaten extrahiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D10 | data nicht data.frame/tibble/sf → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D11 | coord_type='euclidean' + method='haversine' → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D12 | coord_type='euclidean' + method='projected' → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D13 | coord_type='geographic' + method=NULL → default='haversine' | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D14 | coord_type='geographic' + method='projected' → akzeptiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D15 | coord_type='geographic' + method='euclidean' → message+akzeptiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D16 | sf-Objekt ohne CRS → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D17 | sf-Objekt mit POINT-Geometrie → Koordinaten extrahiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D18 | sf-Objekt mit Z/M-Dimensionen → message, nur X,Y verwendet | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D19 | sf-Objekt mit nicht-POINT-Geometrie → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D20 | NA in x oder y → Zeilen entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D21 | Inf in x oder y → Zeilen entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D22 | NaN in x oder y → Zeilen entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D23 | Aufeinanderfolgende doppelte Punkte (selbe traj_id, x, y) → entfernt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D20 | NA in x oder y → Zeilen entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D21 | Inf in x oder y → Zeilen entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D22 | NaN in x oder y → Zeilen entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D23 | Aufeinanderfolgende doppelte Punkte (selbe traj_id, x, y) → entfernt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ♻ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D24 | Nicht-aufeinanderfolgende Duplikate → nicht entfernt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D25 | Trajektorie mit 1 Punkt nach Filterung → entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D26 | Nach gesamter Filterung < 2 Trajektorien → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
-| D27 | traj_id numeric → zu character konvertiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D28 | traj_id factor → zu character konvertiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D25 | Trajektorie mit 1 Punkt nach Filterung → entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ♻ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D26 | Nach gesamter Filterung < 2 Trajektorien → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ⚠ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| D27 | traj_id numeric → zu character konvertiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D28 | traj_id factor → zu character konvertiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D29 | geographic + x außerhalb [-180,180] → warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D30 | geographic + y außerhalb [-90,90] → warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D31 | geographic + vertauschte Koordinaten (x in lat-Bereich) → warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D32 | geographic + Antimeridian-Crossing (|Δx| > 180°) → warning | Code | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D31 | geographic + vertauschte Koordinaten (x in lat-Bereich) → warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D32 | geographic + Antimeridian-Crossing (|Δx| > 180°) → warning | Code | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ♻ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D33 | Antimeridian-Crossing nur innerhalb Trajektorie erkannt (nicht zwischen Trajs) | Code | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D34 | euclidean + looks like lon/lat → warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D35 | method='projected' → proj_params (lat_mean, lon_mean) gespeichert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
-| D36 | Eingabe ungeordnet → nach traj_id gruppiert, Punktreihenfolge erhalten | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D37 | NA in traj_id → Zeile entfernt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D38 | Verbose=TRUE → informative Meldungen | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D34 | euclidean + looks like lon/lat → warning | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D35 | method='projected' → proj_params (lat_mean, lon_mean) gespeichert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| D36 | Eingabe ungeordnet → nach traj_id gruppiert, Punktreihenfolge erhalten | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D37 | NA in traj_id → Zeile entfernt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D38 | Verbose=TRUE → informative Meldungen | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | D39 | Falsche Input-Klasse für tc_partition (non-tc_trajectories) → Error | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| D40 | .truncate_ids: Viele IDs korrekt abgeschnitten ("and N more") | Code | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| D40 | .truncate_ids: Viele IDs korrekt abgeschnitten ("and N more") | Code | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 
 ### E — Partitionierungsphase (MDL)
 
@@ -230,9 +230,9 @@
 | F11 | eps sehr groß → ein großer Cluster | Paper+Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
 | F12 | min_lns = 1 → Verhalten (jedes Segment Core) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | F13 | Alle Gewichte = 0 → dist = 0 für alle Paare (degenerierter Fall) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| F14 | eps <= 0 → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| F15 | min_lns < 1 → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| F16 | Negative Gewichte → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| F14 | eps <= 0 → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| F15 | min_lns < 1 → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| F16 | Negative Gewichte → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | F17 | method='projected': Koordinaten vor Neighborhood-Berechnung projiziert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
 | F18 | Neighbourhood: Symmetrie N_ε(i) enthält j ↔ N_ε(j) enthält i | Paper Def.4 | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | F19 | Falsche Input-Klasse für tc_cluster → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
@@ -268,27 +268,27 @@
 | # | Verhalten | Quelle | tdis | tsph | tcpp | thlp | tprt | tclst | trpr | test | ttrj | ttrc | tedg | tgld | twfl | tplt | tprs | thrd |
 |---|-----------|--------|------|------|------|------|------|-------|------|------|------|------|------|------|------|------|------|------|
 | H01 | Entropy-Formel: -Σ(p_i * log2(p_i)) korrekt berechnet | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| H02 | Tie-Breaking: kleinster eps bei gleichem Entropy-Minimum | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| H03 | eps_grid=NULL: 5.–95. Perzentil der Pairwise-Distanzen | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| H02 | Tie-Breaking: kleinster eps bei gleichem Entropy-Minimum | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| H03 | eps_grid=NULL: 5.–95. Perzentil der Pairwise-Distanzen | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | H04 | eps_grid Degenerate (q5 >= q95): Fallback-Logik | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| H05 | sample_size > n_segments → alle Segmente verwendet | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| H06 | sample_size < n_segments → sample_size Segmente zufällig | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| H05 | sample_size > n_segments → alle Segmente verwendet | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| H06 | sample_size < n_segments → sample_size Segmente zufällig | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | H07 | min_lns-Schätzung: ceiling(mean_nb_size @ optimal_eps) + 1 | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| H08 | Optimales eps liegt innerhalb des übergebenen Grids | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| H09 | entropy_df Output enthält eps-Werte und Entropy-Werte | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| H10 | Gewichte (w_perp, w_par, w_angle) nicht geschätzt → Input-Werte unverändert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| H08 | Optimales eps liegt innerhalb des übergebenen Grids | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| H09 | entropy_df Output enthält eps-Werte und Entropy-Werte | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| H10 | Gewichte (w_perp, w_par, w_angle) nicht geschätzt → Input-Werte unverändert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 
 ### I — S3-Methoden (print / summary / plot)
 
 | # | Verhalten | Quelle | tdis | tsph | tcpp | thlp | tprt | tclst | trpr | test | ttrj | ttrc | tedg | tgld | twfl | tplt | tprs | thrd |
 |---|-----------|--------|------|------|------|------|------|-------|------|------|------|------|------|------|------|------|------|------|
-| I01 | print.tc_trajectories: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I02 | print.tc_trajectories: n_trajectories, n_points, method gezeigt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| I01 | print.tc_trajectories: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| I02 | print.tc_trajectories: n_trajectories, n_points, method gezeigt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | I03 | print.tc_partitions: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | I04 | print.tc_clusters: eps-Unit korrekt (meters vs. coords) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | I05 | print.tc_representatives: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I06 | print.tc_traclus: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I07 | summary.tc_trajectories: min/median/max Punkte pro Trajektorie | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| I06 | print.tc_traclus: invisible(x) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| I07 | summary.tc_trajectories: min/median/max Punkte pro Trajektorie | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | I08 | summary.tc_partitions: Segment-Längen-Statistik | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | I09 | summary.tc_clusters: n_segs + n_trajs pro Cluster | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | I10 | summary.tc_representatives: Waypoints pro Representative | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
@@ -328,20 +328,20 @@
 
 | # | Verhalten | Quelle | tdis | tsph | tcpp | thlp | tprt | tclst | trpr | test | ttrj | ttrc | tedg | tgld | twfl | tplt | tprs | thrd |
 |---|-----------|--------|------|------|------|------|------|-------|------|------|------|------|------|------|------|------|------|------|
-| K01 | tc_traclus() ohne eps → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K02 | tc_traclus() ohne min_lns → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| K01 | tc_traclus() ohne eps → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| K02 | tc_traclus() ohne min_lns → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | K03 | tc_traclus() = manuell tc_partition|tc_cluster|tc_represent | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K04 | Reference Chain: result$clusters$partitions$trajectories vorhanden | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K05 | eps an tc_cluster weitergegeben | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K06 | gamma nur an tc_represent weitergegeben (nicht tc_cluster) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K07 | repr_min_lns überschreibt min_lns in tc_represent | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| K04 | Reference Chain: result$clusters$partitions$trajectories vorhanden | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ♻ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| K05 | eps an tc_cluster weitergegeben | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| K06 | gamma nur an tc_represent weitergegeben (nicht tc_cluster) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| K07 | repr_min_lns überschreibt min_lns in tc_represent | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | K08 | Pipe-Operator |> kompatibel (alle Funktionen returnen Objekt) | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ |
 | K09 | Re-Clustering: gleiche tc_partitions, andere eps/min_lns → keine Re-Partition | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K10 | Output-Klasse: tc_traclus erbt von tc_representatives | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
-| K11 | verbose=TRUE durch alle 3 Pipeline-Schritte propagiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K12 | w_perp, w_par, w_angle durch gesamte Pipeline | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K13 | Parameter-Validierung in tc_traclus vor Berechnung → early Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K14 | Euclidean Vollpipeline: tc_traclus gibt gültiges Ergebnis | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| K10 | Output-Klasse: tc_traclus erbt von tc_representatives | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| K11 | verbose=TRUE durch alle 3 Pipeline-Schritte propagiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| K12 | w_perp, w_par, w_angle durch gesamte Pipeline | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| K13 | Parameter-Validierung in tc_traclus vor Berechnung → early Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| K14 | Euclidean Vollpipeline: tc_traclus gibt gültiges Ergebnis | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
 | K15 | Geographic Vollpipeline (haversine): tc_traclus gibt gültiges Ergebnis | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 
 ---
