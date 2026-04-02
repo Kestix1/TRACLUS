@@ -9,7 +9,7 @@
 | Phase | Status | Session | Offene Testdateien |
 |-------|--------|---------|-------------------|
 | 1: Zeilenstruktur | ✓ erledigt | 2026-04-02 | — |
-| 2: Matrix füllen | ✗ ausstehend | 2026-04-02 | twfl, tplt, tprs, thrd |
+| 2: Matrix füllen | ✗ ausstehend | 2026-04-02 | tprs, thrd |
 | 3: Synthese | ✗ ausstehend | — | — |
 
 ---
@@ -201,8 +201,8 @@
 | E07 | MDL Bias-Term: verhindert Over-Partitioning bei kurzen Segmenten | Paper Sec.4.1.3 | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | E08 | Zero-Length-Segment nach Partitionierung → entfernt, warning | Code | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | E09 | Alle Segmente zero-length → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| E10 | method='projected': Vorwärts-Projektion vor Partitionierung | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
-| E11 | method='projected': Rückwärts-Projektion der Endpunkte | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| E10 | method='projected': Vorwärts-Projektion vor Partitionierung | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ♻ | ✗ | ✗ | ✗ |
+| E11 | method='projected': Rückwärts-Projektion der Endpunkte | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ♻ | ✗ | ✗ | ✗ |
 | E12 | method='haversine': keine Projektion | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | E13 | Aufeinanderfolgende Segmente verbunden (end_i = start_{i+1}) | Paper+Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ |
 | E14 | Segment-IDs sequenziell pro Trajektorie (1, 2, 3, ...) | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
@@ -210,7 +210,7 @@
 | E16 | .equirectangular_inverse: Proj und Inverse sind tatsächlich invers | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | E17 | costpar > costnopar an Knickpunkt → Partition gesetzt | Paper+Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ |
 | E18 | costpar <= costnopar bei geraden Strecken → kein Split | Paper+Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ |
-| E19 | Haversine-Methode: Partitionierung in geografischen Koordinaten | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| E19 | Haversine-Methode: Partitionierung in geografischen Koordinaten | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✗ | ✗ |
 | E20 | n_segments-Anzahl im Ergebnisobjekt korrekt | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 
 ### F — Clustering-Phase (DBSCAN)
@@ -254,7 +254,7 @@
 | G10 | Gamma sehr groß → wenige Waypoints | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | G11 | < 2 Waypoints → Cluster degradiert zu Noise | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
 | G12 | Cluster-Renumbering nach Sweep-Line Degradation | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| G13 | Geographic + Haversine: per-Cluster-Zentrumprojektion | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| G13 | Geographic + Haversine: per-Cluster-Zentrumprojektion | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ |
 | G14 | Geographic + Projected: gespeicherter lat_mean verwendet | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
 | G15 | Euclidean: keine Projektion | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
 | G16 | min_lns aus tc_cluster geerbt wenn repr_min_lns=NULL | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
@@ -292,21 +292,21 @@
 | I08 | summary.tc_partitions: Segment-Längen-Statistik | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | I09 | summary.tc_clusters: n_segs + n_trajs pro Cluster | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | I10 | summary.tc_representatives: Waypoints pro Representative | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I11 | plot.tc_trajectories: läuft ohne Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I12 | plot.tc_partitions: show_points=TRUE zeigt charakteristische Punkte | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I13 | plot.tc_clusters: Noise-Segmente grau/gestrichelt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I14 | plot.tc_clusters: Legend suppressed wenn > 10 Cluster + message | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I15 | plot.tc_representatives: show_clusters=TRUE/FALSE beide Modi | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I16 | plot.tc_estimate: Entropy-Kurve visualisiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I17 | tc_plot wrapper: dispatcht korrekt zu plot.*-Methoden | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I18 | asp-Berechnung: euclidean asp=1, geographic cos-korrigiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I19 | tc_leaflet: nur für geographic Daten | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I20 | tc_leaflet: Error bei euclidean Input | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I21 | tc_leaflet: show_points Parameter in tc_leaflet.tc_partitions | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I22 | tc_leaflet: method='projected' kompatibel | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| I11 | plot.tc_trajectories: läuft ohne Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
+| I12 | plot.tc_partitions: show_points=TRUE zeigt charakteristische Punkte | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ |
+| I13 | plot.tc_clusters: Noise-Segmente grau/gestrichelt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ |
+| I14 | plot.tc_clusters: Legend suppressed wenn > 10 Cluster + message | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
+| I15 | plot.tc_representatives: show_clusters=TRUE/FALSE beide Modi | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
+| I16 | plot.tc_estimate: Entropy-Kurve visualisiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ |
+| I17 | tc_plot wrapper: dispatcht korrekt zu plot.*-Methoden | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
+| I18 | asp-Berechnung: euclidean asp=1, geographic cos-korrigiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
+| I19 | tc_leaflet: nur für geographic Daten | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
+| I20 | tc_leaflet: Error bei euclidean Input | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
+| I21 | tc_leaflet: show_points Parameter in tc_leaflet.tc_partitions | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
+| I22 | tc_leaflet: method='projected' kompatibel | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
 | I23 | tc_leaflet: > 10 Cluster → message statt Legend | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | I24 | print.tc_clusters: Non-default Gewichte gezeigt | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| I25 | Alle S3-print-Methoden: kein Error bei 0 Clustern | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| I25 | Alle S3-print-Methoden: kein Error bei 0 Clustern | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ |
 
 ### J — Daten-I/O (HURDAT2)
 
@@ -320,7 +320,7 @@
 | J06 | min_points Filter: Stürme mit >= min_points → behalten | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | J07 | min_points = 1 → alle Stürme mit >= 1 Punkt behalten | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | J08 | Ungültiger min_points-Typ → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| J09 | Output kompatibel mit tc_trajectories (storm_id, lon, lat Spalten) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| J09 | Output kompatibel mit tc_trajectories (storm_id, lon, lat Spalten) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ |
 | J10 | .parse_hurdat2_coord: skalare Eingabe | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | J11 | .parse_hurdat2_coord_vec: vektorisierte Eingabe konsistent mit skalarer | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 
@@ -331,17 +331,17 @@
 | K01 | tc_traclus() ohne eps → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | K02 | tc_traclus() ohne min_lns → Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | K03 | tc_traclus() = manuell tc_partition|tc_cluster|tc_represent | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K04 | Reference Chain: result$clusters$partitions$trajectories vorhanden | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ♻ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| K04 | Reference Chain: result$clusters$partitions$trajectories vorhanden | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ♻ | ✗ | ✗ | ♻ | ✗ | ✗ | ✗ |
 | K05 | eps an tc_cluster weitergegeben | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | K06 | gamma nur an tc_represent weitergegeben (nicht tc_cluster) | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | K07 | repr_min_lns überschreibt min_lns in tc_represent | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K08 | Pipe-Operator |> kompatibel (alle Funktionen returnen Objekt) | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ✗ | ✗ | ✗ | ✗ |
-| K09 | Re-Clustering: gleiche tc_partitions, andere eps/min_lns → keine Re-Partition | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K10 | Output-Klasse: tc_traclus erbt von tc_representatives | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| K08 | Pipe-Operator |> kompatibel (alle Funktionen returnen Objekt) | Code | ✗ | ✗ | ✗ | ✗ | ✓ | ⚠ | ✗ | ✗ | ✗ | ✗ | ✗ | ⚠ | ♻ | ✗ | ✗ | ✗ |
+| K09 | Re-Clustering: gleiche tc_partitions, andere eps/min_lns → keine Re-Partition | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ |
+| K10 | Output-Klasse: tc_traclus erbt von tc_representatives | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✓ | ✗ | ♻ | ✗ | ✗ |
 | K11 | verbose=TRUE durch alle 3 Pipeline-Schritte propagiert | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | K12 | w_perp, w_par, w_angle durch gesamte Pipeline | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | K13 | Parameter-Validierung in tc_traclus vor Berechnung → early Error | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| K14 | Euclidean Vollpipeline: tc_traclus gibt gültiges Ergebnis | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| K14 | Euclidean Vollpipeline: tc_traclus gibt gültiges Ergebnis | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ♻ | ✗ | ✓ | ♻ | ✗ | ✗ | ✗ |
 | K15 | Geographic Vollpipeline (haversine): tc_traclus gibt gültiges Ergebnis | Code | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
 
 ---
