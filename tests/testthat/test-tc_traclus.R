@@ -151,6 +151,41 @@ test_that("print.tc_traclus works", {
   expect_true(any(grepl("complete", out)))
 })
 
+test_that("K03 / H-12: tc_traclus() result is identical to manual step-by-step chain", {
+  toy <- generate_toy_trajectories()
+  trj <- suppressMessages(
+    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
+                    coord_type = "euclidean")
+  )
+
+  # All-in-one
+  result <- suppressMessages(tc_traclus(trj, eps = 25, min_lns = 3))
+
+  # Re-run the same steps manually using the partitions stored in the result
+  parts   <- result$clusters$partitions
+  clust_m <- suppressMessages(tc_cluster(parts, eps = 25, min_lns = 3))
+  repr_m  <- suppressMessages(tc_represent(clust_m))
+
+  # Cluster count must match
+  expect_equal(result$n_clusters, repr_m$n_clusters)
+
+  # Noise count must match
+  expect_equal(result$n_noise, repr_m$n_noise)
+
+  # Representative coordinates must match (order by cluster_id for comparison)
+  if (result$n_clusters > 0) {
+    r1 <- result$representatives[order(result$representatives$cluster_id,
+                                       result$representatives$rx,
+                                       result$representatives$ry), ]
+    r2 <- repr_m$representatives[order(repr_m$representatives$cluster_id,
+                                       repr_m$representatives$rx,
+                                       repr_m$representatives$ry), ]
+    expect_equal(r1$rx, r2$rx, tolerance = 1e-10)
+    expect_equal(r1$ry, r2$ry, tolerance = 1e-10)
+    expect_equal(r1$cluster_id, r2$cluster_id)
+  }
+})
+
 test_that("summary.tc_traclus shows full pipeline stats", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(

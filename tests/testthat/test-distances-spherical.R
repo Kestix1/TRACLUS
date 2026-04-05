@@ -338,3 +338,53 @@ test_that("golden: weighted total distances and symmetry (spherical)", {
     tolerance = 0.5
   )
 })
+
+# =============================================================================
+# New tests: HIGH gaps (Session 1)
+# =============================================================================
+
+test_that("B08 / H-3: bearing with identical points does not crash", {
+  # atan2(0, 0) in R returns 0, not NaN — verifies no crash and finite result
+  b <- TRACLUS:::.r_bearing(c(10, 50), c(10, 50))
+  expect_true(is.finite(b))
+  expect_gte(b, 0)
+  expect_lt(b, 360)
+
+  # Also test via tc_dist_angle with identical start/end on one segment
+  d <- tc_dist_angle(c(10, 50), c(10, 50), c(0, 0), c(5, 0),
+                     method = "haversine")
+  expect_true(is.finite(d))
+  expect_gte(d, 0)
+})
+
+test_that("B11 / H-4: cross-track sin_xt clamping prevents NaN on extreme input", {
+  # Near-antipodal geometry stresses sin_xt computation
+  # Without clamping sin_xt to [-1,1], asin would produce NaN
+  d <- TRACLUS:::.r_cross_track(c(0, 89.9), c(0, 0), c(180, 0))
+  expect_true(is.finite(d))
+  expect_gte(d, 0)
+})
+
+test_that("B14 / H-4: along-track cos_xt guard prevents division by zero", {
+  # Point ~90 degrees off great circle: cos(angular_xt) ≈ 0
+  # Guard returns 0 instead of dividing by near-zero
+  d <- TRACLUS:::.r_along_track_signed(c(90, 0), c(0, 0), c(0, 89.9))
+  expect_true(is.finite(d))
+})
+
+test_that("B23 / H-5: d_angle_sph zero-length Lj returns 0", {
+  # sj == ej (zero haversine distance) → len_j < threshold → 0
+  d <- tc_dist_angle(c(0, 0), c(5, 0), c(2, 1), c(2, 1),
+                     method = "haversine")
+  expect_equal(d, 0.0, tolerance = 1)
+  expect_false(is.nan(d))
+})
+
+test_that("B24 / H-5: d_angle_sph zero-length Li returns 0 via swap", {
+  # si == ei (zero haversine distance), sj != ej — swap puts zero-length as Lj
+  # → len_j < threshold → returns 0
+  d <- tc_dist_angle(c(2, 1), c(2, 1), c(0, 0), c(5, 0),
+                     method = "haversine")
+  expect_equal(d, 0.0, tolerance = 1)
+  expect_false(is.nan(d))
+})

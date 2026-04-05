@@ -466,6 +466,42 @@ test_that("antimeridian crossing produces warning for geographic data", {
   )
 })
 
+# =============================================================================
+# New tests: HIGH gaps (Session 1)
+# =============================================================================
+
+test_that("D04 / H-7: invalid coord_type gives informative error", {
+  toy <- generate_toy_trajectories()
+  expect_error(
+    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
+                    coord_type = "cartesian", verbose = FALSE),
+    "'coord_type'"
+  )
+  expect_error(
+    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
+                    coord_type = "WGS84", verbose = FALSE),
+    "'coord_type'"
+  )
+})
+
+test_that("D05 / H-8: missing x column gives informative error", {
+  toy <- generate_toy_trajectories()
+  expect_error(
+    tc_trajectories(toy, traj_id = "traj_id", x = "lon", y = "y",
+                    coord_type = "euclidean", verbose = FALSE),
+    "not found"
+  )
+})
+
+test_that("D06 / H-8: missing y column gives informative error", {
+  toy <- generate_toy_trajectories()
+  expect_error(
+    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "lat",
+                    coord_type = "euclidean", verbose = FALSE),
+    "not found"
+  )
+})
+
 # --- traclus_toy dataset ---
 
 test_that("traclus_toy dataset loads and works", {
@@ -477,3 +513,4 @@ test_that("traclus_toy dataset loads and works", {
   expect_s3_class(trj, "tc_trajectories")
   expect_equal(trj$n_trajectories, 6L)
 })
+

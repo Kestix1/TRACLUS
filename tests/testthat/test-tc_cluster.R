@@ -647,3 +647,23 @@ test_that("golden: two segments with min_lns=2 form a cluster (self-inclusive)",
   expect_equal(clust$n_noise, 0)
   expect_equal(clust$segments$cluster_id, c(1L, 1L))
 })
+
+# =============================================================================
+# New tests: CRITICAL gaps (Session 1)
+# =============================================================================
+
+test_that("F13 / C-1: all weights = 0 yields all distances 0 → one giant cluster", {
+  # With w_perp=w_par=w_angle=0, every segment pair has distance 0.
+  # Any eps > 0 makes all segments mutual neighbours → one cluster, zero noise.
+  parts <- make_test_partitions()
+  n_segs <- nrow(parts$segments)
+
+  clust <- suppressMessages(
+    tc_cluster(parts, eps = 0.001, min_lns = 2,
+               w_perp = 0, w_par = 0, w_angle = 0)
+  )
+
+  expect_equal(clust$n_noise, 0L)
+  expect_equal(clust$n_clusters, 1L)
+  expect_true(all(clust$segments$cluster_id == 1L))
+})

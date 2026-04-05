@@ -494,3 +494,28 @@ test_that("golden: full pipeline partitions L-shape at the corner", {
   l2_segs <- parts$segments[parts$segments$traj_id == "L2", ]
   expect_equal(nrow(l2_segs), 1)
 })
+
+# =============================================================================
+# New tests: HIGH gaps (Session 1)
+# =============================================================================
+
+test_that("E09 / H-9: all segments zero-length after partitioning gives error", {
+  # Each trajectory has 2 distinct-but-nearly-identical points.
+  # 1e-16 is representable as non-zero double: df$x[-1] != df$x[-nrow(df)]
+  # → not filtered as consecutive duplicates by tc_trajectories.
+  # Segment length = 1e-16 < ZERO_THRESHOLD (1e-15) → C++ marks as null.
+  # All segments removed → tc_partition must throw an error.
+  df <- data.frame(
+    traj_id = rep(c("A", "B", "C"), each = 2),
+    x       = c(0, 1e-16, 0, 1e-16, 0, 1e-16),
+    y       = c(0, 0,     1, 1,     2, 2)
+  )
+  trj <- suppressMessages(
+    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
+                    coord_type = "euclidean", verbose = FALSE)
+  )
+  expect_error(
+    suppressWarnings(tc_partition(trj)),
+    "No segments remain"
+  )
+})

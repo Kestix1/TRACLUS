@@ -171,6 +171,81 @@ test_that("C++ traclus_dist_sph matches R reference (no early termination)", {
   }
 })
 
+# =============================================================================
+# New tests: CRITICAL + HIGH gaps (Session 1)
+# =============================================================================
+
+test_that("C07 / C-4: early termination fires after d_perp alone exceeds eps", {
+  # Li=(0,0)-(10,0), Lj=(5,3)-(5,7): d_perp=5.8, d_par=5, d_angle=4
+  # With eps=1: w_perp*d_perp = 5.8 > 1 → terminate after perp, return 5.8
+  si <- c(0, 0); ei <- c(10, 0); sj <- c(5, 3); ej <- c(5, 7)
+  d_perp_only <- TRACLUS:::.cpp_traclus_dist_euc(
+    si[1], si[2], ei[1], ei[2], sj[1], sj[2], ej[1], ej[2],
+    1.0, 1.0, 1.0, 1.0
+  )
+  expected_perp <- tc_dist_perpendicular(si, ei, sj, ej)
+  # After early termination, returns exactly d_perp (first accumulated component)
+  expect_equal(d_perp_only, expected_perp, tolerance = 1e-10)
+})
+
+test_that("C08 / C-4: early termination fires after d_perp + d_par exceeds eps", {
+  # Li=(0,0)-(10,0), Lj=(5,3)-(5,7): d_perp=5.8, d_par=5, d_angle=4
+  # eps=8: d_perp=5.8 <= 8, then d_perp+d_par=10.8 > 8 → terminate after par
+  si <- c(0, 0); ei <- c(10, 0); sj <- c(5, 3); ej <- c(5, 7)
+  eps_val <- 8.0  # d_perp (5.8) passes, d_perp+d_par (10.8) triggers
+
+  d_after_par <- TRACLUS:::.cpp_traclus_dist_euc(
+    si[1], si[2], ei[1], ei[2], sj[1], sj[2], ej[1], ej[2],
+    1.0, 1.0, 1.0, eps_val
+  )
+  expected_perp_par <- tc_dist_perpendicular(si, ei, sj, ej) +
+    tc_dist_parallel(si, ei, sj, ej)
+  # Returns d_perp + d_par (not the full distance including d_angle)
+  expect_equal(d_after_par, expected_perp_par, tolerance = 1e-10)
+
+  # Verify this is less than the full distance (d_angle would add more)
+  d_full <- tc_dist_segments(si, ei, sj, ej)
+  expect_lt(d_after_par, d_full)
+})
+
+test_that("C10 / H-6: w_perp=0 skips perp component entirely", {
+  # Perp is skipped → no early termination from it
+  # With eps=1 and w_perp=0, w_par=1: only par (d_par=5) triggers early term
+  si <- c(0, 0); ei <- c(10, 0); sj <- c(5, 3); ej <- c(5, 7)
+  d_no_perp <- TRACLUS:::.cpp_traclus_dist_euc(
+    si[1], si[2], ei[1], ei[2], sj[1], sj[2], ej[1], ej[2],
+    0.0, 1.0, 1.0, 1.0
+  )
+  # Perp skipped; par (5) > eps (1) → returns d_par
+  expect_equal(d_no_perp, tc_dist_parallel(si, ei, sj, ej), tolerance = 1e-10)
+})
+
+test_that("C11 / H-6: w_par=0 skips par component entirely", {
+  # Par is skipped; perp (5.8) > eps (1) → early term after perp
+  si <- c(0, 0); ei <- c(10, 0); sj <- c(5, 3); ej <- c(5, 7)
+  d_no_par <- TRACLUS:::.cpp_traclus_dist_euc(
+    si[1], si[2], ei[1], ei[2], sj[1], sj[2], ej[1], ej[2],
+    1.0, 0.0, 1.0, 1.0
+  )
+  expect_equal(d_no_par, tc_dist_perpendicular(si, ei, sj, ej), tolerance = 1e-10)
+})
+
+test_that("C12 / H-6: w_angle=0 skips angle component entirely", {
+  # Angle skipped → full result = d_perp + d_par only
+  si <- c(0, 0); ei <- c(10, 0); sj <- c(5, 3); ej <- c(5, 7)
+  d_no_angle <- TRACLUS:::.cpp_traclus_dist_euc(
+    si[1], si[2], ei[1], ei[2], sj[1], sj[2], ej[1], ej[2],
+    1.0, 1.0, 0.0, 1e30
+  )
+  expect_equal(d_no_angle,
+               tc_dist_perpendicular(si, ei, sj, ej) + tc_dist_parallel(si, ei, sj, ej),
+               tolerance = 1e-10)
+
+  # And verify it differs from the full distance (which includes d_angle)
+  d_full <- tc_dist_segments(si, ei, sj, ej)
+  expect_lt(d_no_angle, d_full)
+})
+
 test_that("C++ euclidean: tie-break at equal segment length keeps first as Li", {
   # Two segments of exactly equal length — result should be identical
   # regardless of argument order, thanks to the swap convention (first stays at tie)

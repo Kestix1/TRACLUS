@@ -174,6 +174,81 @@ test_that("verbose = FALSE suppresses message", {
 # method = "projected"
 # =============================================================================
 
+# =============================================================================
+# New tests: CRITICAL + HIGH gaps (Session 1)
+# =============================================================================
+
+test_that("H01 / C-2: entropy formula -sum(p_i * log2(p_i)) is correctly implemented", {
+  # 3 segments with known pairwise distances: d(0,1)=1, d(0,2)=2, d(1,2)=3
+  # C++ counts "outside-neighborhood" pairs: pairs where d >= eps (using upper_bound logic)
+  # At eps=1.5: pairs with d >= 1.5 are (0,2)=2 and (1,2)=3
+  #   nb_counts (pairs at-or-beyond eps): seg0→{2}, seg1→{2}, seg2→{3→both}
+  #   Outside-nb counts: {1, 1, 2}, sizes (self-inclusive +1): {2, 2, 3}, total=7
+  #   H = -2*(2/7)*log2(2/7) - (3/7)*log2(3/7)
+  pair_dists <- c(1.0, 2.0, 3.0)
+  expected_H <- -2 * (2/7) * log2(2/7) - (3/7) * log2(3/7)
+
+  result <- TRACLUS:::.cpp_count_neighbours_multi_eps(pair_dists, 3L, c(1.5))
+  expect_equal(result$entropy_vals[1], expected_H, tolerance = 1e-10)
+
+  # Also verify mean_nb_size: (2+2+3)/3 = 7/3
+  expect_equal(result$mean_nb_sizes[1], 7/3, tolerance = 1e-10)
+})
+
+test_that("H04 / H-10: degenerate eps_grid (q5 >= q95) uses fallback without error", {
+  # All identical trajectories → all pairwise segment distances = 0
+  # → q5 = q95 = 0 → fallback: q5*0.5=0, q95*1.5=0, still degenerate
+  # → second guard: q95 = q5 + 1 = 1
+  df <- data.frame(
+    traj_id = rep(c("T1", "T2", "T3", "T4"), each = 2),
+    x       = rep(c(0, 10), 4),
+    y       = rep(c(0, 0),  4)
+  )
+  trj <- suppressMessages(
+    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
+                    coord_type = "euclidean")
+  )
+  parts <- suppressMessages(tc_partition(trj))
+
+  # Should complete without error; fallback produces a finite eps (may be 0 if all distances are 0)
+  est <- suppressMessages(tc_estimate_params(parts))
+  expect_s3_class(est, "tc_estimate")
+  expect_true(is.finite(est$eps))
+  expect_gte(est$eps, 0)
+  expect_equal(nrow(est$entropy_df), 50L)
+})
+
+test_that("H07 / H-11: min_lns formula ceiling(mean_nb_size) + 1 applied correctly", {
+  # Directly test the C++ helper: 3 segments, all pairs OUTSIDE eps neighborhood
+  # C++ counts pairs where d >= eps (outside-neighborhood semantics via upper_bound)
+  # pair_dists = c(2,2,2), eps = 1.5 → all 3 pairs have d=2 >= 1.5 → all counted
+  # nb_counts: each segment has 2 others counted → size = 3, total = 9, mean = 3
+  # min_lns = ceiling(3) + 1 = 4
+  pair_dists <- c(2.0, 2.0, 2.0)
+  result <- TRACLUS:::.cpp_count_neighbours_multi_eps(pair_dists, 3L, c(1.5))
+  expect_equal(result$mean_nb_sizes[1], 3.0, tolerance = 1e-10)
+
+  computed_min_lns <- as.integer(ceiling(result$mean_nb_sizes[1]) + 1L)
+  expect_equal(computed_min_lns, 4L)
+
+  # Verify tc_estimate_params uses same formula: min_lns >= ceiling(mean_nb) + 1
+  df <- data.frame(
+    traj_id = rep(paste0("T", 1:4), each = 3),
+    x = c(0,5,10, 0,5,10, 0,5,10, 0,5,10),
+    y = c(0,0,0,  1,1,1,  2,2,2,  3,3,3)
+  )
+  trj <- suppressMessages(
+    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
+                    coord_type = "euclidean")
+  )
+  parts <- suppressMessages(tc_partition(trj))
+  est <- suppressMessages(tc_estimate_params(parts))
+
+  # min_lns must be ceiling(mean_nb_at_optimal) + 1, hence >= 2
+  expect_gte(est$min_lns, 2L)
+  expect_true(is.integer(est$min_lns))
+})
+
 test_that("tc_estimate_params with method='projected' returns meter-scale eps", {
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(

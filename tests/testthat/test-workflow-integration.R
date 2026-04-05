@@ -230,3 +230,46 @@ test_that("tc_estimate_params integrates with clustering workflow", {
   )
   expect_s3_class(clust, "tc_clusters")
 })
+
+# =============================================================================
+# New tests: CRITICAL gaps (Session 1)
+# =============================================================================
+
+test_that("K15 / C-3: geographic full pipeline (haversine) end-to-end", {
+  geo <- generate_geo_trajectories()
+
+  # Step 1: Load with geographic coord_type
+  trj <- suppressMessages(
+    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
+                    coord_type = "geographic")
+  )
+  expect_equal(trj$method, "haversine")
+
+  # Step 2: Partition
+  parts <- suppressMessages(tc_partition(trj))
+  expect_s3_class(parts, "tc_partitions")
+  expect_equal(parts$method, "haversine")
+  expect_true(parts$n_segments > 0)
+
+  # Step 3: Cluster (large eps in meters to ensure we get clusters)
+  clust <- suppressMessages(tc_cluster(parts, eps = 500000, min_lns = 2))
+  expect_s3_class(clust, "tc_clusters")
+
+  # Step 4: Represent
+  repr <- suppressMessages(tc_represent(clust))
+  expect_s3_class(repr, "tc_representatives")
+  expect_equal(repr$method, "haversine")
+
+  # Representatives must have valid geographic coordinates
+  if (repr$n_clusters > 0) {
+    expect_true(all(is.finite(repr$representatives$rx)))
+    expect_true(all(is.finite(repr$representatives$ry)))
+    expect_true(all(repr$representatives$rx >= -180 &
+                    repr$representatives$rx <= 180))
+    expect_true(all(repr$representatives$ry >= -90 &
+                    repr$representatives$ry <= 90))
+  }
+
+  # Reference chain preserved
+  expect_s3_class(repr$clusters$partitions$trajectories, "tc_trajectories")
+})

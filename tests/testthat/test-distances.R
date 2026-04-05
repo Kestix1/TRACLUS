@@ -333,6 +333,60 @@ test_that("golden: weighted total distance for Pair A and Pair B", {
   )
 })
 
+# =============================================================================
+# New tests: CRITICAL + HIGH gaps (Session 1)
+# =============================================================================
+
+test_that("A33 / C-1: all weights = 0 yields distance 0 for any segment pair", {
+  # With w_perp=w_par=w_angle=0, tc_dist_segments returns 0 regardless of geometry
+  d1 <- tc_dist_segments(c(0, 0), c(10, 0), c(0, 5), c(10, 5),
+                         w_perp = 0, w_par = 0, w_angle = 0)
+  expect_equal(d1, 0.0)
+
+  # Very dissimilar segments — still 0
+  d2 <- tc_dist_segments(c(0, 0), c(10, 0), c(100, 100), c(200, 200),
+                         w_perp = 0, w_par = 0, w_angle = 0)
+  expect_equal(d2, 0.0)
+
+  # Perpendicular segments — still 0
+  d3 <- tc_dist_segments(c(0, 0), c(10, 0), c(5, -3), c(5, 3),
+                         w_perp = 0, w_par = 0, w_angle = 0)
+  expect_equal(d3, 0.0)
+})
+
+test_that("A10 / H-1: d_perp l1=l2=0 Lehmer guard returns 0 not NaN", {
+  # Both Lj endpoints are exactly on the line through Li → l1 = l2 = 0
+  # Lehmer mean would be 0/0 without the guard; guard must return 0
+  d <- tc_dist_perpendicular(c(0, 0), c(10, 0), c(2, 0), c(8, 0))
+  expect_equal(d, 0.0, tolerance = 1e-10)
+  expect_false(is.nan(d))
+  expect_true(is.finite(d))
+
+  # Another collinear case: endpoint exactly at start of Li
+  d2 <- tc_dist_perpendicular(c(0, 0), c(10, 0), c(0, 0), c(5, 0))
+  expect_equal(d2, 0.0, tolerance = 1e-10)
+  expect_false(is.nan(d2))
+})
+
+test_that("A26 / H-2: zero-length Li (before swap) returns 0 via swap convention", {
+  # si == ei (zero-length i segment), sj != ej (positive-length j segment)
+  # Swap: j becomes new Li (length > 0), i becomes new Lj (length 0)
+  # → len_j < 1e-15 guard fires → returns 0
+  d <- tc_dist_angle(c(5, 5), c(5, 5), c(0, 0), c(10, 0))
+  expect_equal(d, 0.0, tolerance = 1e-10)
+  expect_false(is.nan(d))
+  expect_true(is.finite(d))
+
+  # Also verify perpendicular and parallel for same case
+  dp <- tc_dist_perpendicular(c(5, 5), c(5, 5), c(0, 0), c(10, 0))
+  expect_true(is.finite(dp))
+  expect_gte(dp, 0)
+
+  dl <- tc_dist_parallel(c(5, 5), c(5, 5), c(0, 0), c(10, 0))
+  expect_true(is.finite(dl))
+  expect_gte(dl, 0)
+})
+
 test_that("golden: swap symmetry — dist(Li,Lj) == dist(Lj,Li)", {
   # Pair A
   si_a <- c(0, 0); ei_a <- c(10, 0); sj_a <- c(3, 0); ej_a <- c(3, 4)

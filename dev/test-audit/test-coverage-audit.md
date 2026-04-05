@@ -11,6 +11,9 @@
 | 1: Zeilenstruktur | ✓ erledigt | 2026-04-02 | — |
 | 2: Matrix füllen | ✓ erledigt | 2026-04-02 | — |
 | 3: Synthese | ✓ erledigt | 2026-04-02 | — |
+| 4: CRITICAL+HIGH Tests schreiben | ✓ erledigt | 2026-04-05 | — |
+
+**Session 1 (2026-04-05):** 16 neue `test_that()`-Blöcke für alle CRITICAL+HIGH-Lücken implementiert (C-1..C-4, H-1..H-12). `devtools::test()`: FAIL 0 | WARN 6 | SKIP 0 | PASS 1057.
 
 ---
 
