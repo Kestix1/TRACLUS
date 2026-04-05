@@ -403,3 +403,31 @@ test_that("golden: swap symmetry — dist(Li,Lj) == dist(Lj,Li)", {
     tolerance = 1e-10
   )
 })
+
+# =============================================================================
+# New tests: LOW gaps (Session 2)
+# =============================================================================
+
+test_that("A38 / L-1: TRACLUS d_perp can violate the triangle inequality (not a metric)", {
+  # Concrete counter-example:
+  #   A = (0,0)->(100,0)   horizontal, length 100
+  #   B = (50,0)->(50,100) vertical,   length 100
+  #   C = (50,50)->(50,150) vertical,  length 100
+  #
+  # d_perp(A,B): project B onto line y=0  → l1=0, l2=100 → Lehmer=100
+  # d_perp(B,C): project C onto line x=50 → l1=0, l2=0   → Lehmer=0
+  # d_perp(A,C): project C onto line y=0  → l1=50, l2=150 → Lehmer=125
+  #
+  # Triangle inequality violated: d(A,C) = 125 > d(A,B) + d(B,C) = 100 + 0
+
+  d_AB <- tc_dist_perpendicular(c(0, 0), c(100, 0), c(50, 0),  c(50, 100))
+  d_BC <- tc_dist_perpendicular(c(50, 0), c(50, 100), c(50, 50), c(50, 150))
+  d_AC <- tc_dist_perpendicular(c(0, 0), c(100, 0), c(50, 50), c(50, 150))
+
+  expect_equal(d_AB, 100, tolerance = 1e-10)
+  expect_equal(d_BC,   0, tolerance = 1e-10)
+  expect_equal(d_AC, 125, tolerance = 1e-10)
+
+  # The triangle inequality d(A,C) <= d(A,B) + d(B,C) is violated here:
+  expect_gt(d_AC, d_AB + d_BC)
+})

@@ -12,8 +12,11 @@
 | 2: Matrix füllen | ✓ erledigt | 2026-04-02 | — |
 | 3: Synthese | ✓ erledigt | 2026-04-02 | — |
 | 4: CRITICAL+HIGH Tests schreiben | ✓ erledigt | 2026-04-05 | — |
+| 5: MEDIUM+LOW Tests + Redundanzbereinigung | ✓ erledigt | 2026-04-06 | — |
 
 **Session 1 (2026-04-05):** 16 neue `test_that()`-Blöcke für alle CRITICAL+HIGH-Lücken implementiert (C-1..C-4, H-1..H-12). `devtools::test()`: FAIL 0 | WARN 6 | SKIP 0 | PASS 1057.
+
+**Session 2 (2026-04-06):** 11 neue `test_that()`-Blöcke für alle MEDIUM+LOW-Lücken (M-1..M-7, L-1..L-3). Redundanzbereinigung: 17 `test_that()`-Blöcke aus R1–R5 entfernt (tprs ×7, thlp ×3, twfl ×3, ttrc ×4). `devtools::test()` Abschluss: FAIL 0 | WARN 4 | SKIP 0 | PASS 1041.
 
 ---
 

@@ -610,3 +610,34 @@ test_that("tc_represent result can be printed invisibly", {
   ret <- capture.output(result <- print(repr))
   expect_s3_class(result, "tc_representatives")
 })
+
+
+# =============================================================================
+# New tests: MEDIUM gaps (Session 2)
+# =============================================================================
+
+test_that("G13 / M-6: geographic haversine representation — representatives in valid lon/lat range", {
+  geo  <- generate_geo_trajectories()
+  trj  <- suppressMessages(
+    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
+                    coord_type = "geographic", verbose = FALSE)
+  )
+  parts <- suppressMessages(tc_partition(trj))
+  clust <- suppressMessages(suppressWarnings(
+    tc_cluster(parts, eps = 500000, min_lns = 2)
+  ))
+  repr <- suppressMessages(suppressWarnings(tc_represent(clust)))
+
+  expect_equal(repr$method, "haversine")
+
+  if (repr$n_clusters > 0) {
+    expect_true(
+      all(repr$representatives$rx >= -180 & repr$representatives$rx <= 180),
+      label = "representative longitudes in [-180, 180]"
+    )
+    expect_true(
+      all(repr$representatives$ry >= -90 & repr$representatives$ry <= 90),
+      label = "representative latitudes in [-90, 90]"
+    )
+  }
+})

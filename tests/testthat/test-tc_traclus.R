@@ -2,47 +2,6 @@
 # Tests for tc_traclus (all-in-one wrapper)
 # =============================================================================
 
-test_that("tc_traclus runs complete pipeline on toy data", {
-  toy <- generate_toy_trajectories()
-  trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
-  )
-
-  result <- suppressMessages(tc_traclus(trj, eps = 25, min_lns = 3))
-
-  expect_s3_class(result, "tc_traclus")
-  expect_s3_class(result, "tc_representatives")
-  expect_true(result$n_clusters >= 1)
-})
-
-test_that("tc_traclus has correct dual class", {
-  toy <- generate_toy_trajectories()
-  trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
-  )
-
-  result <- suppressMessages(tc_traclus(trj, eps = 25, min_lns = 3))
-
-  expect_equal(class(result), c("tc_traclus", "tc_representatives"))
-})
-
-test_that("tc_traclus preserves full reference chain", {
-  toy <- generate_toy_trajectories()
-  trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
-  )
-
-  result <- suppressMessages(tc_traclus(trj, eps = 25, min_lns = 3))
-
-  # Full chain: tc_traclus -> tc_clusters -> tc_partitions -> tc_trajectories
-  expect_s3_class(result$clusters, "tc_clusters")
-  expect_s3_class(result$clusters$partitions, "tc_partitions")
-  expect_s3_class(result$clusters$partitions$trajectories, "tc_trajectories")
-})
-
 test_that("tc_traclus missing eps/min_lns gives custom error", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
@@ -186,16 +145,3 @@ test_that("K03 / H-12: tc_traclus() result is identical to manual step-by-step c
   }
 })
 
-test_that("summary.tc_traclus shows full pipeline stats", {
-  toy <- generate_toy_trajectories()
-  trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
-  )
-  result <- suppressMessages(tc_traclus(trj, eps = 25, min_lns = 3))
-
-  out <- capture.output(summary(result))
-  expect_true(any(grepl("TRACLUS Result - Summary", out)))
-  expect_true(any(grepl("Input trajs", out)))
-  expect_true(any(grepl("Partitioned into", out)))
-})

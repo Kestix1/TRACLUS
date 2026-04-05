@@ -37,12 +37,6 @@ test_that("euclidean distances with large coordinate values are finite", {
   expect_gte(d_tot, 0)
 })
 
-test_that("haversine distance with identical points returns 0", {
-  p <- c(-74.006, 40.7128)
-  d <- tc_dist_segments(p, p, p, p, method = "haversine")
-  expect_equal(d, 0, tolerance = 1e-10)
-})
-
 test_that("haversine distance with nearly antipodal points is finite", {
   si <- c(0, 0)
   ei <- c(1, 0)

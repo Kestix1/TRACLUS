@@ -66,21 +66,6 @@ test_that("latitudes are in valid range", {
   expect_true(all(result$lon >= -180 & result$lon <= 180))
 })
 
-test_that("result is compatible with tc_trajectories", {
-  filepath <- get_hurdat2_path()
-  skip_if(filepath == "", "HURDAT2 test file not found")
-
-  # Use high min_points to keep test fast
-  storms <- suppressMessages(tc_read_hurdat2(filepath, min_points = 80))
-
-  # Should work directly with tc_trajectories
-  trj <- suppressMessages(
-    tc_trajectories(storms, traj_id = "storm_id",
-                    x = "lon", y = "lat", coord_type = "geographic")
-  )
-  expect_s3_class(trj, "tc_trajectories")
-})
-
 # =============================================================================
 # min_points filtering
 # =============================================================================

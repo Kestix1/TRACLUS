@@ -73,17 +73,6 @@ test_that(".validate_dist_inputs: valid inputs — no error", {
   )
 })
 
-test_that(".validate_dist_inputs: NA in si — error", {
-  expect_error(
-    TRACLUS:::.validate_dist_inputs(
-      si = c(NA, 0), ei = c(1, 0),
-      sj = c(0, 1), ej = c(1, 1),
-      method = "euclidean"
-    ),
-    "finite"
-  )
-})
-
 test_that(".validate_dist_inputs: Inf in ej — error", {
   expect_error(
     TRACLUS:::.validate_dist_inputs(
@@ -95,17 +84,6 @@ test_that(".validate_dist_inputs: Inf in ej — error", {
   )
 })
 
-test_that(".validate_dist_inputs: wrong-length si — error", {
-  expect_error(
-    TRACLUS:::.validate_dist_inputs(
-      si = c(0, 0, 0), ei = c(1, 0),
-      sj = c(0, 1), ej = c(1, 1),
-      method = "euclidean"
-    ),
-    "si"
-  )
-})
-
 test_that(".validate_dist_inputs: non-numeric sj — error", {
   expect_error(
     TRACLUS:::.validate_dist_inputs(
@@ -114,17 +92,6 @@ test_that(".validate_dist_inputs: non-numeric sj — error", {
       method = "euclidean"
     ),
     "sj"
-  )
-})
-
-test_that(".validate_dist_inputs: invalid method — error", {
-  expect_error(
-    TRACLUS:::.validate_dist_inputs(
-      si = c(0, 0), ei = c(1, 0),
-      sj = c(0, 1), ej = c(1, 1),
-      method = "great_circle"
-    ),
-    "'method'"
   )
 })
 

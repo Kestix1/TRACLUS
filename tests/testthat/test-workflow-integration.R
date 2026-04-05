@@ -87,36 +87,6 @@ test_that("re-clustering same partitions with different params works", {
 # Geographic workflow
 # =============================================================================
 
-test_that("full geographic workflow produces valid results", {
-  geo <- generate_geo_trajectories()
-
-  trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic")
-  )
-  expect_equal(trj$method, "haversine")
-
-  parts <- suppressMessages(tc_partition(trj))
-  expect_true(parts$n_segments > 0)
-
-  # Use a large eps (in meters) for geographic data
-  clust <- suppressMessages(
-    suppressWarnings(tc_cluster(parts, eps = 500000, min_lns = 2))
-  )
-  expect_s3_class(clust, "tc_clusters")
-
-  repr <- suppressMessages(suppressWarnings(tc_represent(clust)))
-  expect_s3_class(repr, "tc_representatives")
-
-  # Coordinates should still be in lon/lat
-  if (repr$n_clusters > 0) {
-    expect_true(all(repr$representatives$rx >= -180 &
-                    repr$representatives$rx <= 180))
-    expect_true(all(repr$representatives$ry >= -90 &
-                    repr$representatives$ry <= 90))
-  }
-})
-
 # =============================================================================
 # HURDAT2 workflow
 # =============================================================================
@@ -150,62 +120,6 @@ test_that("HURDAT2 to TRACLUS pipeline works", {
   expect_s3_class(repr, "tc_representatives")
 })
 
-# =============================================================================
-# HURDAT2 with method = "projected" (performance-optimized geographic)
-# =============================================================================
-
-test_that("HURDAT2 pipeline with method = 'projected' works end-to-end", {
-  filepath <- system.file("extdata", "hurdat2_1950_2004.txt",
-                          package = "TRACLUS")
-  skip_if(filepath == "", "HURDAT2 test file not found")
-
-  storms <- suppressMessages(tc_read_hurdat2(filepath, min_points = 80))
-
-  trj <- suppressMessages(
-    tc_trajectories(storms, traj_id = "storm_id",
-                    x = "lon", y = "lat", coord_type = "geographic",
-                    method = "projected")
-  )
-  expect_equal(trj$method, "projected")
-  expect_false(is.null(trj$proj_params))
-
-  parts <- suppressMessages(tc_partition(trj))
-  expect_true(parts$n_segments > 0)
-  # Segments should still be in lon/lat (not meters)
-  expect_true(all(parts$segments$sx >= -180 & parts$segments$sx <= 180))
-
-  clust <- suppressMessages(suppressWarnings(
-    tc_cluster(parts, eps = 500000, min_lns = 2)
-  ))
-  expect_s3_class(clust, "tc_clusters")
-
-  repr <- suppressMessages(suppressWarnings(tc_represent(clust)))
-  expect_s3_class(repr, "tc_representatives")
-  # Representative coordinates should also be in lon/lat
-  if (nrow(repr$representatives) > 0) {
-    expect_true(all(repr$representatives$rx >= -180 &
-                    repr$representatives$rx <= 180))
-  }
-})
-
-# =============================================================================
-# Pipe chain
-# =============================================================================
-
-test_that("pipe chain works with |>", {
-  toy <- generate_toy_trajectories()
-
-  # Using base pipe
-  result <- suppressMessages(suppressWarnings({
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean") |>
-      tc_partition() |>
-      tc_cluster(eps = 25, min_lns = 3) |>
-      tc_represent()
-  }))
-
-  expect_s3_class(result, "tc_representatives")
-})
 
 # =============================================================================
 # Parameter estimation integration

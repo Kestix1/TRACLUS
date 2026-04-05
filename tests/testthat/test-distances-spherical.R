@@ -388,3 +388,40 @@ test_that("B24 / H-5: d_angle_sph zero-length Li returns 0 via swap", {
   expect_equal(d, 0.0, tolerance = 1)
   expect_false(is.nan(d))
 })
+
+# =============================================================================
+# New tests: MEDIUM + LOW gaps (Session 2)
+# =============================================================================
+
+test_that("B26 / M-1: haversine warns on latitude out of range (> 90)", {
+  # y-coordinate (latitude) > 90 is outside valid haversine range
+  expect_warning(
+    tc_dist_segments(c(0, 95), c(5, 95), c(0, 0), c(5, 0),
+                     method = "haversine"),
+    "Latitude"
+  )
+})
+
+test_that("B27 / M-1: haversine warns on longitude out of range (> 180)", {
+  # x-coordinate (longitude) > 180 is outside valid haversine range
+  expect_warning(
+    tc_dist_segments(c(185, 0), c(190, 0), c(0, 0), c(5, 0),
+                     method = "haversine"),
+    "Longitude"
+  )
+})
+
+test_that("B20 / L-3: d_angle_sph bearing diff normalised to [0°, 180°]", {
+  # Li heading ~359° (NNW): si=(0,0), ei=(-0.001, 0.1)
+  # Lj heading ~1°  (NNE): si=(5,0), ei=(5.001, 0.1)
+  # Naive bearing diff = |359 - 1| = 358° (> 180)
+  # Normalised: 360 - 358 = 2° → d = len_j * sin(2°)  ≈  0.035 * len_j
+  # Without normalisation: diff > 90° → d = len_j (full segment length)
+  li_s <- c(0, 0);    li_e <- c(-0.001, 0.1)
+  lj_s <- c(5, 0);    lj_e <- c(5.001, 0.1)
+  len_j <- TRACLUS:::.r_haversine(lj_s, lj_e)
+  d <- tc_dist_angle(li_s, li_e, lj_s, lj_e, method = "haversine")
+  # With correct normalisation the angle distance is a small fraction of len_j
+  expect_gte(d, 0)
+  expect_lt(d, len_j * 0.1)   # << len_j confirms normalisation occurred
+})

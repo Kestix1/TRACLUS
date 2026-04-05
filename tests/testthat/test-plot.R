@@ -482,3 +482,39 @@ test_that("tc_leaflet.tc_traclus dispatches to tc_representatives", {
   call_methods <- vapply(map$x$calls, `[[`, character(1), "method")
   expect_true("addPolylines" %in% call_methods)
 })
+
+# =============================================================================
+# New tests: MEDIUM gaps (Session 2)
+# =============================================================================
+
+test_that("I23 / M-7: tc_leaflet emits message for >10 clusters (tc_clusters)", {
+  skip_if_not_installed("leaflet")
+  skip_if_not_installed("viridisLite")
+
+  geo  <- generate_geo_trajectories()
+  trj  <- suppressMessages(
+    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
+                    coord_type = "geographic", verbose = FALSE)
+  )
+  parts <- suppressMessages(tc_partition(trj))
+  clust <- suppressMessages(suppressWarnings(
+    tc_cluster(parts, eps = 500000, min_lns = 2)
+  ))
+
+  # Inject 11 distinct cluster IDs so the >10 legend-suppression path fires
+  n_target <- 11L
+  segs <- clust$segments
+  if (nrow(segs) < n_target) {
+    extra <- segs[rep(1L, n_target - nrow(segs)), ]
+    segs  <- rbind(segs, extra)
+    rownames(segs) <- NULL
+  } else {
+    segs <- segs[seq_len(n_target), ]
+  }
+  segs$cluster_id  <- seq_len(n_target)
+  clust$segments   <- segs
+  clust$n_clusters <- n_target
+  clust$n_noise    <- 0L
+
+  expect_message(tc_leaflet(clust), "Legend suppressed")
+})

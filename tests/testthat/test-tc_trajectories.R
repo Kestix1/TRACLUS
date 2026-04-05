@@ -435,22 +435,6 @@ test_that("dedup then short-traj removal chain works correctly", {
   expect_false("B" %in% trj$data$traj_id)
 })
 
-test_that("warning truncates IDs to first 5", {
-  # Create 10 trajectories each with only 1 point
-  # Plus 2 valid trajectories
-  df <- data.frame(
-    traj_id = c(paste0("SHORT_", 1:10), "VALID_A", "VALID_A", "VALID_A",
-                "VALID_B", "VALID_B", "VALID_B"),
-    x = c(1:10, 0, 1, 2, 3, 4, 5),
-    y = c(1:10, 0, 1, 2, 3, 4, 5)
-  )
-  expect_warning(
-    trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                           coord_type = "euclidean", verbose = FALSE),
-    "and \\d+ more"
-  )
-})
-
 # --- Antimeridian warning ---
 
 test_that("antimeridian crossing produces warning for geographic data", {
@@ -512,5 +496,120 @@ test_that("traclus_toy dataset loads and works", {
                          coord_type = "euclidean", verbose = FALSE)
   expect_s3_class(trj, "tc_trajectories")
   expect_equal(trj$n_trajectories, 6L)
+})
+
+# =============================================================================
+# New tests: MEDIUM + LOW gaps (Session 2)
+# =============================================================================
+
+test_that("D09 / M-2: non-numeric y column gives error", {
+  bad <- data.frame(traj_id = rep("A", 3), x = c(1, 2, 3),
+                    y = c("a", "b", "c"), stringsAsFactors = FALSE)
+  expect_error(
+    tc_trajectories(bad, traj_id = "traj_id", x = "x", y = "y",
+                    coord_type = "euclidean", verbose = FALSE),
+    "numeric"
+  )
+})
+
+test_that("D18 / M-3: sf POINT Z input emits message about dropping Z dimension", {
+  skip_if_not_installed("sf")
+  pts <- data.frame(
+    id  = rep(c("A", "B"), each = 3),
+    x   = c(0, 1, 2, 3, 4, 5),
+    y   = c(0, 1, 2, 3, 4, 5),
+    z   = c(10, 20, 30, 10, 20, 30)
+  )
+  sf_pts <- sf::st_as_sf(pts, coords = c("x", "y", "z"))
+  sf_pts <- sf::st_set_crs(sf_pts, 3857)  # projected CRS → euclidean
+  expect_message(
+    tc_trajectories(sf_pts, traj_id = "id", verbose = FALSE),
+    "Z/M"
+  )
+})
+
+test_that("D19 / M-3: sf non-POINT geometry gives error", {
+  skip_if_not_installed("sf")
+  line_sf <- sf::st_sf(
+    id       = c("A", "B"),
+    geometry = sf::st_sfc(
+      sf::st_linestring(rbind(c(-80, 25), c(-78, 26), c(-76, 27))),
+      sf::st_linestring(rbind(c(-82, 24), c(-80, 25), c(-78, 26)))
+    ),
+    crs = 4326
+  )
+  expect_error(
+    tc_trajectories(line_sf, traj_id = "id", verbose = FALSE),
+    "POINT"
+  )
+})
+
+test_that("D24 / M-4: non-consecutive duplicate points are NOT removed", {
+  # Traj A: (0,0),(1,1),(0,0),(2,2) — identical points at pos 1 and 3 are
+  # non-consecutive (pos 2 differs) → all 4 points must be retained.
+  df <- data.frame(
+    traj_id = c(rep("A", 4), rep("B", 3)),
+    x       = c(0, 1, 0, 2,   3, 4, 5),
+    y       = c(0, 1, 0, 2,   3, 4, 5)
+  )
+  trj    <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
+                             coord_type = "euclidean", verbose = FALSE)
+  a_pts  <- trj$data[trj$data$traj_id == "A", ]
+  expect_equal(nrow(a_pts), 4L)
+})
+
+test_that("D29 / M-5: geographic x outside [-180, 180] gives warning", {
+  df <- data.frame(
+    traj_id = rep(c("A", "B"), each = 3),
+    x       = c(185, 186, 187,   10, 11, 12),  # A has longitude > 180
+    y       = c(30, 31, 32,      40, 41, 42)
+  )
+  expect_warning(
+    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
+                    coord_type = "geographic", verbose = FALSE),
+    "outside|\\[-180"
+  )
+})
+
+test_that("D30 / M-5: geographic y outside [-90, 90] gives warning", {
+  # B's x values (100,101,102) exceed 90 to prevent the swap-detection warning,
+  # ensuring only the out-of-range warning fires.
+  df <- data.frame(
+    traj_id = rep(c("A", "B"), each = 3),
+    x       = c(10, 11, 12,    100, 101, 102),
+    y       = c(95, 96, 97,    40,  41,  42)   # A has latitude > 90
+  )
+  expect_warning(
+    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
+                    coord_type = "geographic", verbose = FALSE),
+    "outside|\\[-90"
+  )
+})
+
+test_that("D01 / L-2: missing x gives package-specific error", {
+  toy <- generate_toy_trajectories()
+  expect_error(
+    tc_trajectories(toy, traj_id = "traj_id", y = "y",
+                    coord_type = "euclidean", verbose = FALSE),
+    "x, y, and coord_type are required"
+  )
+})
+
+test_that("D02 / L-2: missing y gives package-specific error", {
+  toy <- generate_toy_trajectories()
+  expect_error(
+    tc_trajectories(toy, traj_id = "traj_id", x = "x",
+                    coord_type = "euclidean", verbose = FALSE),
+    "x, y, and coord_type are required"
+  )
+})
+
+test_that("D03 / L-2: missing coord_type gives package-specific error", {
+  toy <- generate_toy_trajectories()
+  expect_error(
+    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
+                    verbose = FALSE),
+    "x, y, and coord_type are required"
+  )
 })
 
