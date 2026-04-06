@@ -1,6 +1,4 @@
-# =============================================================================
-# Tests for Phase 5: tc_represent (sweep-line representative generation)
-# =============================================================================
+# --- Tests for tc_represent (sweep-line representative generation) ---
 
 # --- Helper: create a clustered toy dataset ---
 make_test_clusters <- function(eps = 25, min_lns = 3) {
@@ -13,9 +11,7 @@ make_test_clusters <- function(eps = 25, min_lns = 3) {
   suppressMessages(suppressWarnings(tc_cluster(parts, eps = eps, min_lns = min_lns)))
 }
 
-# =============================================================================
-# Basic functionality
-# =============================================================================
+# --- Basic functionality ----------------------------------------------------
 
 test_that("tc_represent works on toy data", {
   clust <- make_test_clusters()
@@ -104,9 +100,7 @@ test_that("n_noise and n_clusters are consistent with segments", {
                nrow(repr$segments))
 })
 
-# =============================================================================
-# Parameter handling
-# =============================================================================
+# --- Parameter handling -----------------------------------------------------
 
 test_that("gamma parameter is validated", {
   clust <- make_test_clusters()
@@ -150,9 +144,7 @@ test_that("wrong input class gives informative error", {
   )
 })
 
-# =============================================================================
-# Edge cases
-# =============================================================================
+# --- Edge cases -------------------------------------------------------------
 
 test_that("0 clusters input produces warning and empty representatives", {
   clust <- make_test_clusters()
@@ -241,9 +233,7 @@ test_that("pre-cleanup reference is preserved in clusters element", {
   expect_equal(repr$clusters$n_clusters, clust$n_clusters)
 })
 
-# =============================================================================
-# Sweep-line internals
-# =============================================================================
+# --- Sweep-line internals ---------------------------------------------------
 
 test_that(".compute_average_direction returns unit vector", {
   dir <- TRACLUS:::.compute_average_direction(
@@ -329,9 +319,7 @@ test_that(".sweep_line_representative handles segments in opposite directions", 
   expect_true(nrow(result) >= 2)
 })
 
-# =============================================================================
-# Equirectangular projection
-# =============================================================================
+# --- Equirectangular projection ---------------------------------------------
 
 test_that(".equirectangular_proj and _inverse are inverses", {
   lon <- c(-74.006, -73.935, -73.870)
@@ -352,9 +340,7 @@ test_that(".equirectangular_proj produces meter-scale values", {
   expect_equal(proj$x, 0, tolerance = 1e-10)
 })
 
-# =============================================================================
-# Print and summary
-# =============================================================================
+# --- Print and summary ------------------------------------------------------
 
 test_that("print.tc_representatives works", {
   clust <- make_test_clusters()
@@ -385,9 +371,7 @@ test_that("summary.tc_representatives works with 0 clusters", {
   expect_true(any(grepl("Clusters:.*0", out)))
 })
 
-# =============================================================================
-# Verbose control
-# =============================================================================
+# --- Verbose control --------------------------------------------------------
 
 test_that("verbose = TRUE produces message", {
   clust <- make_test_clusters()
@@ -521,9 +505,7 @@ test_that("golden: gamma spacing and exit-event waypoints", {
   expect_equal(result$ry, c(1.0, 1.5), tolerance = 1e-10)
 })
 
-# =============================================================================
-# Trajectory diversity fix (F1: sweep-line trajectory-diversity check)
-# =============================================================================
+# --- Trajectory diversity fix (sweep-line trajectory-diversity check) -------
 
 test_that("diversity fix: consecutive same-trajectory segments produce no representative", {
   # 3 consecutive segments from the SAME trajectory, sharing endpoints.
@@ -599,9 +581,7 @@ test_that("diversity fix: high min_lns with many trajectories is unchanged", {
   expect_equal(result$ry, c(1.0, 1.5, 1.5, 1.5, 1.5), tolerance = 1e-10)
 })
 
-# =============================================================================
-# Pipe compatibility
-# =============================================================================
+# --- Pipe compatibility -----------------------------------------------------
 
 test_that("tc_represent result can be printed invisibly", {
   clust <- make_test_clusters()
@@ -612,11 +592,7 @@ test_that("tc_represent result can be printed invisibly", {
 })
 
 
-# =============================================================================
-# New tests: MEDIUM gaps (Session 2)
-# =============================================================================
-
-test_that("G13 / M-6: geographic haversine representation — representatives in valid lon/lat range", {
+test_that("geographic haversine representation: representatives in valid lon/lat range", {
   geo  <- generate_geo_trajectories()
   trj  <- suppressMessages(
     tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",

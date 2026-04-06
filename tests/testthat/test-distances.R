@@ -1,7 +1,5 @@
-# =============================================================================
-# Tests for R-reference euclidean distance functions
+# --- Tests for R-reference euclidean distance functions ---
 # Paper Definitions 1, 2, 3 and weighted total distance
-# =============================================================================
 
 test_that("perpendicular distance: parallel horizontal segments", {
   # Two parallel horizontal segments at y=0 and y=5.
@@ -333,11 +331,7 @@ test_that("golden: weighted total distance for Pair A and Pair B", {
   )
 })
 
-# =============================================================================
-# New tests: CRITICAL + HIGH gaps (Session 1)
-# =============================================================================
-
-test_that("A33 / C-1: all weights = 0 yields distance 0 for any segment pair", {
+test_that("all weights = 0 yields distance 0 for any segment pair", {
   # With w_perp=w_par=w_angle=0, tc_dist_segments returns 0 regardless of geometry
   d1 <- tc_dist_segments(c(0, 0), c(10, 0), c(0, 5), c(10, 5),
                          w_perp = 0, w_par = 0, w_angle = 0)
@@ -354,7 +348,7 @@ test_that("A33 / C-1: all weights = 0 yields distance 0 for any segment pair", {
   expect_equal(d3, 0.0)
 })
 
-test_that("A10 / H-1: d_perp l1=l2=0 Lehmer guard returns 0 not NaN", {
+test_that("d_perp: l1=l2=0 Lehmer guard returns 0 not NaN", {
   # Both Lj endpoints are exactly on the line through Li → l1 = l2 = 0
   # Lehmer mean would be 0/0 without the guard; guard must return 0
   d <- tc_dist_perpendicular(c(0, 0), c(10, 0), c(2, 0), c(8, 0))
@@ -368,7 +362,7 @@ test_that("A10 / H-1: d_perp l1=l2=0 Lehmer guard returns 0 not NaN", {
   expect_false(is.nan(d2))
 })
 
-test_that("A26 / H-2: zero-length Li (before swap) returns 0 via swap convention", {
+test_that("zero-length Li (before swap) returns 0 via swap convention", {
   # si == ei (zero-length i segment), sj != ej (positive-length j segment)
   # Swap: j becomes new Li (length > 0), i becomes new Lj (length 0)
   # → len_j < 1e-15 guard fires → returns 0
@@ -404,11 +398,7 @@ test_that("golden: swap symmetry — dist(Li,Lj) == dist(Lj,Li)", {
   )
 })
 
-# =============================================================================
-# New tests: LOW gaps (Session 2)
-# =============================================================================
-
-test_that("A38 / L-1: TRACLUS d_perp can violate the triangle inequality (not a metric)", {
+test_that("TRACLUS d_perp can violate the triangle inequality (not a metric)", {
   # Concrete counter-example:
   #   A = (0,0)->(100,0)   horizontal, length 100
   #   B = (50,0)->(50,100) vertical,   length 100

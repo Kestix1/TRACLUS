@@ -1,6 +1,4 @@
-# =============================================================================
-# Tests for Phase 7: plot methods and tc_leaflet
-# =============================================================================
+# --- Tests for plot methods and tc_leaflet ---
 
 # --- Helpers ---
 make_full_workflow <- function() {
@@ -38,9 +36,7 @@ make_estimate <- function() {
   suppressMessages(tc_estimate_params(parts))
 }
 
-# =============================================================================
-# plot.tc_trajectories
-# =============================================================================
+# --- plot.tc_trajectories ---
 
 test_that("plot.tc_trajectories runs without error", {
   wf <- make_full_workflow()
@@ -58,9 +54,7 @@ test_that("plot.tc_trajectories accepts ... args", {
   expect_no_error(plot(wf$trj, main = "Custom Title", xlim = c(0, 80)))
 })
 
-# =============================================================================
-# plot.tc_partitions
-# =============================================================================
+# --- plot.tc_partitions ---
 
 test_that("plot.tc_partitions runs without error", {
   wf <- make_full_workflow()
@@ -78,9 +72,7 @@ test_that("plot.tc_partitions returns invisible(x)", {
   expect_s3_class(result, "tc_partitions")
 })
 
-# =============================================================================
-# plot.tc_clusters
-# =============================================================================
+# --- plot.tc_clusters ---
 
 test_that("plot.tc_clusters runs without error", {
   wf <- make_full_workflow()
@@ -107,9 +99,7 @@ test_that("plot.tc_clusters handles 0 clusters", {
   expect_no_error(plot(wf$clust))
 })
 
-# =============================================================================
-# plot.tc_representatives
-# =============================================================================
+# --- plot.tc_representatives ---
 
 test_that("plot.tc_representatives runs in default mode", {
   wf <- make_full_workflow()
@@ -148,9 +138,7 @@ test_that("plot.tc_representatives handles 0 clusters", {
   expect_no_error(plot(wf$repr))
 })
 
-# =============================================================================
-# plot.tc_traclus — S3 dispatch to tc_representatives
-# =============================================================================
+# --- plot.tc_traclus — S3 dispatch to tc_representatives ---
 
 test_that("plot.tc_traclus dispatches to tc_representatives", {
   result <- make_traclus_result()
@@ -166,9 +154,7 @@ test_that("plot.tc_traclus accepts show_clusters parameter", {
   expect_no_error(plot(result, show_clusters = TRUE))
 })
 
-# =============================================================================
-# tc_plot — convenience wrapper
-# =============================================================================
+# --- tc_plot — convenience wrapper ---
 
 test_that("tc_plot() dispatches to plot methods", {
   wf <- make_full_workflow()
@@ -203,9 +189,7 @@ test_that("tc_plot() does not forward show_clusters to tc_trajectories", {
   expect_no_error(tc_plot(wf$clust))
 })
 
-# =============================================================================
-# plot.tc_estimate
-# =============================================================================
+# --- plot.tc_estimate ---
 
 test_that("plot.tc_estimate runs without error", {
   est <- make_estimate()
@@ -223,9 +207,7 @@ test_that("plot.tc_estimate accepts ... args", {
   expect_no_error(plot(est, main = "Custom Entropy Plot"))
 })
 
-# =============================================================================
-# asp computation
-# =============================================================================
+# --- asp computation ---
 
 test_that(".compute_asp returns 1 for euclidean", {
   asp <- TRACLUS:::.compute_asp("euclidean", c(0, 10, 20))
@@ -238,9 +220,7 @@ test_that(".compute_asp returns cos-corrected value for geographic", {
   expect_equal(asp, expected, tolerance = 1e-10)
 })
 
-# =============================================================================
-# tc_leaflet — basic checks (skip if leaflet not available)
-# =============================================================================
+# --- tc_leaflet — basic checks (skip if leaflet not available) ---
 
 test_that("plot.tc_representatives draws noise (incl. degraded) without error", {
   wf <- make_full_workflow()
@@ -254,9 +234,7 @@ test_that("plot.tc_representatives draws noise (incl. degraded) without error", 
   expect_no_error(plot(repr, show_clusters = TRUE))
 })
 
-# =============================================================================
-# Legend suppression with >10 clusters
-# =============================================================================
+# --- Legend suppression with >10 clusters ---
 
 test_that("plot.tc_clusters suppresses legend when >10 clusters", {
   wf <- make_full_workflow()
@@ -483,11 +461,7 @@ test_that("tc_leaflet.tc_traclus dispatches to tc_representatives", {
   expect_true("addPolylines" %in% call_methods)
 })
 
-# =============================================================================
-# New tests: MEDIUM gaps (Session 2)
-# =============================================================================
-
-test_that("I23 / M-7: tc_leaflet emits message for >10 clusters (tc_clusters)", {
+test_that("tc_leaflet emits message for >10 clusters (tc_clusters)", {
   skip_if_not_installed("leaflet")
   skip_if_not_installed("viridisLite")
 

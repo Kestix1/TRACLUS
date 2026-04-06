@@ -1,6 +1,4 @@
-# =============================================================================
-# Tests for print and summary methods
-# =============================================================================
+# --- Tests for print and summary methods ---
 
 # --- Helpers ---
 make_full_workflow <- function() {
@@ -17,9 +15,7 @@ make_full_workflow <- function() {
   list(trj = trj, parts = parts, clust = clust, repr = repr)
 }
 
-# =============================================================================
-# print methods: return invisible(x)
-# =============================================================================
+# --- print methods: return invisible(x) ---
 
 test_that("print.tc_clusters returns invisible(x)", {
   wf <- make_full_workflow()
@@ -52,9 +48,7 @@ test_that("print.tc_estimate returns invisible(x)", {
   expect_s3_class(result, "tc_estimate")
 })
 
-# =============================================================================
-# print methods: output content
-# =============================================================================
+# --- print methods: output content ---
 
 test_that("print.tc_trajectories shows trajectory count", {
   wf <- make_full_workflow()
@@ -79,9 +73,7 @@ test_that("print.tc_clusters shows haversine unit for geographic data", {
 })
 
 
-# =============================================================================
-# summary methods: return invisible(object)
-# =============================================================================
+# --- summary methods: return invisible(object) ---
 
 test_that("summary.tc_trajectories returns invisible(object)", {
   wf <- make_full_workflow()
@@ -120,9 +112,7 @@ test_that("summary.tc_traclus returns invisible(object)", {
   expect_s3_class(result, "tc_traclus")
 })
 
-# =============================================================================
-# summary methods: output content
-# =============================================================================
+# --- summary methods: output content ---
 
 test_that("summary.tc_trajectories shows points per traj stats", {
   wf <- make_full_workflow()

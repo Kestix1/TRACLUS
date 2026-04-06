@@ -1,6 +1,4 @@
-# =============================================================================
-# Tests for R-reference spherical (haversine) distance functions
-# =============================================================================
+# --- Tests for R-reference spherical (haversine) distance functions ---
 
 test_that("haversine: known distance London to Paris", {
   # London: (-0.1278, 51.5074), Paris: (2.3522, 48.8566)
@@ -339,11 +337,7 @@ test_that("golden: weighted total distances and symmetry (spherical)", {
   )
 })
 
-# =============================================================================
-# New tests: HIGH gaps (Session 1)
-# =============================================================================
-
-test_that("B08 / H-3: bearing with identical points does not crash", {
+test_that("bearing with identical points does not crash", {
   # atan2(0, 0) in R returns 0, not NaN — verifies no crash and finite result
   b <- TRACLUS:::.r_bearing(c(10, 50), c(10, 50))
   expect_true(is.finite(b))
@@ -357,7 +351,7 @@ test_that("B08 / H-3: bearing with identical points does not crash", {
   expect_gte(d, 0)
 })
 
-test_that("B11 / H-4: cross-track sin_xt clamping prevents NaN on extreme input", {
+test_that("cross-track sin_xt clamping prevents NaN on extreme input", {
   # Near-antipodal geometry stresses sin_xt computation
   # Without clamping sin_xt to [-1,1], asin would produce NaN
   d <- TRACLUS:::.r_cross_track(c(0, 89.9), c(0, 0), c(180, 0))
@@ -365,14 +359,14 @@ test_that("B11 / H-4: cross-track sin_xt clamping prevents NaN on extreme input"
   expect_gte(d, 0)
 })
 
-test_that("B14 / H-4: along-track cos_xt guard prevents division by zero", {
+test_that("along-track cos_xt guard prevents division by zero", {
   # Point ~90 degrees off great circle: cos(angular_xt) ≈ 0
   # Guard returns 0 instead of dividing by near-zero
   d <- TRACLUS:::.r_along_track_signed(c(90, 0), c(0, 0), c(0, 89.9))
   expect_true(is.finite(d))
 })
 
-test_that("B23 / H-5: d_angle_sph zero-length Lj returns 0", {
+test_that("d_angle_sph zero-length Lj returns 0", {
   # sj == ej (zero haversine distance) → len_j < threshold → 0
   d <- tc_dist_angle(c(0, 0), c(5, 0), c(2, 1), c(2, 1),
                      method = "haversine")
@@ -380,7 +374,7 @@ test_that("B23 / H-5: d_angle_sph zero-length Lj returns 0", {
   expect_false(is.nan(d))
 })
 
-test_that("B24 / H-5: d_angle_sph zero-length Li returns 0 via swap", {
+test_that("d_angle_sph zero-length Li returns 0 via swap", {
   # si == ei (zero haversine distance), sj != ej — swap puts zero-length as Lj
   # → len_j < threshold → returns 0
   d <- tc_dist_angle(c(2, 1), c(2, 1), c(0, 0), c(5, 0),
@@ -389,11 +383,7 @@ test_that("B24 / H-5: d_angle_sph zero-length Li returns 0 via swap", {
   expect_false(is.nan(d))
 })
 
-# =============================================================================
-# New tests: MEDIUM + LOW gaps (Session 2)
-# =============================================================================
-
-test_that("B26 / M-1: haversine warns on latitude out of range (> 90)", {
+test_that("haversine warns on latitude out of range (> 90)", {
   # y-coordinate (latitude) > 90 is outside valid haversine range
   expect_warning(
     tc_dist_segments(c(0, 95), c(5, 95), c(0, 0), c(5, 0),
@@ -402,7 +392,7 @@ test_that("B26 / M-1: haversine warns on latitude out of range (> 90)", {
   )
 })
 
-test_that("B27 / M-1: haversine warns on longitude out of range (> 180)", {
+test_that("haversine warns on longitude out of range (> 180)", {
   # x-coordinate (longitude) > 180 is outside valid haversine range
   expect_warning(
     tc_dist_segments(c(185, 0), c(190, 0), c(0, 0), c(5, 0),
@@ -411,7 +401,7 @@ test_that("B27 / M-1: haversine warns on longitude out of range (> 180)", {
   )
 })
 
-test_that("B20 / L-3: d_angle_sph bearing diff normalised to [0°, 180°]", {
+test_that("d_angle_sph bearing diff normalised to [0°, 180°]", {
   # Li heading ~359° (NNW): si=(0,0), ei=(-0.001, 0.1)
   # Lj heading ~1°  (NNE): si=(5,0), ei=(5.001, 0.1)
   # Naive bearing diff = |359 - 1| = 358° (> 180)

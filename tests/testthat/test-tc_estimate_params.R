@@ -1,6 +1,4 @@
-# =============================================================================
-# Tests for tc_estimate_params (parameter estimation via entropy)
-# =============================================================================
+# --- Tests for tc_estimate_params (parameter estimation via entropy) ---
 
 make_test_partitions_for_estimate <- function() {
   toy <- generate_toy_trajectories()
@@ -11,9 +9,7 @@ make_test_partitions_for_estimate <- function() {
   suppressMessages(tc_partition(trj))
 }
 
-# =============================================================================
-# Basic functionality
-# =============================================================================
+# --- Basic functionality ----------------------------------------------------
 
 test_that("tc_estimate_params returns tc_estimate object", {
   parts <- make_test_partitions_for_estimate()
@@ -50,9 +46,7 @@ test_that("optimal eps is within grid range", {
   expect_lte(est$eps, max(est$entropy_df$eps))
 })
 
-# =============================================================================
-# Parameter handling
-# =============================================================================
+# --- Parameter handling -----------------------------------------------------
 
 test_that("custom eps_grid is used", {
   parts <- make_test_partitions_for_estimate()
@@ -111,9 +105,7 @@ test_that("invalid sample_size is rejected", {
   expect_error(tc_estimate_params(parts, sample_size = -5), "'sample_size'")
 })
 
-# =============================================================================
-# Tie-breaking
-# =============================================================================
+# --- Tie-breaking -----------------------------------------------------------
 
 test_that("tie in entropy chooses smallest eps", {
   parts <- make_test_partitions_for_estimate()
@@ -127,9 +119,7 @@ test_that("tie in entropy chooses smallest eps", {
   expect_equal(est$eps, min(min_eps_candidates))
 })
 
-# =============================================================================
-# Print
-# =============================================================================
+# --- Print ------------------------------------------------------------------
 
 test_that("print.tc_estimate works", {
   parts <- make_test_partitions_for_estimate()
@@ -151,9 +141,7 @@ test_that("print.tc_estimate shows non-default weights", {
   expect_true(any(grepl("Weights", out)))
 })
 
-# =============================================================================
-# Verbose
-# =============================================================================
+# --- Verbose ----------------------------------------------------------------
 
 test_that("verbose = TRUE produces message", {
   parts <- make_test_partitions_for_estimate()
@@ -170,15 +158,9 @@ test_that("verbose = FALSE suppresses message", {
   )
 })
 
-# =============================================================================
-# method = "projected"
-# =============================================================================
+# --- Numerical correctness --------------------------------------------------
 
-# =============================================================================
-# New tests: CRITICAL + HIGH gaps (Session 1)
-# =============================================================================
-
-test_that("H01 / C-2: entropy formula -sum(p_i * log2(p_i)) is correctly implemented", {
+test_that("entropy formula -sum(p_i * log2(p_i)) is correctly implemented", {
   # 3 segments with known pairwise distances: d(0,1)=1, d(0,2)=2, d(1,2)=3
   # C++ counts "outside-neighborhood" pairs: pairs where d >= eps (using upper_bound logic)
   # At eps=1.5: pairs with d >= 1.5 are (0,2)=2 and (1,2)=3
@@ -195,7 +177,7 @@ test_that("H01 / C-2: entropy formula -sum(p_i * log2(p_i)) is correctly impleme
   expect_equal(result$mean_nb_sizes[1], 7/3, tolerance = 1e-10)
 })
 
-test_that("H04 / H-10: degenerate eps_grid (q5 >= q95) uses fallback without error", {
+test_that("degenerate eps_grid (q5 >= q95) uses fallback without error", {
   # All identical trajectories → all pairwise segment distances = 0
   # → q5 = q95 = 0 → fallback: q5*0.5=0, q95*1.5=0, still degenerate
   # → second guard: q95 = q5 + 1 = 1
@@ -218,7 +200,7 @@ test_that("H04 / H-10: degenerate eps_grid (q5 >= q95) uses fallback without err
   expect_equal(nrow(est$entropy_df), 50L)
 })
 
-test_that("H07 / H-11: min_lns formula ceiling(mean_nb_size) + 1 applied correctly", {
+test_that("min_lns formula ceiling(mean_nb_size) + 1 applied correctly", {
   # Directly test the C++ helper: 3 segments, all pairs OUTSIDE eps neighborhood
   # C++ counts pairs where d >= eps (outside-neighborhood semantics via upper_bound)
   # pair_dists = c(2,2,2), eps = 1.5 → all 3 pairs have d=2 >= 1.5 → all counted

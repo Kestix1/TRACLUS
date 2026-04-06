@@ -1,10 +1,7 @@
-# =============================================================================
-# Test data generators for TRACLUS unit tests
-#
+# --- Test data generators for TRACLUS unit tests ---
 # All generators return deterministic data suitable for testing.
 # Each test file should use these generators to avoid duplicating
 # test data definitions.
-# =============================================================================
 
 #' Generate simple euclidean toy trajectories
 #'

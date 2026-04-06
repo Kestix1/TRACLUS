@@ -1,6 +1,4 @@
-# =============================================================================
-# Tests for Phase 4: tc_cluster (DBSCAN clustering of line segments)
-# =============================================================================
+# --- Tests for tc_cluster (DBSCAN clustering of line segments) ---
 
 # --- Helper: create a partitioned toy dataset for clustering tests ---
 make_test_partitions <- function() {
@@ -12,9 +10,7 @@ make_test_partitions <- function() {
   suppressMessages(tc_partition(trj))
 }
 
-# =============================================================================
-# Basic functionality
-# =============================================================================
+# --- Basic functionality ----------------------------------------------------
 
 test_that("tc_cluster works on toy data with reasonable parameters", {
   parts <- make_test_partitions()
@@ -108,9 +104,7 @@ test_that("TR6 (vertical outlier) is noise with appropriate params", {
               info = "TR6 (vertical outlier) should be classified as noise")
 })
 
-# =============================================================================
-# Parameter validation
-# =============================================================================
+# --- Parameter validation ---------------------------------------------------
 
 test_that("missing eps and min_lns gives custom error message", {
   parts <- make_test_partitions()
@@ -170,9 +164,7 @@ test_that("wrong input class gives informative error", {
   )
 })
 
-# =============================================================================
-# Edge cases
-# =============================================================================
+# --- Edge cases -------------------------------------------------------------
 
 test_that("very small eps produces 0 clusters with warning", {
   parts <- make_test_partitions()
@@ -254,9 +246,7 @@ test_that("custom weights influence clustering", {
   expect_s3_class(clust2, "tc_clusters")
 })
 
-# =============================================================================
-# DBSCAN expansion logic
-# =============================================================================
+# --- DBSCAN expansion logic -------------------------------------------------
 
 test_that(".dbscan_expand correctly identifies clusters in simple case", {
   # 5 segments: 1-2-3 form a chain, 4-5 form another chain, no connection.
@@ -326,9 +316,7 @@ test_that(".renumber_clusters handles all-noise input", {
   expect_equal(result, c(0L, 0L, 0L))
 })
 
-# =============================================================================
-# Neighbourhood computation (C++)
-# =============================================================================
+# --- Neighbourhood computation (C++) ----------------------------------------
 
 test_that("C++ neighbourhood computation returns correct structure", {
   parts <- make_test_partitions()
@@ -419,9 +407,7 @@ test_that("eps near-zero yields empty neighbourhoods", {
   expect_equal(total_neighbours, 0L)
 })
 
-# =============================================================================
-# Print and summary
-# =============================================================================
+# --- Print and summary ------------------------------------------------------
 
 test_that("print.tc_clusters works", {
   parts <- make_test_partitions()
@@ -474,9 +460,7 @@ test_that("summary.tc_clusters works with 0 clusters", {
   expect_true(any(grepl("Clusters:.*0", out)))
 })
 
-# =============================================================================
-# Verbose control
-# =============================================================================
+# --- Verbose control --------------------------------------------------------
 
 test_that("verbose = TRUE produces message", {
   parts <- make_test_partitions()
@@ -493,9 +477,7 @@ test_that("verbose = FALSE suppresses message", {
   )
 })
 
-# =============================================================================
-# Pipe compatibility
-# =============================================================================
+# --- Pipe compatibility -----------------------------------------------------
 
 test_that("tc_cluster result can be printed invisibly", {
   parts <- make_test_partitions()
@@ -648,11 +630,7 @@ test_that("golden: two segments with min_lns=2 form a cluster (self-inclusive)",
   expect_equal(clust$segments$cluster_id, c(1L, 1L))
 })
 
-# =============================================================================
-# New tests: CRITICAL gaps (Session 1)
-# =============================================================================
-
-test_that("F13 / C-1: all weights = 0 yields all distances 0 → one giant cluster", {
+test_that("all weights = 0 yields all distances 0 — one giant cluster", {
   # With w_perp=w_par=w_angle=0, every segment pair has distance 0.
   # Any eps > 0 makes all segments mutual neighbours → one cluster, zero noise.
   parts <- make_test_partitions()

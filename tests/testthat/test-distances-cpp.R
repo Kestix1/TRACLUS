@@ -1,8 +1,6 @@
-# =============================================================================
-# Tests for R vs C++ consistency of distance functions
+# --- Tests for R vs C++ consistency of distance functions ---
 # Tolerance of 1e-10 accounts for floating-point differences between
 # R and compiled C++ code.
-# =============================================================================
 
 # --- Euclidean: R vs C++ ---
 
@@ -171,11 +169,7 @@ test_that("C++ traclus_dist_sph matches R reference (no early termination)", {
   }
 })
 
-# =============================================================================
-# New tests: CRITICAL + HIGH gaps (Session 1)
-# =============================================================================
-
-test_that("C07 / C-4: early termination fires after d_perp alone exceeds eps", {
+test_that("early termination fires after d_perp alone exceeds eps", {
   # Li=(0,0)-(10,0), Lj=(5,3)-(5,7): d_perp=5.8, d_par=5, d_angle=4
   # With eps=1: w_perp*d_perp = 5.8 > 1 → terminate after perp, return 5.8
   si <- c(0, 0); ei <- c(10, 0); sj <- c(5, 3); ej <- c(5, 7)
@@ -188,7 +182,7 @@ test_that("C07 / C-4: early termination fires after d_perp alone exceeds eps", {
   expect_equal(d_perp_only, expected_perp, tolerance = 1e-10)
 })
 
-test_that("C08 / C-4: early termination fires after d_perp + d_par exceeds eps", {
+test_that("early termination fires after d_perp + d_par exceeds eps", {
   # Li=(0,0)-(10,0), Lj=(5,3)-(5,7): d_perp=5.8, d_par=5, d_angle=4
   # eps=8: d_perp=5.8 <= 8, then d_perp+d_par=10.8 > 8 → terminate after par
   si <- c(0, 0); ei <- c(10, 0); sj <- c(5, 3); ej <- c(5, 7)
@@ -208,7 +202,7 @@ test_that("C08 / C-4: early termination fires after d_perp + d_par exceeds eps",
   expect_lt(d_after_par, d_full)
 })
 
-test_that("C10 / H-6: w_perp=0 skips perp component entirely", {
+test_that("w_perp=0 skips perp component entirely", {
   # Perp is skipped → no early termination from it
   # With eps=1 and w_perp=0, w_par=1: only par (d_par=5) triggers early term
   si <- c(0, 0); ei <- c(10, 0); sj <- c(5, 3); ej <- c(5, 7)
@@ -220,7 +214,7 @@ test_that("C10 / H-6: w_perp=0 skips perp component entirely", {
   expect_equal(d_no_perp, tc_dist_parallel(si, ei, sj, ej), tolerance = 1e-10)
 })
 
-test_that("C11 / H-6: w_par=0 skips par component entirely", {
+test_that("w_par=0 skips par component entirely", {
   # Par is skipped; perp (5.8) > eps (1) → early term after perp
   si <- c(0, 0); ei <- c(10, 0); sj <- c(5, 3); ej <- c(5, 7)
   d_no_par <- TRACLUS:::.cpp_traclus_dist_euc(
@@ -230,7 +224,7 @@ test_that("C11 / H-6: w_par=0 skips par component entirely", {
   expect_equal(d_no_par, tc_dist_perpendicular(si, ei, sj, ej), tolerance = 1e-10)
 })
 
-test_that("C12 / H-6: w_angle=0 skips angle component entirely", {
+test_that("w_angle=0 skips angle component entirely", {
   # Angle skipped → full result = d_perp + d_par only
   si <- c(0, 0); ei <- c(10, 0); sj <- c(5, 3); ej <- c(5, 7)
   d_no_angle <- TRACLUS:::.cpp_traclus_dist_euc(

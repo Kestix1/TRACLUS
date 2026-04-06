@@ -1,16 +1,13 @@
-# =============================================================================
-# Golden-Value Test Scenarios
-# =============================================================================
-# 9 phasenuebergreifende End-to-End-Tests mit exakt berechneten Erwartungs-
-# werten. Jedes Szenario testet eine spezifische TRACLUS-Eigenschaft.
-# Alle erwarteten Werte sind von Hand berechnet und gegen das Paper verifiziert
+# --- Golden-value test scenarios ---
+# End-to-end tests with analytically computed expected values.
+# Each scenario tests a specific TRACLUS property.
+# All expected values are computed by hand and verified against the paper
 # (Lee, Han & Whang 2007).
 #
 # Notation:
 #   Phase 1 = tc_partition  (MDL)
 #   Phase 2 = tc_cluster    (DBSCAN)
 #   Phase 3 = tc_represent  (Sweep-Line)
-# =============================================================================
 
 # --- Shared helper: build trajectories from coordinate vectors ---
 make_trajs <- function(ids, xs, ys) {
@@ -19,9 +16,7 @@ make_trajs <- function(ids, xs, ys) {
                   coord_type = "euclidean", verbose = FALSE)
 }
 
-# =============================================================================
-# Szenario 1 | Zwei parallele, identisch lange Segmente
-# =============================================================================
+# --- Scenario 1 | Two parallel, equal-length segments ---
 # T1: (0,0) -> (10,0)      T2: (0,1) -> (10,1)
 # dist = d_perp(1) + d_par(0) + d_angle(0) = 1.0
 
@@ -80,9 +75,7 @@ test_that("S01 Phase3: representative is midline y=0.5", {
   expect_equal(reps$ry, c(0.5, 0.5), tolerance = 1e-10)
 })
 
-# =============================================================================
-# Szenario 3 | Die Gegenfahrbahn (180 deg)
-# =============================================================================
+# --- Scenario 3 | Opposing-direction segments (180 deg) ---
 # T1: (0,0) -> (10,0)  [East]
 # T2: (10,0.5) -> (0,0.5)  [West]
 #
@@ -125,9 +118,7 @@ test_that("S03: distance components verify paper formulas", {
   expect_equal(d_angle, 10.0, tolerance = 1e-10)
 })
 
-# =============================================================================
-# Szenario 4 | Versetzte Segmente mit Overlap-Cutoff
-# =============================================================================
+# --- Scenario 4 | Offset segments with overlap cutoff ---
 # S1: (0,0) -> (10,0)    S2: (2,1) -> (12,1)
 # Directly to .sweep_line_representative, min_lns=2.
 #
@@ -149,9 +140,7 @@ test_that("S04 Phase3: representative only in overlap region", {
   expect_equal(result$ry, c(0.5, 0.5), tolerance = 1e-10)
 })
 
-# =============================================================================
-# Szenario 6 | Der Trichter
-# =============================================================================
+# --- Scenario 6 | The funnel (angular gradient) ---
 # T1: (0,0) -> (10,0)      0 deg,    len = 10
 # T2: (0,1) -> (10,2)    ~ 5.7 deg,  len = sqrt(101)
 # T3: (0,2) -> (10,5)    ~16.7 deg,  len = sqrt(109)
@@ -221,9 +210,7 @@ test_that("S06 Phase3: tilted representative from non-horizontal cluster", {
   expect_true(reps$ry[2] > reps$ry[1])
 })
 
-# =============================================================================
-# Szenario 7 | Die kurze Begegnung
-# =============================================================================
+# --- Scenario 7 | Short overlapping segment ---
 # S1: (0,0) -> (10,0)   len 10
 # S2: (4,1) -> (6,1)    len 2
 # Directly to .sweep_line_representative, min_lns=2.
@@ -246,9 +233,7 @@ test_that("S07 Phase3: short segment determines representative extent", {
   expect_equal(result$ry, c(0.5, 0.5), tolerance = 1e-10)
 })
 
-# =============================================================================
-# Szenario 8 | Die Gabelung
-# =============================================================================
+# --- Scenario 8 | L-shaped trajectory splits into two clusters ---
 # T1: (0,0) -> (5,0) -> (5,5)     L-shape, MDL splits into 2 segments
 # T2: (0,0.5) -> (5,0.5)          parallel to S1a (horizontal)
 # T3: (4.5,0) -> (4.5,5)          parallel to S1b (vertical)
@@ -334,9 +319,7 @@ test_that("S08 Phase3: two independent representatives", {
   }
 })
 
-# =============================================================================
-# Szenario 9 | Vertikale Segmente (dx=0)
-# =============================================================================
+# --- Scenario 9 | Vertical segments (dx=0) ---
 # T1: (0,0) -> (0,10)     T2: (1,0) -> (1,10)
 # dist = d_perp(1) + d_par(0) + d_angle(0) = 1.0
 #
@@ -392,9 +375,7 @@ test_that("S09 Phase3: end-to-end vertical representative", {
   expect_equal(reps$ry, c(0, 10), tolerance = 1e-6)
 })
 
-# =============================================================================
-# Szenario 10 | Einzelne Trajektorie
-# =============================================================================
+# --- Scenario 10 | Single trajectory ---
 # T1: (0,0) -> (10,0)
 # Only 1 segment, |Neps|=1 < min_lns=2 => noise.
 
@@ -431,9 +412,7 @@ test_that("S10: isolated trajectory within multi-traj input is all noise", {
   expect_equal(nrow(repr$representatives), 0)
 })
 
-# =============================================================================
-# Szenario 11 | Eps-Skalierung
-# =============================================================================
+# --- Scenario 11 | Eps scaling: two groups merge at large eps ---
 # Group A: T1-T3 at y = 0, 1, 2   (horizontal, length 10)
 # Group B: T4-T6 at y = 10, 11, 12 (horizontal, length 10)
 #
@@ -512,13 +491,11 @@ test_that("S11 Phase3: one merged representative at eps=15", {
 })
 
 
-# =============================================================================
-# Szenario P1 | method = "projected" — parallele Geo-Trajektorien
-# =============================================================================
-# Zwei parallele Routen (Ost-West bei ~30N), 1 Grad Breitenunterschied.
-# Equirectangulaere Distanz bei lat_mean ≈ 30.5:
+# --- Scenario P1 | method = "projected" — parallel geographic trajectories ---
+# Two parallel east-west routes at ~30N, 1 degree latitude apart.
+# Equirectangular distance at lat_mean ≈ 30.5:
 #   d_perp ≈ 1 * 111320 = 111320 m
-# Bei eps = 200000 m sollten sie clustern; bei eps = 50000 nicht.
+# At eps = 200000 m they should cluster; at eps = 50000 they should not.
 
 make_geo_trajs_for_projected <- function() {
   df <- data.frame(

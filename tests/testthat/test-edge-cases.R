@@ -1,6 +1,4 @@
-# =============================================================================
-# Edge case tests for numerical stability and minimal inputs
-# =============================================================================
+# --- Edge case tests for numerical stability and minimal inputs ---
 
 # --- P9: Numerical instability tests ---
 

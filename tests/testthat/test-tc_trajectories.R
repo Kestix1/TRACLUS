@@ -1,7 +1,4 @@
-# =============================================================================
-# Tests for tc_trajectories() — input validation, sf-handling, coord_type/
-# method resolution, filtering, grouping, edge cases
-# =============================================================================
+# --- Tests for tc_trajectories() — input validation, sf-handling, coord_type/method resolution, filtering, grouping, edge cases ---
 
 # --- Basic happy path ---
 
@@ -450,11 +447,7 @@ test_that("antimeridian crossing produces warning for geographic data", {
   )
 })
 
-# =============================================================================
-# New tests: HIGH gaps (Session 1)
-# =============================================================================
-
-test_that("D04 / H-7: invalid coord_type gives informative error", {
+test_that("invalid coord_type gives informative error", {
   toy <- generate_toy_trajectories()
   expect_error(
     tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
@@ -468,7 +461,7 @@ test_that("D04 / H-7: invalid coord_type gives informative error", {
   )
 })
 
-test_that("D05 / H-8: missing x column gives informative error", {
+test_that("missing x column gives informative error", {
   toy <- generate_toy_trajectories()
   expect_error(
     tc_trajectories(toy, traj_id = "traj_id", x = "lon", y = "y",
@@ -477,7 +470,7 @@ test_that("D05 / H-8: missing x column gives informative error", {
   )
 })
 
-test_that("D06 / H-8: missing y column gives informative error", {
+test_that("missing y column gives informative error", {
   toy <- generate_toy_trajectories()
   expect_error(
     tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "lat",
@@ -498,11 +491,7 @@ test_that("traclus_toy dataset loads and works", {
   expect_equal(trj$n_trajectories, 6L)
 })
 
-# =============================================================================
-# New tests: MEDIUM + LOW gaps (Session 2)
-# =============================================================================
-
-test_that("D09 / M-2: non-numeric y column gives error", {
+test_that("non-numeric y column gives error", {
   bad <- data.frame(traj_id = rep("A", 3), x = c(1, 2, 3),
                     y = c("a", "b", "c"), stringsAsFactors = FALSE)
   expect_error(
@@ -512,7 +501,7 @@ test_that("D09 / M-2: non-numeric y column gives error", {
   )
 })
 
-test_that("D18 / M-3: sf POINT Z input emits message about dropping Z dimension", {
+test_that("sf POINT Z input emits message about dropping Z dimension", {
   skip_if_not_installed("sf")
   pts <- data.frame(
     id  = rep(c("A", "B"), each = 3),
@@ -528,7 +517,7 @@ test_that("D18 / M-3: sf POINT Z input emits message about dropping Z dimension"
   )
 })
 
-test_that("D19 / M-3: sf non-POINT geometry gives error", {
+test_that("sf non-POINT geometry gives error", {
   skip_if_not_installed("sf")
   line_sf <- sf::st_sf(
     id       = c("A", "B"),
@@ -544,7 +533,7 @@ test_that("D19 / M-3: sf non-POINT geometry gives error", {
   )
 })
 
-test_that("D24 / M-4: non-consecutive duplicate points are NOT removed", {
+test_that("non-consecutive duplicate points are NOT removed", {
   # Traj A: (0,0),(1,1),(0,0),(2,2) — identical points at pos 1 and 3 are
   # non-consecutive (pos 2 differs) → all 4 points must be retained.
   df <- data.frame(
@@ -558,7 +547,7 @@ test_that("D24 / M-4: non-consecutive duplicate points are NOT removed", {
   expect_equal(nrow(a_pts), 4L)
 })
 
-test_that("D29 / M-5: geographic x outside [-180, 180] gives warning", {
+test_that("geographic x outside [-180, 180] gives warning", {
   df <- data.frame(
     traj_id = rep(c("A", "B"), each = 3),
     x       = c(185, 186, 187,   10, 11, 12),  # A has longitude > 180
@@ -571,7 +560,7 @@ test_that("D29 / M-5: geographic x outside [-180, 180] gives warning", {
   )
 })
 
-test_that("D30 / M-5: geographic y outside [-90, 90] gives warning", {
+test_that("geographic y outside [-90, 90] gives warning", {
   # B's x values (100,101,102) exceed 90 to prevent the swap-detection warning,
   # ensuring only the out-of-range warning fires.
   df <- data.frame(
@@ -586,7 +575,7 @@ test_that("D30 / M-5: geographic y outside [-90, 90] gives warning", {
   )
 })
 
-test_that("D01 / L-2: missing x gives package-specific error", {
+test_that("missing x gives package-specific error", {
   toy <- generate_toy_trajectories()
   expect_error(
     tc_trajectories(toy, traj_id = "traj_id", y = "y",
@@ -595,7 +584,7 @@ test_that("D01 / L-2: missing x gives package-specific error", {
   )
 })
 
-test_that("D02 / L-2: missing y gives package-specific error", {
+test_that("missing y gives package-specific error", {
   toy <- generate_toy_trajectories()
   expect_error(
     tc_trajectories(toy, traj_id = "traj_id", x = "x",
@@ -604,7 +593,7 @@ test_that("D02 / L-2: missing y gives package-specific error", {
   )
 })
 
-test_that("D03 / L-2: missing coord_type gives package-specific error", {
+test_that("missing coord_type gives package-specific error", {
   toy <- generate_toy_trajectories()
   expect_error(
     tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",

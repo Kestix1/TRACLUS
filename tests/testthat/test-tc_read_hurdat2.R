@@ -1,14 +1,10 @@
-# =============================================================================
-# Tests for tc_read_hurdat2 (HURDAT2 parser)
-# =============================================================================
+# --- Tests for tc_read_hurdat2 (HURDAT2 parser) ---
 
 get_hurdat2_path <- function() {
   system.file("extdata", "hurdat2_1950_2004.txt", package = "TRACLUS")
 }
 
-# =============================================================================
-# Basic functionality
-# =============================================================================
+# --- Basic functionality ---
 
 test_that("tc_read_hurdat2 reads bundled file", {
   filepath <- get_hurdat2_path()
@@ -66,9 +62,7 @@ test_that("latitudes are in valid range", {
   expect_true(all(result$lon >= -180 & result$lon <= 180))
 })
 
-# =============================================================================
-# min_points filtering
-# =============================================================================
+# --- min_points filtering ---
 
 test_that("min_points filters short storms", {
   filepath <- get_hurdat2_path()
@@ -113,9 +107,7 @@ test_that("higher min_points yields fewer storms", {
             length(unique(r50$storm_id)))
 })
 
-# =============================================================================
-# Performance
-# =============================================================================
+# --- Performance ---
 
 test_that("parser reads large file in reasonable time", {
   filepath <- get_hurdat2_path()
@@ -129,9 +121,7 @@ test_that("parser reads large file in reasonable time", {
   expect_lt(elapsed, 10)
 })
 
-# =============================================================================
-# Input validation
-# =============================================================================
+# --- Input validation ---
 
 test_that("non-existent file gives error", {
   expect_error(tc_read_hurdat2("nonexistent_file.txt"),
@@ -150,9 +140,7 @@ test_that("invalid min_points gives error", {
   expect_error(tc_read_hurdat2(filepath, min_points = -1), "'min_points'")
 })
 
-# =============================================================================
-# Coordinate parsing
-# =============================================================================
+# --- Coordinate parsing ---
 
 test_that(".parse_hurdat2_coord handles N/S/E/W correctly", {
   # North latitude: positive

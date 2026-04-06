@@ -1,6 +1,4 @@
-# =============================================================================
-# Tests for tc_traclus (all-in-one wrapper)
-# =============================================================================
+# --- Tests for tc_traclus (all-in-one wrapper) ---
 
 test_that("tc_traclus missing eps/min_lns gives custom error", {
   toy <- generate_toy_trajectories()
@@ -110,7 +108,7 @@ test_that("print.tc_traclus works", {
   expect_true(any(grepl("complete", out)))
 })
 
-test_that("K03 / H-12: tc_traclus() result is identical to manual step-by-step chain", {
+test_that("tc_traclus() result is identical to manual step-by-step chain", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
     tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",

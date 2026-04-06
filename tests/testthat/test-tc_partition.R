@@ -1,6 +1,4 @@
-# =============================================================================
-# Tests for tc_partition() — MDL-based trajectory partitioning (Phase 3)
-# =============================================================================
+# --- Tests for tc_partition() — MDL-based trajectory partitioning ---
 
 test_that("tc_partition works on toy data", {
   trj <- tc_trajectories(generate_toy_trajectories(),
@@ -214,9 +212,7 @@ test_that("summary.tc_partitions works", {
   expect_invisible(summary(parts))
 })
 
-# =============================================================================
-# MDL cost function tests (C++ internals)
-# =============================================================================
+# --- MDL cost function tests (C++ internals) --------------------------------
 
 test_that("safe_log2 clamps values below 1", {
   # For values >= 1, log2 is returned normally
@@ -295,9 +291,7 @@ test_that("partition works with haversine method (single trajectory)", {
   expect_equal(cp, c(1L, 6L))
 })
 
-# =============================================================================
-# Edge cases
-# =============================================================================
+# --- Edge cases -------------------------------------------------------------
 
 test_that("partition handles many trajectories", {
   # Create 20 trajectories
@@ -495,11 +489,7 @@ test_that("golden: full pipeline partitions L-shape at the corner", {
   expect_equal(nrow(l2_segs), 1)
 })
 
-# =============================================================================
-# New tests: HIGH gaps (Session 1)
-# =============================================================================
-
-test_that("E09 / H-9: all segments zero-length after partitioning gives error", {
+test_that("all segments zero-length after partitioning gives error", {
   # Each trajectory has 2 distinct-but-nearly-identical points.
   # 1e-16 is representable as non-zero double: df$x[-1] != df$x[-nrow(df)]
   # → not filtered as consecutive duplicates by tc_trajectories.

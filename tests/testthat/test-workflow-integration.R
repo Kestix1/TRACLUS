@@ -1,10 +1,6 @@
-# =============================================================================
-# Integration tests: full TRACLUS workflow
-# =============================================================================
+# --- Integration tests: full TRACLUS workflow ---
 
-# =============================================================================
-# Euclidean workflow
-# =============================================================================
+# --- Euclidean workflow ---
 
 test_that("full euclidean workflow produces valid results", {
   toy <- generate_toy_trajectories()
@@ -83,13 +79,9 @@ test_that("re-clustering same partitions with different params works", {
   expect_identical(clust1$partitions, clust2$partitions)
 })
 
-# =============================================================================
-# Geographic workflow
-# =============================================================================
+# --- Geographic workflow ---
 
-# =============================================================================
-# HURDAT2 workflow
-# =============================================================================
+# --- HURDAT2 workflow ---
 
 test_that("HURDAT2 to TRACLUS pipeline works", {
   filepath <- system.file("extdata", "hurdat2_1950_2004.txt",
@@ -121,9 +113,7 @@ test_that("HURDAT2 to TRACLUS pipeline works", {
 })
 
 
-# =============================================================================
-# Parameter estimation integration
-# =============================================================================
+# --- Parameter estimation integration ---
 
 test_that("tc_estimate_params integrates with clustering workflow", {
   toy <- generate_toy_trajectories()
@@ -145,11 +135,7 @@ test_that("tc_estimate_params integrates with clustering workflow", {
   expect_s3_class(clust, "tc_clusters")
 })
 
-# =============================================================================
-# New tests: CRITICAL gaps (Session 1)
-# =============================================================================
-
-test_that("K15 / C-3: geographic full pipeline (haversine) end-to-end", {
+test_that("geographic full pipeline (haversine) end-to-end", {
   geo <- generate_geo_trajectories()
 
   # Step 1: Load with geographic coord_type

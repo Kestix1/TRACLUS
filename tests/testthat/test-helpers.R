@@ -1,14 +1,9 @@
-# =============================================================================
-# Dedicated unit tests for complex internal helper functions
-#
+# --- Unit tests for internal helper functions ---
 # Covers: .check_antimeridian(), .validate_dist_inputs(), .truncate_ids()
 # Trivial helpers (.merge_plot_args, .group_by_traj_id, .check_class) are
 # sufficiently covered by the main function tests.
-# =============================================================================
 
-# =============================================================================
-# .check_antimeridian()
-# =============================================================================
+# --- .check_antimeridian() -------------------------------------------------
 
 test_that(".check_antimeridian: no crossing — no warning", {
   df <- data.frame(
@@ -59,9 +54,7 @@ test_that(".check_antimeridian: single-row data.frame — no warning", {
   expect_no_warning(TRACLUS:::.check_antimeridian(df))
 })
 
-# =============================================================================
-# .validate_dist_inputs()
-# =============================================================================
+# --- .validate_dist_inputs() -----------------------------------------------
 
 test_that(".validate_dist_inputs: valid inputs — no error", {
   expect_no_error(
@@ -95,9 +88,7 @@ test_that(".validate_dist_inputs: non-numeric sj — error", {
   )
 })
 
-# =============================================================================
-# .truncate_ids()
-# =============================================================================
+# --- .truncate_ids() -------------------------------------------------------
 
 test_that(".truncate_ids: few IDs — no truncation", {
   result <- TRACLUS:::.truncate_ids(c("A", "B", "C"), max_show = 5)
