@@ -14,7 +14,7 @@
 \item{w_angle}{Weight for angle distance.}
 }
 \value{
-NULL (invisible). Throws \code{stop()} on invalid input.
+\code{NULL} (invisible). Throws \code{stop()} on invalid input.
 }
 \description{
 Checks that w_perp, w_par, and w_angle are non-negative finite numeric

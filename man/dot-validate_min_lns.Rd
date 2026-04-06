@@ -10,7 +10,7 @@
 \item{min_lns}{The min_lns value to validate.}
 }
 \value{
-NULL (invisible). Throws \code{stop()} on invalid input.
+\code{NULL} (invisible). Throws \code{stop()} on invalid input.
 }
 \description{
 Checks that min_lns is a single positive integer (>= 1).

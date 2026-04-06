@@ -10,7 +10,7 @@
 \item{gamma}{The gamma value to validate.}
 }
 \value{
-NULL (invisible). Throws \code{stop()} on invalid input.
+\code{NULL} (invisible). Throws \code{stop()} on invalid input.
 }
 \description{
 Checks that gamma is a single positive finite numeric value.

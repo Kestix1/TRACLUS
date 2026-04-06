@@ -41,9 +41,11 @@ This function calls \code{plot(x, ...)} with S3 dispatch based on the class of
 \code{plot()} for standard R syntax — both produce identical results.
 }
 \examples{
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                       x = "x", y = "y", coord_type = "euclidean")
-tc_plot(trj)  # same as plot(trj)
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
+tc_plot(trj) # same as plot(trj)
 
 }
 \seealso{

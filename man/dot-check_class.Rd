@@ -15,7 +15,7 @@
 (character), used in the error message.}
 }
 \value{
-NULL (invisible). Throws \code{stop()} on class mismatch.
+\code{NULL} (invisible). Throws \code{stop()} on class mismatch.
 }
 \description{
 Checks that the input object has the expected S3 class and throws an

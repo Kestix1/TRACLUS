@@ -1,3 +1,6 @@
+# Maximum number of items to show in plot legends before suppressing
+.legend_max_items <- 10L
+
 #' Plot TRACLUS objects
 #'
 #' Convenience wrapper around the S3 `plot()` methods for TRACLUS objects.
@@ -32,9 +35,11 @@
 #'   only).
 #'
 #' @examples
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                        x = "x", y = "y", coord_type = "euclidean")
-#' tc_plot(trj)  # same as plot(trj)
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
+#' tc_plot(trj) # same as plot(trj)
 #'
 #' @family workflow functions
 #' @export
@@ -63,8 +68,10 @@ tc_plot <- function(x, show_clusters = FALSE, show_points = TRUE, ...) {
 #' @return `x`, invisibly.
 #'
 #' @examples
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                        x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #' plot(trj)
 #'
 #' @name plot.TRACLUS
@@ -121,8 +128,11 @@ plot.tc_trajectories <- function(x, ...) {
   col_map <- stats::setNames(cols, traj_ids)
 
   # Compute asp unless user overrides
-  asp <- if (!is.null(user_args$asp)) user_args$asp else
+  asp <- if (!is.null(user_args$asp)) {
+    user_args$asp
+  } else {
     .compute_asp(x$coord_type, data$y)
+  }
 
   # Set up plot
   labs <- .default_axis_labels(x$coord_type)
@@ -142,14 +152,16 @@ plot.tc_trajectories <- function(x, ...) {
     idx <- data$traj_id == tid
     graphics::lines(data$x[idx], data$y[idx], col = col_map[tid], lwd = 1.5)
     graphics::points(data$x[idx], data$y[idx],
-                     col = col_map[tid], pch = 16, cex = 0.6)
+      col = col_map[tid], pch = 16, cex = 0.6
+    )
   }
 
   # Legend (suppress for >10 trajectories)
-  if (n_trajs <= 10) {
+  if (n_trajs <= .legend_max_items) {
     graphics::legend("bottomright",
-                     legend = traj_ids, col = cols,
-                     lwd = 1.5, cex = 0.7, bg = "white")
+      legend = traj_ids, col = cols,
+      lwd = 1.5, cex = 0.7, bg = "white"
+    )
   }
 
   invisible(x)
@@ -176,8 +188,11 @@ plot.tc_partitions <- function(x, show_points = TRUE, ...) {
 
   all_x <- c(segs$sx, segs$ex)
   all_y <- c(segs$sy, segs$ey)
-  asp <- if (!is.null(user_args$asp)) user_args$asp else
+  asp <- if (!is.null(user_args$asp)) {
+    user_args$asp
+  } else {
     .compute_asp(x$coord_type, all_y)
+  }
 
   labs <- .default_axis_labels(x$coord_type)
   plot_args <- .merge_plot_args(
@@ -195,20 +210,23 @@ plot.tc_partitions <- function(x, show_points = TRUE, ...) {
   for (tid in traj_ids) {
     idx <- segs$traj_id == tid
     graphics::segments(segs$sx[idx], segs$sy[idx],
-                       segs$ex[idx], segs$ey[idx],
-                       col = col_map[tid], lwd = 1.5)
+      segs$ex[idx], segs$ey[idx],
+      col = col_map[tid], lwd = 1.5
+    )
   }
 
   # Characteristic points (start and end of each segment)
   if (show_points) {
     graphics::points(c(segs$sx, segs$ex), c(segs$sy, segs$ey),
-                     pch = 4, cex = 0.8, col = "black")
+      pch = 4, cex = 0.8, col = "black"
+    )
   }
 
-  if (n_trajs <= 10) {
+  if (n_trajs <= .legend_max_items) {
     graphics::legend("bottomright",
-                     legend = traj_ids, col = cols,
-                     lwd = 1.5, cex = 0.7, bg = "white")
+      legend = traj_ids, col = cols,
+      lwd = 1.5, cex = 0.7, bg = "white"
+    )
   }
 
   invisible(x)
@@ -227,12 +245,17 @@ plot.tc_clusters <- function(x, ...) {
 
   all_x <- c(segs$sx, segs$ex)
   all_y <- c(segs$sy, segs$ey)
-  asp <- if (!is.null(user_args$asp)) user_args$asp else
+  asp <- if (!is.null(user_args$asp)) {
+    user_args$asp
+  } else {
     .compute_asp(x$coord_type, all_y)
+  }
 
   eps_unit <- if (x$method %in% c("haversine", "projected")) "m" else ""
-  default_main <- sprintf("TRACLUS Clustering (eps = %g%s, min_lns = %d)",
-                           x$params$eps, eps_unit, x$params$min_lns)
+  default_main <- sprintf(
+    "TRACLUS Clustering (eps = %g%s, min_lns = %d)",
+    x$params$eps, eps_unit, x$params$min_lns
+  )
 
   labs <- .default_axis_labels(x$coord_type)
   plot_args <- .merge_plot_args(
@@ -250,8 +273,9 @@ plot.tc_clusters <- function(x, ...) {
   noise <- is.na(segs$cluster_id)
   if (any(noise)) {
     graphics::segments(segs$sx[noise], segs$sy[noise],
-                       segs$ex[noise], segs$ey[noise],
-                       col = "grey80", lty = 2, lwd = 0.8)
+      segs$ex[noise], segs$ey[noise],
+      col = "grey80", lty = 2, lwd = 0.8
+    )
   }
 
   # Draw clustered segments coloured by cluster
@@ -263,12 +287,13 @@ plot.tc_clusters <- function(x, ...) {
     for (cid in cluster_ids) {
       idx <- segs$cluster_id == cid & !is.na(segs$cluster_id)
       graphics::segments(segs$sx[idx], segs$sy[idx],
-                         segs$ex[idx], segs$ey[idx],
-                         col = col_map[as.character(cid)], lwd = 1.5)
+        segs$ex[idx], segs$ey[idx],
+        col = col_map[as.character(cid)], lwd = 1.5
+      )
     }
 
     # Legend
-    if (length(cluster_ids) <= 10) {
+    if (length(cluster_ids) <= .legend_max_items) {
       leg_labels <- paste("Cluster", cluster_ids)
       leg_cols <- cols
       leg_lty <- rep(1, length(cluster_ids))
@@ -278,12 +303,15 @@ plot.tc_clusters <- function(x, ...) {
         leg_lty <- c(leg_lty, 2)
       }
       graphics::legend("bottomright",
-                       legend = leg_labels,
-                       col = leg_cols, lty = leg_lty, lwd = 1.5,
-                       cex = 0.7, bg = "white")
+        legend = leg_labels,
+        col = leg_cols, lty = leg_lty, lwd = 1.5,
+        cex = 0.7, bg = "white"
+      )
     } else {
-      message("Legend suppressed (>10 clusters). ",
-              "Use summary() to see cluster details.")
+      message(
+        "Legend suppressed (>10 clusters). ",
+        "Use summary() to see cluster details."
+      )
     }
   }
 
@@ -304,7 +332,7 @@ plot.tc_clusters <- function(x, ...) {
 #'   Set to `NA` to suppress the legend.
 #' @export
 plot.tc_representatives <- function(x, show_clusters = FALSE,
-                                     legend_pos = "bottomright", ...) {
+                                    legend_pos = "bottomright", ...) {
   segs <- x$segments
   repr <- x$representatives
   user_args <- list(...)
@@ -315,8 +343,11 @@ plot.tc_representatives <- function(x, show_clusters = FALSE,
     all_x <- c(all_x, repr$rx)
     all_y <- c(all_y, repr$ry)
   }
-  asp <- if (!is.null(user_args$asp)) user_args$asp else
+  asp <- if (!is.null(user_args$asp)) {
+    user_args$asp
+  } else {
     .compute_asp(x$coord_type, all_y)
+  }
 
   labs <- .default_axis_labels(x$coord_type)
   plot_args <- .merge_plot_args(
@@ -336,12 +367,12 @@ plot.tc_representatives <- function(x, show_clusters = FALSE,
 
   if (any(noise)) {
     graphics::segments(segs$sx[noise], segs$sy[noise],
-                       segs$ex[noise], segs$ey[noise],
-                       col = "grey80", lty = 2, lwd = 0.8)
+      segs$ex[noise], segs$ey[noise],
+      col = "grey80", lty = 2, lwd = 0.8
+    )
   }
 
   if (x$n_clusters == 0) {
-    invisible(x)
     return(invisible(x))
   }
 
@@ -366,7 +397,7 @@ plot.tc_representatives <- function(x, show_clusters = FALSE,
     # Find a segment in this renumbered cluster and look up its original cluster
     seg_idx <- which(segs$cluster_id == cid & !is.na(segs$cluster_id))[1]
     if (!is.na(seg_idx)) {
-      orig_cid <- orig_ids[seg_idx]  # orig_ids is x$clusters$segments$cluster_id
+      orig_cid <- orig_ids[seg_idx] # orig_ids is x$clusters$segments$cluster_id
       surviving_orig_ids <- c(surviving_orig_ids, orig_cid)
     }
   }
@@ -378,8 +409,9 @@ plot.tc_representatives <- function(x, show_clusters = FALSE,
     clustered <- !is.na(curr_ids)
     if (any(clustered)) {
       graphics::segments(segs$sx[clustered], segs$sy[clustered],
-                         segs$ex[clustered], segs$ey[clustered],
-                         col = "grey70", lwd = 0.8)
+        segs$ex[clustered], segs$ey[clustered],
+        col = "grey70", lwd = 0.8
+      )
     }
     # Representatives: black outline + colour
     for (cid in cluster_ids) {
@@ -387,7 +419,8 @@ plot.tc_representatives <- function(x, show_clusters = FALSE,
       # Black outline for visibility
       graphics::lines(pts$rx, pts$ry, col = "black", lwd = 4)
       graphics::lines(pts$rx, pts$ry,
-                      col = col_map[as.character(cid)], lwd = 2.5)
+        col = col_map[as.character(cid)], lwd = 2.5
+      )
     }
   } else {
     # "clusters" mode: segments coloured, representatives in matching colour
@@ -395,8 +428,9 @@ plot.tc_representatives <- function(x, show_clusters = FALSE,
       col <- col_map[as.character(cid)]
       idx <- segs$cluster_id == cid & !is.na(segs$cluster_id)
       graphics::segments(segs$sx[idx], segs$sy[idx],
-                         segs$ex[idx], segs$ey[idx],
-                         col = col, lwd = 1.2)
+        segs$ex[idx], segs$ey[idx],
+        col = col, lwd = 1.2
+      )
       pts <- repr[repr$cluster_id == cid, ]
       graphics::lines(pts$rx, pts$ry, col = "black", lwd = 4)
       graphics::lines(pts$rx, pts$ry, col = col, lwd = 2.5)
@@ -404,7 +438,7 @@ plot.tc_representatives <- function(x, show_clusters = FALSE,
   }
 
   # Legend
-  show_legend <- !is.na(legend_pos) && n_cl <= 10
+  show_legend <- !is.na(legend_pos) && n_cl <= .legend_max_items
   if (show_legend) {
     leg_labels <- paste("Representative", cluster_ids)
     leg_cols <- cols
@@ -417,12 +451,15 @@ plot.tc_representatives <- function(x, show_clusters = FALSE,
       leg_lwd <- c(leg_lwd, 0.8)
     }
     graphics::legend(legend_pos,
-                     legend = leg_labels, col = leg_cols,
-                     lty = leg_lty, lwd = leg_lwd,
-                     cex = 0.7, bg = "white")
-  } else if (n_cl > 10 && !is.na(legend_pos)) {
-    message("Legend suppressed (>10 clusters). ",
-            "Use summary() to see cluster details.")
+      legend = leg_labels, col = leg_cols,
+      lty = leg_lty, lwd = leg_lwd,
+      cex = 0.7, bg = "white"
+    )
+  } else if (n_cl > .legend_max_items && !is.na(legend_pos)) {
+    message(
+      "Legend suppressed (>10 clusters). ",
+      "Use summary() to see cluster details."
+    )
   }
 
   invisible(x)
@@ -456,8 +493,10 @@ plot.tc_traclus <- function(x, ...) {
 #'
 #' @examples
 #' \donttest{
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                        x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #' parts <- tc_partition(trj)
 #' est <- tc_estimate_params(parts)
 #' plot(est)

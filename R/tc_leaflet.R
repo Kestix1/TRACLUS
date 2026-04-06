@@ -17,8 +17,10 @@
 #'     system.file("extdata", "hurdat2_1950_2004.txt", package = "TRACLUS"),
 #'     min_points = 80
 #'   )
-#'   trj <- tc_trajectories(storms, traj_id = "storm_id",
-#'                          x = "lon", y = "lat", coord_type = "geographic")
+#'   trj <- tc_trajectories(storms,
+#'     traj_id = "storm_id",
+#'     x = "lon", y = "lat", coord_type = "geographic"
+#'   )
 #'   tc_leaflet(trj)
 #' }
 #' }
@@ -39,13 +41,15 @@ tc_leaflet <- function(x, ...) {
 .leaflet_check <- function(x) {
   if (x$coord_type != "geographic") {
     stop("tc_leaflet() is only available for geographic data ",
-         "(coord_type = 'geographic'). Use plot() for euclidean data.",
-         call. = FALSE)
+      "(coord_type = 'geographic'). Use plot() for euclidean data.",
+      call. = FALSE
+    )
   }
   if (!requireNamespace("leaflet", quietly = TRUE)) {
     stop("Package 'leaflet' is required for interactive maps. ",
-         "Install it with install.packages('leaflet').",
-         call. = FALSE)
+      "Install it with install.packages('leaflet').",
+      call. = FALSE
+    )
   }
 }
 
@@ -102,9 +106,10 @@ tc_leaflet.tc_trajectories <- function(x, ...) {
   }
 
   # Legend (suppress for >10 trajectories)
-  if (n_trajs <= 10) {
+  if (n_trajs <= .legend_max_items) { # nolint: object_usage_linter.
     m <- leaflet::addLegend(
-      m, position = "bottomright",
+      m,
+      position = "bottomright",
       colors = cols,
       labels = as.character(traj_ids),
       opacity = 0.8
@@ -148,9 +153,10 @@ tc_leaflet.tc_partitions <- function(x, show_points = TRUE, ...) {
   }
 
   # Legend (suppress for >10 trajectories)
-  if (n_trajs <= 10) {
+  if (n_trajs <= .legend_max_items) { # nolint: object_usage_linter.
     m <- leaflet::addLegend(
-      m, position = "bottomright",
+      m,
+      position = "bottomright",
       colors = cols,
       labels = as.character(traj_ids),
       opacity = 0.8
@@ -161,7 +167,7 @@ tc_leaflet.tc_partitions <- function(x, show_points = TRUE, ...) {
   if (show_points) {
     all_lng <- c(segs$sx, segs$ex)
     all_lat <- c(segs$sy, segs$ey)
-    cross_label <- "\u2715"  # multiplication sign (X shape)
+    cross_label <- "\u2715" # multiplication sign (X shape)
     m <- leaflet::addLabelOnlyMarkers(
       m,
       lng = all_lng, lat = all_lat,
@@ -232,7 +238,7 @@ tc_leaflet.tc_clusters <- function(x, ...) {
     }
 
     # Legend (suppress for >10 clusters)
-    if (length(cluster_ids) <= 10) {
+    if (length(cluster_ids) <= .legend_max_items) { # nolint: object_usage_linter.
       leg_colors <- cols
       leg_labels <- paste("Cluster", cluster_ids)
       if (any(noise)) {
@@ -240,14 +246,17 @@ tc_leaflet.tc_clusters <- function(x, ...) {
         leg_labels <- c(leg_labels, "Noise")
       }
       m <- leaflet::addLegend(
-        m, position = "bottomright",
+        m,
+        position = "bottomright",
         colors = leg_colors,
         labels = leg_labels,
         opacity = 0.8
       )
     } else {
-      message("Legend suppressed (>10 clusters). ",
-              "Use summary() to see cluster details.")
+      message(
+        "Legend suppressed (>10 clusters). ",
+        "Use summary() to see cluster details."
+      )
     }
   }
 
@@ -266,7 +275,7 @@ tc_leaflet.tc_clusters <- function(x, ...) {
 #'   See [plot.tc_representatives()] for details.
 #' @export
 tc_leaflet.tc_representatives <- function(x, show_clusters = FALSE,
-                                           ...) {
+                                          ...) {
   .leaflet_check(x)
 
   segs <- x$segments
@@ -291,7 +300,9 @@ tc_leaflet.tc_representatives <- function(x, show_clusters = FALSE,
     }
   }
 
-  if (x$n_clusters == 0) return(m)
+  if (x$n_clusters == 0) {
+    return(m)
+  }
 
   cluster_ids <- sort(unique(repr$cluster_id))
   n_cl <- length(cluster_ids)
@@ -315,9 +326,6 @@ tc_leaflet.tc_representatives <- function(x, show_clusters = FALSE,
   }
   cols <- unname(orig_col_map[as.character(surviving_orig_ids)])
   col_map <- stats::setNames(cols, as.character(cluster_ids))
-
-  # Cluster summary for labels
-  cl_summary <- x$clusters$cluster_summary
 
   if (!show_clusters) {
     # Active cluster segments in grey
@@ -378,7 +386,7 @@ tc_leaflet.tc_representatives <- function(x, show_clusters = FALSE,
   }
 
   # Legend (suppress for >10 clusters)
-  if (n_cl <= 10) {
+  if (n_cl <= .legend_max_items) { # nolint: object_usage_linter.
     leg_colors <- cols
     leg_labels <- paste("Representative", cluster_ids)
     if (any(noise)) {
@@ -386,14 +394,17 @@ tc_leaflet.tc_representatives <- function(x, show_clusters = FALSE,
       leg_labels <- c(leg_labels, "Noise")
     }
     m <- leaflet::addLegend(
-      m, position = "bottomright",
+      m,
+      position = "bottomright",
       colors = leg_colors,
       labels = leg_labels,
       opacity = 0.8
     )
   } else {
-    message("Legend suppressed (>10 clusters). ",
-            "Use summary() to see cluster details.")
+    message(
+      "Legend suppressed (>10 clusters). ",
+      "Use summary() to see cluster details."
+    )
   }
 
   m

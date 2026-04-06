@@ -44,8 +44,10 @@
 #' @export
 #'
 #' @examples
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                         x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #' \donttest{
 #' result <- tc_traclus(trj, eps = 25, min_lns = 3)
 #' print(result)
@@ -59,9 +61,10 @@ tc_traclus <- function(x, eps, min_lns, gamma = 1, repr_min_lns = NULL,
   # --- Custom error for missing required parameters ---
   if (missing(eps) || missing(min_lns)) {
     stop("'eps' and 'min_lns' are required. Choose values by trial and ",
-         "error or use tc_estimate_params() after tc_partition() for a ",
-         "data-driven starting point.",
-         call. = FALSE)
+      "error or use tc_estimate_params() after tc_partition() for a ",
+      "data-driven starting point.",
+      call. = FALSE
+    )
   }
 
   # --- Parameter validation (fail early before any computation) ---
@@ -77,15 +80,18 @@ tc_traclus <- function(x, eps, min_lns, gamma = 1, repr_min_lns = NULL,
   parts <- tc_partition(x, verbose = verbose)
 
   # --- Step 2: Cluster ---
-  clust <- tc_cluster(parts, eps = eps, min_lns = min_lns,
-                      w_perp = w_perp, w_par = w_par, w_angle = w_angle,
-                      verbose = verbose)
+  clust <- tc_cluster(parts,
+    eps = eps, min_lns = min_lns,
+    w_perp = w_perp, w_par = w_par, w_angle = w_angle,
+    verbose = verbose
+  )
 
   # --- Step 3: Represent ---
   # repr_min_lns overrides min_lns for representation only
-  repr_ml <- if (!is.null(repr_min_lns)) repr_min_lns else NULL
-  result <- tc_represent(clust, gamma = gamma, min_lns = repr_ml,
-                         verbose = verbose)
+  result <- tc_represent(clust,
+    gamma = gamma, min_lns = repr_min_lns,
+    verbose = verbose
+  )
 
   # --- Add tc_traclus class for potential custom dispatch ---
   class(result) <- c("tc_traclus", "tc_representatives")
