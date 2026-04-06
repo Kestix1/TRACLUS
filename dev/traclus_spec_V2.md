@@ -12,15 +12,31 @@ Entwicklung des R-Pakets **TRACLUS**, das den TRACLUS Algorithmus implementiert.
 <!-- GEÄNDERT: R >= 4.1.0 Begründung angepasst; skip_on_cran() entfernt -->
 * CRAN-Implikationen: Vignetten bauen ohne Internet, Tests laufen in akzeptabler Zeit (< 10 Min), saubere Speicherverwaltung bei Rcpp ohne Compiler-Warnings. Depends: R (>= 4.1.0) in DESCRIPTION (für Kompatibilität mit modernen R-Features und Lambda-Syntax). C++-Code nutzt C++11 (R-Default seit 4.0) — keine zusätzlichen SystemRequirements oder Makevars-Einstellungen nötig. Tests sind schnell genug um alle auf CRAN zu laufen — `skip_on_cran()` wird nicht verwendet.
 * NEWS.md zur Dokumentation von Änderungen zwischen Versionen (CRAN-Standard)
+<!-- NEU: CRAN-Submission-Infrastruktur -->
+* `CITATION.cff` im Repo-Root: aktiviert GitHub "Cite this repository"-Button; Format cff-version 1.2.0; enthält Titel, Version, Autor, Lizenz, Repository-URL
+* `cran-comments.md` im Repo-Root: Pflicht für `devtools::release()`; enthält Testumgebungen und Reviewer-Hinweise; in `.Rbuildignore` ausgeschlossen
+* `.github/RELEASE_CHECKLIST.md`: 7-stufige Pre-CRAN-Checkliste (Code → Tests → Docs → DESCRIPTION → CI → Submission → Post-Acceptance)
+* `inst/WORDLIST`: Fachbegriffe für `spelling::spell_check_package()`
 <!-- GEÄNDERT: Installationsanweisung auf pak::pak() aktualisiert -->
 * README.md mit CRAN-Badge, R-CMD-check-Badge, test-coverage-Badge, Installationsanweisungen (`pak::pak("MartinHoblisch/TRACLUS")`), Minimalbeispiel (Toy-Dataset und Geographic-Beispiel), Parameter-Estimation-Beispiel, Workflow-Tabelle aller Funktionen und pkgdown-Link
-* .Rbuildignore enthält: ^\.github$, ^docs$, ^pkgdown$, ^README\.Rmd$, ^LICENSE\.md$, ^\.lintr$ sowie Entwicklungs-Artefakte (^traclus_spec_final\.md$, ^traclus_structure\.md$, ^traclus_implementation_prompt\.md$, ^_pkgdown\.yml$, ^TRACLUS\.Rproj$, ^\.Rproj\.user$, ^\.claude$, ^figure$, ^todo\.md$, ^traclus_audit_prompt\.md$)
+* .Rbuildignore enthält: ^\.github$, ^docs$, ^pkgdown$, ^README\.Rmd$, ^LICENSE\.md$, ^\.lintr$, ^cran-comments\.md$ sowie Entwicklungs-Artefakte (^traclus_spec_final\.md$, ^traclus_structure\.md$, ^traclus_implementation_prompt\.md$, ^_pkgdown\.yml$, ^TRACLUS\.Rproj$, ^\.Rproj\.user$, ^\.claude$, ^figure$, ^todo\.md$, ^traclus_audit_prompt\.md$, ^dev$)
 * Unit Tests mit testthat, inklusive Tests für Edge Cases. Unit Tests die R- und C++-Distanzfunktionen vergleichen nutzen eine Toleranz von 1e-10 (nicht exakte Gleichheit) um Floating-Point-Unterschiede zwischen R und kompiliertem Code zu berücksichtigen.
-<!-- GEÄNDERT: CI/CD erweitert um test-coverage und pkgdown -->
-* CI/CD via GitHub Actions: R CMD check auf Windows, macOS, Ubuntu (release, devel, oldrel-1); test-coverage mit Codecov-Integration; pkgdown-Deployment via GitHub Pages
+<!-- GEÄNDERT: CI/CD auf 8 Workflows erweitert (Prio 0+1 Roadmap 2026-04-07) -->
+* CI/CD via GitHub Actions (8 Workflows):
+  * `R-CMD-check.yaml` — R CMD check auf Windows, macOS, Ubuntu (release, devel, oldrel-1); `--as-cran` explizit; `error_on = "warning"` auf ubuntu/release (CRAN-Strenge); wöchentlicher Scheduled Run Mo 06:00 UTC (nur ubuntu/release); concurrency + workflow_dispatch
+  * `test-coverage.yaml` — Coverage-Messung via covr + Codecov-Upload; concurrency + workflow_dispatch
+  * `pkgdown.yaml` — pkgdown-Deployment via GitHub Pages bei push/release/workflow_dispatch; concurrency
+  * `lint.yaml` — lintr-Check; `permissions: read-all`; concurrency + workflow_dispatch
+  * `spelling.yaml` — `spell_check_package(error = TRUE)`; Fachbegriffe in `inst/WORDLIST` (TRACLUS, DBSCAN, haversine, Rcpp, …)
+  * `urlchecker.yaml` — `url_check(parallel = TRUE)` prüft alle URLs in Rd, DESCRIPTION, README auf 404/Redirects
+  * `asan.yaml` — ASAN/UBSAN via `ghcr.io/rocker-org/r-devel-san`; kritisch für Rcpp-Pakete (häufigste CRAN-Rejection-Ursache); push + workflow_dispatch; Artefakt-Upload bei Failure
+  * `rhub.yaml` — r-hub v2 (kanonisches Format); nur workflow_dispatch; benötigt `RHUB_TOKEN` Secret (einmalig via `rhub::rhub_setup()`); testet auf linux, macos, windows, atlas
+* Alle Workflows: `permissions: read-all` und `concurrency: cancel-in-progress: true`
 * Professionelle pkgdown-Site als GitHub-Landingpage, generiert aus Paketdokumentation und Vignettes. Bootstrap 5 Theme, strukturierter Reference-Index (Workflow, Helpers, Distance Functions, Visualisation, Print/Summary, Data, Package)
 <!-- NEU -->
-* `.lintr`-Datei mit `line_length_linter(120)` und `object_name_linter(styles = c("snake_case", "dotted.case", "camelCase"))` für konsistenten Code-Stil
+* **Code-Stil**: Tidyverse Style Guide (https://style.tidyverse.org/) als verbindlicher Standard.
+  * **styler**: `styler::style_pkg(filetype = c("R", "Rmd"))` wird vor jedem Release ausgeführt. Formatiert alle R-Quelldateien, Tests und Vignetten-Chunks automatisch nach `styler::tidyverse_style()` (Default-Einstellungen). Keine separate `.styler`-Konfigurationsdatei — Zeilenlänge wird ausschließlich über `lintr` (`line_length_linter(120)`) enforced.
+  * **lintr**: `.lintr`-Datei mit `line_length_linter(120)`, `object_name_linter(styles = c("snake_case", "dotted.case"))`, `commented_code_linter = NULL` (deaktiviert — math. Annotationen in Tests), `indentation_linter = NULL` (deaktiviert — styler übernimmt Formatierung), `object_length_linter(length = 40L)` und `exclusions` für `object_usage_linter` in `tests/testthat` (Rcpp-Funktionen und helper-Sichtbarkeit). Naming-Konvention: `snake_case` für Variablen/Funktionen, `dotted.case` für S3-Methoden (z.B. `tc_leaflet.tc_trajectories`). `camelCase` ist nicht erlaubt.
 * Pipe-Kompatibilität: Alle Kernfunktionen sind chainbar mit |> oder %>%. Jede Funktion akzeptiert das Ergebnisobjekt des vorherigen Schritts als erstes Argument. Ausnahme: tc_estimate_params() gibt ein S3-Objekt zurück, das kein tc_*-Workflow-Objekt ist — die Pipe-Chain wird damit unterbrochen, das ist by Design und wird dokumentiert.
 * Jede Kernfunktion prüft die Klasse des ersten Arguments und wirft bei falschem Typ einen stop() mit klarer Fehlermeldung (z.B. "Expected a 'tc_partitions' object. Run tc_partition() first." — Klassenname in einfachen Anführungszeichen).
 * Da jede Phase ein neues Objekt zurückgibt ohne das Eingabeobjekt zu verändern, kann der Nutzer denselben Schritt mit verschiedenen Parametern wiederholen — ideal für Trial-and-Error beim Clustering. Dieses Design-Feature wird in der Dokumentation und im Parameter Guide hervorgehoben.

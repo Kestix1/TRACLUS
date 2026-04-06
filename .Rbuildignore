@@ -12,3 +12,4 @@
 ^\.claude$
 ^dev$
 ^data-raw$
+^cran-comments\.md$
