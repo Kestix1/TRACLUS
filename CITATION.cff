@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+type: software
+title: 'TRACLUS: Trajectory Clustering Using Line Segments'
+version: 1.0.0
+date-released: '2026-04-06'
+abstract: Implements the TRACLUS (TRAjectory CLUStering) algorithm by Lee, Han, and
+  Whang (2007) <doi:10.1145/1247480.1247546>. The algorithm partitions trajectories
+  into line segments using minimum description length (MDL), clusters segments via
+  density-based spatial clustering (DBSCAN), and generates representative trajectories
+  using a sweep-line algorithm. Supports euclidean, spherical (haversine), and
+  equirectangular-projected distance calculations for geographic trajectory data.
+authors:
+- family-names: Hoblisch
+  given-names: Martin
+  email: m.hoblisch@gmail.com
+license: GPL-3.0-only
+repository-code: https://github.com/MartinHoblisch/TRACLUS
+url: https://martinhoblisch.github.io/TRACLUS
