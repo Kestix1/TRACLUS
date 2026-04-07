@@ -48,6 +48,14 @@ Step-by-step process before submitting to CRAN. Complete every item in order.
 
 ## 7. Post-Acceptance
 
-- [ ] Create a GitHub Release (tag: `v<version>`, body from `NEWS.md`)
+- [ ] Create a GitHub Release (tag: `v<version>`, body from `NEWS.md`) — automated via `release.yaml` on tag push
 - [ ] Update `cran-comments.md` with acceptance date
 - [ ] Bump version to next development version (e.g., `1.0.0.9000`)
+
+---
+
+## 8. Post-CRAN (activate when relevant)
+
+- [ ] **Valgrind** — run `valgrind.yaml` manually (`workflow_dispatch`) once after ASAN/UBSAN is green; too slow for push triggers
+- [ ] **fledge** — activate after first patch release: `usethis::use_package("fledge", type = "Suggests")` + `fledge::fledge()`; automates `NEWS.md` + version bump from Conventional Commits
+- [ ] **revdepcheck** — run `revdepcheck::revdep_check()` once downstream packages start depending on TRACLUS

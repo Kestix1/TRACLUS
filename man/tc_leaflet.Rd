@@ -40,6 +40,9 @@ A \code{leaflet} htmlwidget object (can be further customized
 via piping, e.g., \code{tc_leaflet(x) |> leaflet::setView(...)}).
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\details{
 Creates interactive Leaflet maps for geographic TRACLUS data.
 Only available when \code{coord_type = "geographic"} — euclidean data
 will produce an error. Requires the \code{leaflet} package.

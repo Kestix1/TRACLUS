@@ -13,3 +13,4 @@
 ^dev$
 ^data-raw$
 ^cran-comments\.md$
+^CODE_OF_CONDUCT\.md$

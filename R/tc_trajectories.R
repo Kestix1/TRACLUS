@@ -1,5 +1,7 @@
 #' Validate and prepare trajectory data
 #'
+#' `r lifecycle::badge("stable")`
+#'
 #' Validates input data, resolves coordinate types and distance methods, and
 #' creates a `tc_trajectories` object for use in the TRACLUS pipeline. This is
 #' the entry point for all TRACLUS analyses.

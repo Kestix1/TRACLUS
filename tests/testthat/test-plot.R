@@ -522,3 +522,41 @@ test_that("tc_leaflet emits message for >10 clusters (tc_clusters)", {
 
   expect_message(tc_leaflet(clust), "Legend suppressed")
 })
+
+# --- vdiffr: SVG snapshot tests for all 6 plot.* methods ---
+
+test_that("vdiffr: plot.tc_trajectories snapshot", {
+  skip_if_not_installed("vdiffr")
+  wf <- make_full_workflow()
+  vdiffr::expect_doppelganger("tc_trajectories", function() plot(wf$trj))
+})
+
+test_that("vdiffr: plot.tc_partitions snapshot", {
+  skip_if_not_installed("vdiffr")
+  wf <- make_full_workflow()
+  vdiffr::expect_doppelganger("tc_partitions", function() plot(wf$parts))
+})
+
+test_that("vdiffr: plot.tc_clusters snapshot", {
+  skip_if_not_installed("vdiffr")
+  wf <- make_full_workflow()
+  vdiffr::expect_doppelganger("tc_clusters", function() plot(wf$clust))
+})
+
+test_that("vdiffr: plot.tc_representatives snapshot", {
+  skip_if_not_installed("vdiffr")
+  wf <- make_full_workflow()
+  vdiffr::expect_doppelganger("tc_representatives", function() plot(wf$repr))
+})
+
+test_that("vdiffr: plot.tc_traclus snapshot", {
+  skip_if_not_installed("vdiffr")
+  result <- make_traclus_result()
+  vdiffr::expect_doppelganger("tc_traclus", function() plot(result))
+})
+
+test_that("vdiffr: plot.tc_estimate snapshot", {
+  skip_if_not_installed("vdiffr")
+  est <- make_estimate()
+  vdiffr::expect_doppelganger("tc_estimate", function() plot(est))
+})

@@ -49,11 +49,13 @@ The full reference chain is preserved:
 \code{result$clusters$partitions$trajectories}.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\details{
 Convenience wrapper that executes all three TRACLUS steps in sequence:
 partitioning (\code{\link[=tc_partition]{tc_partition()}}), clustering (\code{\link[=tc_cluster]{tc_cluster()}}), and
 representative trajectory generation (\code{\link[=tc_represent]{tc_represent()}}).
-}
-\details{
+
 This wrapper is equivalent to:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{x |> tc_partition() |>

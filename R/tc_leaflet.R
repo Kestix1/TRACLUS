@@ -1,5 +1,7 @@
 #' Leaflet map for TRACLUS objects
 #'
+#' `r lifecycle::badge("stable")`
+#'
 #' Creates interactive Leaflet maps for geographic TRACLUS data.
 #' Only available when `coord_type = "geographic"` — euclidean data
 #' will produce an error. Requires the `leaflet` package.

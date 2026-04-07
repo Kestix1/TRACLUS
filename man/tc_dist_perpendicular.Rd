@@ -27,14 +27,16 @@ distance. Units are coordinate units for \code{"euclidean"} or meters for
 \code{"haversine"}.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\details{
 Computes the perpendicular distance between two line segments as defined in
 the TRACLUS paper (Definition 1). The longer segment is treated as the
 reference line (Li), and the endpoints of the shorter segment (Lj) are
 projected onto the \strong{line} (not the segment) through Li. The two
 perpendicular distances are combined using the Lehmer mean of order 2:
 \eqn{d_\perp = (l_1^2 + l_2^2) / (l_1 + l_2)}.
-}
-\details{
+
 The swap convention from the original paper is applied internally: the
 longer segment becomes Li regardless of argument order. At exact length
 equality (floating-point \code{==}), the first segment (i) is kept as Li.

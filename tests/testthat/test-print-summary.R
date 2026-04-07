@@ -56,15 +56,13 @@ test_that("print.tc_estimate returns invisible(x)", {
 
 # --- print methods: output content ---
 
-test_that("print.tc_trajectories shows trajectory count", {
+test_that("print.tc_trajectories output snapshot", {
   wf <- make_full_workflow()
-  out <- capture.output(print(wf$trj))
-  expect_true(any(grepl("Trajectories", out)))
-  expect_true(any(grepl("Status", out)))
+  expect_snapshot(print(wf$trj))
 })
 
 
-test_that("print.tc_clusters shows haversine unit for geographic data", {
+test_that("print.tc_clusters output snapshot (geographic)", {
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
     tc_trajectories(geo,
@@ -76,8 +74,7 @@ test_that("print.tc_clusters shows haversine unit for geographic data", {
   clust <- suppressMessages(suppressWarnings(
     tc_cluster(parts, eps = 500000, min_lns = 2)
   ))
-  out <- capture.output(print(clust))
-  expect_true(any(grepl("meters", out)))
+  expect_snapshot(print(clust))
 })
 
 
@@ -124,23 +121,19 @@ test_that("summary.tc_traclus returns invisible(object)", {
 
 # --- summary methods: output content ---
 
-test_that("summary.tc_trajectories shows points per traj stats", {
+test_that("summary.tc_trajectories output snapshot", {
   wf <- make_full_workflow()
-  out <- capture.output(summary(wf$trj))
-  expect_true(any(grepl("Points per traj", out)))
-  expect_true(any(grepl("min", out)))
+  expect_snapshot(summary(wf$trj))
 })
 
 
-test_that("summary.tc_clusters shows noise percentage", {
+test_that("summary.tc_clusters output snapshot", {
   wf <- make_full_workflow()
-  out <- capture.output(summary(wf$clust))
-  expect_true(any(grepl("Noise", out)))
-  expect_true(any(grepl("%", out)))
+  expect_snapshot(summary(wf$clust))
 })
 
 
-test_that("summary.tc_traclus shows full pipeline stats", {
+test_that("summary.tc_traclus output snapshot", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
     tc_trajectories(toy,
@@ -151,7 +144,5 @@ test_that("summary.tc_traclus shows full pipeline stats", {
   result <- suppressMessages(suppressWarnings(
     tc_traclus(trj, eps = 25, min_lns = 3)
   ))
-  out <- capture.output(summary(result))
-  expect_true(any(grepl("Input trajs", out)))
-  expect_true(any(grepl("Partitioned into", out)))
+  expect_snapshot(summary(result))
 })

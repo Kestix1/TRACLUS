@@ -66,11 +66,13 @@ A \code{tc_trajectories} S3 object (list) with elements:
 }
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\details{
 Validates input data, resolves coordinate types and distance methods, and
 creates a \code{tc_trajectories} object for use in the TRACLUS pipeline. This is
 the entry point for all TRACLUS analyses.
-}
-\details{
+
 Validation is performed in four stages:
 \enumerate{
 \item \strong{Base checks}: Column existence, numeric and finite coordinates,

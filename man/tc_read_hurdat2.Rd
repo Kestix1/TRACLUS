@@ -23,10 +23,12 @@ longitudes are negative.}
 }
 }
 \description{
-Parses NOAA National Hurricane Center's HURDAT2 (Hurricane Database 2)
-format and returns a tidy data.frame ready for \code{\link[=tc_trajectories]{tc_trajectories()}}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \details{
+Parses NOAA National Hurricane Center's HURDAT2 (Hurricane Database 2)
+format and returns a tidy data.frame ready for \code{\link[=tc_trajectories]{tc_trajectories()}}.
+
 The HURDAT2 format uses two types of lines:
 \itemize{
 \item \strong{Header lines}: Storm ID, name, and number of data entries.

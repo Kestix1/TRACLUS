@@ -1,5 +1,7 @@
 #' Cluster line segments using density-based clustering
 #'
+#' `r lifecycle::badge("stable")`
+#'
 #' Applies a modified DBSCAN algorithm to group similar line segments
 #' into clusters. Segments that are not dense enough are classified as
 #' noise (cluster_id = NA). After clustering, a trajectory cardinality

@@ -1,5 +1,7 @@
 #' Estimate clustering parameters from data
 #'
+#' `r lifecycle::badge("stable")`
+#'
 #' Provides a data-driven starting point for `eps` and `min_lns` by
 #' minimizing the entropy of epsilon-neighbourhood sizes across a grid
 #' of candidate eps values (Paper Section 4.4). This is an optional

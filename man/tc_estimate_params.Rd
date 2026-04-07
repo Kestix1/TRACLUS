@@ -45,12 +45,14 @@ for the full grid.}
 }
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\details{
 Provides a data-driven starting point for \code{eps} and \code{min_lns} by
 minimizing the entropy of epsilon-neighbourhood sizes across a grid
 of candidate eps values (Paper Section 4.4). This is an optional
 helper — the optimal values are typically found by trial and error.
-}
-\details{
+
 The algorithm works in two stages:
 \enumerate{
 \item \strong{Grid generation} (when \code{eps_grid = NULL}): A random sample of

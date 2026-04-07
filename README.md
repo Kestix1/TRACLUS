@@ -4,6 +4,9 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/TRACLUS)](https://CRAN.R-project.org/package=TRACLUS)
 [![R-CMD-check](https://github.com/MartinHoblisch/TRACLUS/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MartinHoblisch/TRACLUS/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/MartinHoblisch/TRACLUS/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/MartinHoblisch/TRACLUS/actions/workflows/test-coverage.yaml)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![License: GPL-3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![r-universe](https://martinhoblisch.r-universe.dev/badges/TRACLUS)](https://martinhoblisch.r-universe.dev/TRACLUS)
 <!-- badges: end -->
 
 **TRACLUS** implements the TRAjectory CLUStering algorithm by
@@ -108,6 +111,12 @@ doi: [10.1145/1247480.1247546](https://doi.org/10.1145/1247480.1247546)
 
 Full documentation and vignettes are available at
 <https://martinhoblisch.github.io/TRACLUS/>.
+
+## Code of Conduct
+
+Please note that the TRACLUS project is released with a
+[Contributor Code of Conduct](https://martinhoblisch.github.io/TRACLUS/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
 
 ## License
 

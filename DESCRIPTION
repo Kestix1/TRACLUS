@@ -22,11 +22,13 @@ LinkingTo:
     Rcpp,
     RcppProgress
 Suggests:
-    leaflet,
-    sf,
     knitr,
+    leaflet,
+    lifecycle,
     rmarkdown,
-    testthat (>= 3.0.0)
+    sf,
+    testthat (>= 3.0.0),
+    vdiffr (>= 1.0.0)
 VignetteBuilder: knitr
 LazyData: true
 Encoding: UTF-8

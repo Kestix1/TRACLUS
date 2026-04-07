@@ -40,11 +40,13 @@ waypoint coordinates in original format).}
 }
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\details{
 Computes a representative trajectory for each cluster using the
 sweep-line algorithm (Paper Figure 15). The representative captures
 the "average path" of all line segments in the cluster.
-}
-\details{
+
 For geographic data (\code{coord_type = "geographic"}), segment coordinates
 are locally projected to meters using equirectangular approximation
 before the sweep-line runs, then transformed back. This ensures

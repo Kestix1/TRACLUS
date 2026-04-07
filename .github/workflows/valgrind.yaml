@@ -1,0 +1,53 @@
+# Valgrind memory-error check for the TRACLUS Rcpp backend.
+#
+# Run this MANUALLY after the ASAN/UBSAN workflow passes — it is too slow
+# (~30–60 min) to run on every push. Trigger it once before each CRAN submission.
+#
+# How to run: Actions → valgrind → Run workflow
+on:
+  workflow_dispatch:
+
+name: valgrind
+
+permissions: read-all
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  valgrind:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/rocker-org/r-ver:latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          apt-get update -qq
+          apt-get install -y valgrind libcurl4-openssl-dev libssl-dev libxml2-dev
+
+      - name: Install R dependencies
+        run: |
+          Rscript -e 'install.packages(c("remotes", "rcmdcheck"), repos = "https://cloud.r-project.org")'
+          Rscript -e 'remotes::install_deps(dependencies = TRUE, repos = "https://cloud.r-project.org")'
+
+      - name: Check with Valgrind
+        run: |
+          Rscript -e 'rcmdcheck::rcmdcheck(
+            args = c("--use-valgrind", "--no-manual", "--no-vignettes"),
+            error_on = "warning",
+            check_dir = "check"
+          )'
+
+      - name: Upload check results on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: valgrind-check-results
+          path: check

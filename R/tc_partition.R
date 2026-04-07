@@ -1,5 +1,7 @@
 #' Partition trajectories using MDL-based approximation
 #'
+#' `r lifecycle::badge("stable")`
+#'
 #' Applies the approximate trajectory partitioning algorithm (Paper Figure 8)
 #' to identify characteristic points in each trajectory, then connects them
 #' into line segments. The MDL (Minimum Description Length) principle balances

@@ -46,13 +46,15 @@ A \code{tc_clusters} S3 object (list) with elements:
 }
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\details{
 Applies a modified DBSCAN algorithm to group similar line segments
 into clusters. Segments that are not dense enough are classified as
 noise (cluster_id = NA). After clustering, a trajectory cardinality
 check removes clusters whose segments originate from fewer than
 \code{min_lns} distinct trajectories (Paper Section 4.3).
-}
-\details{
+
 The weighted distance between two segments is:
 \code{dist = w_perp * d_perp + w_par * d_par + w_angle * d_angle}
 (Paper Section 2.3). Early termination skips remaining components

@@ -24,12 +24,14 @@ A \code{tc_partitions} S3 object (list) with elements:
 }
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\details{
 Applies the approximate trajectory partitioning algorithm (Paper Figure 8)
 to identify characteristic points in each trajectory, then connects them
 into line segments. The MDL (Minimum Description Length) principle balances
 compression (fewer segments) against fidelity (preserving trajectory shape).
-}
-\details{
+
 The partitioning uses only perpendicular and angle distance in the MDL
 cost function, as described in the original paper (Formulas 6 and 7).
 The weighting parameters \code{w_perp}, \code{w_par}, \code{w_angle} have no influence

@@ -1,5 +1,7 @@
 #' Run the complete TRACLUS algorithm
 #'
+#' `r lifecycle::badge("stable")`
+#'
 #' Convenience wrapper that executes all three TRACLUS steps in sequence:
 #' partitioning ([tc_partition()]), clustering ([tc_cluster()]), and
 #' representative trajectory generation ([tc_represent()]).

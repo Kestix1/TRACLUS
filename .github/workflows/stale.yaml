@@ -1,0 +1,43 @@
+# Mark issues and PRs as stale after 60 days of inactivity, close after 90 days.
+# Runs weekly on Monday mornings and can be triggered manually.
+on:
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+name: stale
+
+permissions:
+  issues: write
+  pull-requests: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 60
+          days-before-close: 30
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          stale-issue-message: >
+            This issue has been open for 60 days without activity.
+            It will be closed in 30 days unless there is new activity.
+            If this is still relevant, please leave a comment.
+          stale-pr-message: >
+            This pull request has been open for 60 days without activity.
+            It will be closed in 30 days unless there is new activity.
+            If this is still relevant, please leave a comment or push new commits.
+          close-issue-message: >
+            Closing due to 90 days of inactivity.
+            Feel free to reopen if this becomes relevant again.
+          close-pr-message: >
+            Closing due to 90 days of inactivity.
+            Feel free to reopen or open a new PR if you would like to continue.
+          exempt-issue-labels: 'pinned,security'
+          exempt-pr-labels: 'pinned,work-in-progress'

@@ -50,4 +50,3 @@ jobs:
           fail_ci_if_error: ${{ github.event_name != 'pull_request' && true || false }}
           file: ./cobertura.xml
           plugin: noop
-          token: ${{ secrets.CODECOV_TOKEN }}

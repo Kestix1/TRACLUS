@@ -1,5 +1,7 @@
 #' Generate representative trajectories for clusters
 #'
+#' `r lifecycle::badge("stable")`
+#'
 #' Computes a representative trajectory for each cluster using the
 #' sweep-line algorithm (Paper Figure 15). The representative captures
 #' the "average path" of all line segments in the cluster.

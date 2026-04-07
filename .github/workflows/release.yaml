@@ -1,0 +1,47 @@
+# Automatically create a GitHub Release when a version tag (v*) is pushed.
+# Extracts the top section of NEWS.md as the release body.
+#
+# How to trigger:
+#   git tag v1.0.1
+#   git push origin v1.0.1
+on:
+  push:
+    tags:
+      - 'v*'
+
+name: release
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract release notes from NEWS.md
+        id: news
+        run: |
+          # Extract content of the first version section (everything up to the
+          # second "# TRACLUS" heading, or end of file if there is only one).
+          NOTES=$(awk '
+            /^# TRACLUS/ { count++; if (count == 2) exit }
+            count == 1 { print }
+          ' NEWS.md)
+          # Write to a temp file to safely pass multi-line content
+          echo "$NOTES" > /tmp/release_notes.md
+          echo "notes_file=/tmp/release_notes.md" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: TRACLUS ${{ github.ref_name }}
+          body_path: ${{ steps.news.outputs.notes_file }}
+          draft: false
+          prerelease: false

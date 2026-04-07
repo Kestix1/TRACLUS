@@ -1,5 +1,7 @@
 #' Perpendicular distance between two line segments
 #'
+#' `r lifecycle::badge("stable")`
+#'
 #' Computes the perpendicular distance between two line segments as defined in
 #' the TRACLUS paper (Definition 1). The longer segment is treated as the
 #' reference line (Li), and the endpoints of the shorter segment (Lj) are

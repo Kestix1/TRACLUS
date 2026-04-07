@@ -1,5 +1,7 @@
 #' Read HURDAT2 Best-Track data
 #'
+#' `r lifecycle::badge("stable")`
+#'
 #' Parses NOAA National Hurricane Center's HURDAT2 (Hurricane Database 2)
 #' format and returns a tidy data.frame ready for [tc_trajectories()].
 #'

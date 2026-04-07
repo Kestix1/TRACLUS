@@ -1,0 +1,14 @@
+repos:
+- repo: https://github.com/lorenzwalthert/precommit
+  rev: v0.4.3
+  hooks:
+  - id: parseable-R
+    name: Check R files are parseable
+  - id: no-browser-statement
+    name: No browser() in R code
+  - id: no-debug-statement
+    name: No debug() in R code
+  - id: deps-in-desc
+    name: Dependencies declared in DESCRIPTION
+  - id: lintr
+    name: Lint R code (lintr)
