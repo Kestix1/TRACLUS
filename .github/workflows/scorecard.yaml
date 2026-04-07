@@ -16,6 +16,7 @@ jobs:
   analysis:
     name: Scorecard analysis
     runs-on: ubuntu-latest
+    continue-on-error: true  # Benötigt public repo; reaktivieren nach CRAN-Release
     permissions:
       security-events: write
       id-token: write
