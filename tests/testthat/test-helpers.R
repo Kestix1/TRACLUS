@@ -17,7 +17,7 @@ test_that(".check_antimeridian: no crossing — no warning", {
 test_that(".check_antimeridian: simple crossing within one trajectory — warning", {
   df <- data.frame(
     traj_id = c("A", "A"),
-    x = c(179, -179),   # abs diff = 358 > 180
+    x = c(179, -179), # abs diff = 358 > 180
     y = c(0, 0)
   )
   expect_warning(

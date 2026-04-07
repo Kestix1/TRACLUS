@@ -9,8 +9,10 @@
 #' @return `x`, invisibly.
 #'
 #' @examples
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                        x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #' print(trj)
 #'
 #' @name print.TRACLUS
@@ -53,8 +55,10 @@ print.tc_clusters <- function(x, ...) {
   cat(sprintf("  eps:          %.4g%s\n", x$params$eps, eps_unit))
   cat(sprintf("  min_lns:      %d\n", x$params$min_lns))
   if (x$params$w_perp != 1 || x$params$w_par != 1 || x$params$w_angle != 1) {
-    cat(sprintf("  Weights:      perp=%.2g, par=%.2g, angle=%.2g\n",
-                x$params$w_perp, x$params$w_par, x$params$w_angle))
+    cat(sprintf(
+      "  Weights:      perp=%.2g, par=%.2g, angle=%.2g\n",
+      x$params$w_perp, x$params$w_par, x$params$w_angle
+    ))
   }
   cat(sprintf("  Coord type:   %s\n", x$coord_type))
   cat(sprintf("  Method:       %s\n", x$method))
@@ -62,7 +66,8 @@ print.tc_clusters <- function(x, ...) {
   if (x$params$min_lns < 3L) {
     cat(sprintf(
       "  Note:         min_lns = %d may produce representatives dominated by\n",
-      x$params$min_lns))
+      x$params$min_lns
+    ))
     cat("                a single trajectory. Consider min_lns >= 3.\n")
     cat("                See ?tc_represent or vignette('TRACLUS-parameter-guide').\n")
   }
@@ -77,9 +82,11 @@ print.tc_representatives <- function(x, ...) {
   cat(sprintf("  Noise segs:   %d\n", x$n_noise))
   if (x$n_clusters > 0) {
     wps <- table(x$representatives$cluster_id)
-    cat(sprintf("  Waypoints:    %d total (%.0f per representative)\n",
-                nrow(x$representatives),
-                stats::median(as.integer(wps))))
+    cat(sprintf(
+      "  Waypoints:    %d total (%.0f per representative)\n",
+      nrow(x$representatives),
+      stats::median(as.integer(wps))
+    ))
   }
   cat(sprintf("  gamma:        %.4g\n", x$params$gamma))
   cat(sprintf("  min_lns:      %d\n", x$params$min_lns))
@@ -97,9 +104,11 @@ print.tc_traclus <- function(x, ...) {
   cat(sprintf("  Noise segs:   %d\n", x$n_noise))
   if (x$n_clusters > 0) {
     wps <- table(x$representatives$cluster_id)
-    cat(sprintf("  Waypoints:    %d total (%.0f per representative)\n",
-                nrow(x$representatives),
-                stats::median(as.integer(wps))))
+    cat(sprintf(
+      "  Waypoints:    %d total (%.0f per representative)\n",
+      nrow(x$representatives),
+      stats::median(as.integer(wps))
+    ))
   }
   # Show clustering params from the reference chain
   cl_params <- x$clusters$params
@@ -108,8 +117,10 @@ print.tc_traclus <- function(x, ...) {
   cat(sprintf("  min_lns:      %d\n", cl_params$min_lns))
   cat(sprintf("  gamma:        %.4g\n", x$params$gamma))
   if (cl_params$w_perp != 1 || cl_params$w_par != 1 || cl_params$w_angle != 1) {
-    cat(sprintf("  Weights:      perp=%.2g, par=%.2g, angle=%.2g\n",
-                cl_params$w_perp, cl_params$w_par, cl_params$w_angle))
+    cat(sprintf(
+      "  Weights:      perp=%.2g, par=%.2g, angle=%.2g\n",
+      cl_params$w_perp, cl_params$w_par, cl_params$w_angle
+    ))
   }
   cat(sprintf("  Coord type:   %s\n", x$coord_type))
   cat(sprintf("  Method:       %s\n", x$method))
@@ -125,8 +136,10 @@ print.tc_traclus <- function(x, ...) {
 #'
 #' @examples
 #' \donttest{
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                        x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #' parts <- tc_partition(trj)
 #' est <- tc_estimate_params(parts)
 #' print(est)
@@ -141,12 +154,16 @@ print.tc_estimate <- function(x, ...) {
   cat("TRACLUS Parameter Estimate\n")
   cat(sprintf("  Optimal eps:  %.4g%s\n", x$eps, eps_unit))
   cat(sprintf("  Est. min_lns: %d\n", x$min_lns))
-  cat(sprintf("  Grid range:   %.4g to %.4g (%d points)\n",
-              min(x$entropy_df$eps), max(x$entropy_df$eps),
-              nrow(x$entropy_df)))
+  cat(sprintf(
+    "  Grid range:   %.4g to %.4g (%d points)\n",
+    min(x$entropy_df$eps), max(x$entropy_df$eps),
+    nrow(x$entropy_df)
+  ))
   if (x$w_perp != 1 || x$w_par != 1 || x$w_angle != 1) {
-    cat(sprintf("  Weights:      perp=%.2g, par=%.2g, angle=%.2g\n",
-                x$w_perp, x$w_par, x$w_angle))
+    cat(sprintf(
+      "  Weights:      perp=%.2g, par=%.2g, angle=%.2g\n",
+      x$w_perp, x$w_par, x$w_angle
+    ))
   }
   invisible(x)
 }

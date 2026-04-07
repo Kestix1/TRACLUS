@@ -14,8 +14,10 @@
 #'
 #' @examples
 #' head(traclus_toy)
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                        x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #'
 #' @source Synthetic data created for the TRACLUS package.
 "traclus_toy"

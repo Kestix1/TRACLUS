@@ -55,8 +55,10 @@
 #' @export
 #'
 #' @examples
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                         x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #' parts <- tc_partition(trj)
 #' \donttest{
 #' est <- tc_estimate_params(parts)
@@ -73,7 +75,7 @@ tc_estimate_params <- function(x, eps_grid = NULL, sample_size = 200L,
 
   # --- Validate sample_size ---
   if (!is.numeric(sample_size) || length(sample_size) != 1 ||
-      !is.finite(sample_size) || sample_size < 2) {
+    !is.finite(sample_size) || sample_size < 2) {
     stop("'sample_size' must be a positive integer >= 2.", call. = FALSE)
   }
   sample_size <- as.integer(sample_size)
@@ -89,8 +91,10 @@ tc_estimate_params <- function(x, eps_grid = NULL, sample_size = 200L,
     proj_params <- x$trajectories$proj_params
     proj_s <- .equirectangular_proj(segs$sx, segs$sy, proj_params$lat_mean)
     proj_e <- .equirectangular_proj(segs$ex, segs$ey, proj_params$lat_mean)
-    segs$sx <- proj_s$x;  segs$sy <- proj_s$y
-    segs$ex <- proj_e$x;  segs$ey <- proj_e$y
+    segs$sx <- proj_s$x
+    segs$sy <- proj_s$y
+    segs$ex <- proj_e$x
+    segs$ey <- proj_e$y
     dist_method <- "euclidean"
   } else {
     dist_method <- method
@@ -110,7 +114,7 @@ tc_estimate_params <- function(x, eps_grid = NULL, sample_size = 200L,
   s_ey <- segs$ey[sample_idx]
 
   # --- Compute pairwise distances for sample (triangular) ---
-  pair_dists <- .cpp_compute_pairwise_dists(
+  pair_dists <- .cpp_compute_pairwise_dists( # nolint: object_usage_linter.
     s_sx, s_sy, s_ex, s_ey,
     w_perp, w_par, w_angle,
     dist_method
@@ -124,26 +128,28 @@ tc_estimate_params <- function(x, eps_grid = NULL, sample_size = 200L,
       # Degenerate: all distances nearly equal
       q5 <- min(pair_dists) * 0.5
       q95 <- max(pair_dists) * 1.5
-      if (q5 >= q95) q95 <- q5 + 1
+      if (q5 >= q95) q95 <- q5 + 1 # Arbitrary offset to ensure non-empty grid
     }
     eps_grid <- seq(q5, q95, length.out = 50)
   } else {
     # Validate user-provided grid
     if (!is.numeric(eps_grid) || length(eps_grid) < 2 ||
-        any(!is.finite(eps_grid)) || any(eps_grid <= 0)) {
+      any(!is.finite(eps_grid)) || any(eps_grid <= 0)) {
       stop("'eps_grid' must be a numeric vector of positive values ",
-           "with at least 2 elements.", call. = FALSE)
+        "with at least 2 elements.",
+        call. = FALSE
+      )
     }
     eps_grid <- sort(eps_grid)
   }
 
   # --- Compute entropy for each candidate eps ---
   # C++: single pass through pair_dists, binary search per pair → O(n_pairs * log(n_eps))
-  cpp_result <- .cpp_count_neighbours_multi_eps(
+  cpp_result <- .cpp_count_neighbours_multi_eps( # nolint: object_usage_linter.
     pair_dists, n_sample, eps_grid
   )
   mean_nb_sizes <- cpp_result$mean_nb_sizes
-  entropy_vals  <- cpp_result$entropy_vals
+  entropy_vals <- cpp_result$entropy_vals
 
   # --- Find optimal eps (minimum entropy, smallest eps on tie) ---
   min_entropy <- min(entropy_vals)
@@ -160,8 +166,7 @@ tc_estimate_params <- function(x, eps_grid = NULL, sample_size = 200L,
   # --- Build result ---
   entropy_df <- data.frame(
     eps = eps_grid,
-    entropy = entropy_vals,
-    stringsAsFactors = FALSE
+    entropy = entropy_vals
   )
 
   result <- structure(

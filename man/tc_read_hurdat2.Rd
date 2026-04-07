@@ -50,7 +50,8 @@ The output is directly compatible with:
 \examples{
 # Read the bundled HURDAT2 dataset (Atlantic 1950-2004, 826 storms)
 filepath <- system.file("extdata", "hurdat2_1950_2004.txt",
-                        package = "TRACLUS")
+  package = "TRACLUS"
+)
 \donttest{
 storms <- tc_read_hurdat2(filepath)
 head(storms)

@@ -4,8 +4,10 @@
 make_full_workflow <- function() {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   clust <- suppressMessages(suppressWarnings(
@@ -18,8 +20,10 @@ make_full_workflow <- function() {
 make_traclus_result <- function() {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   suppressMessages(suppressWarnings(
     tc_traclus(trj, eps = 25, min_lns = 3)
@@ -29,8 +33,10 @@ make_traclus_result <- function() {
 make_estimate <- function() {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   suppressMessages(tc_estimate_params(parts))
@@ -268,7 +274,8 @@ test_that("plot.tc_representatives suppresses legend when >10 clusters", {
   }
   if (nrow(repr$clusters$segments) < n_target) {
     extra_c <- repr$clusters$segments[
-      rep(1L, n_target - nrow(repr$clusters$segments)), ]
+      rep(1L, n_target - nrow(repr$clusters$segments)),
+    ]
     repr$clusters$segments <- rbind(repr$clusters$segments, extra_c)
     rownames(repr$clusters$segments) <- NULL
   }
@@ -284,8 +291,10 @@ test_that("plot.tc_representatives suppresses legend when >10 clusters", {
 
   # Representatives: 2 waypoints per cluster
   repr$representatives <- do.call(rbind, lapply(new_ids, function(cid) {
-    data.frame(cluster_id = cid, point_id = 1:2,
-               rx = c(0, 10), ry = c(cid, cid))
+    data.frame(
+      cluster_id = cid, point_id = 1:2,
+      rx = c(0, 10), ry = c(cid, cid)
+    )
   }))
 
   expect_message(plot(repr), "Legend suppressed")
@@ -305,8 +314,10 @@ test_that("tc_leaflet.tc_trajectories works on geographic data", {
 
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic"
+    )
   )
   result <- expect_no_warning(tc_leaflet(trj))
   expect_s3_class(result, "leaflet")
@@ -314,7 +325,8 @@ test_that("tc_leaflet.tc_trajectories works on geographic data", {
   # Verify polylines are actually present in the widget
   call_methods <- vapply(result$x$calls, `[[`, character(1), "method")
   expect_true("addPolylines" %in% call_methods,
-              info = "Leaflet widget should contain addPolylines calls")
+    info = "Leaflet widget should contain addPolylines calls"
+  )
 })
 
 test_that("tc_leaflet.tc_partitions works on geographic data", {
@@ -322,8 +334,10 @@ test_that("tc_leaflet.tc_partitions works on geographic data", {
 
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   result <- expect_no_warning(tc_leaflet(parts))
@@ -339,8 +353,10 @@ test_that("tc_leaflet.tc_clusters works on geographic data", {
 
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   clust <- suppressMessages(suppressWarnings(
@@ -359,8 +375,10 @@ test_that("tc_leaflet.tc_representatives works on geographic data", {
 
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   clust <- suppressMessages(suppressWarnings(
@@ -381,8 +399,10 @@ test_that("tc_leaflet.tc_representatives show_clusters parameter works", {
 
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   clust <- suppressMessages(suppressWarnings(
@@ -408,8 +428,10 @@ test_that("tc_leaflet.tc_partitions adds circle markers when show_points = TRUE"
 
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
 
@@ -417,13 +439,15 @@ test_that("tc_leaflet.tc_partitions adds circle markers when show_points = TRUE"
   result <- expect_no_warning(tc_leaflet(parts))
   call_methods <- vapply(result$x$calls, `[[`, character(1), "method")
   expect_true("addMarkers" %in% call_methods,
-              info = "show_points = TRUE should produce cross markers")
+    info = "show_points = TRUE should produce cross markers"
+  )
 
   # show_points = FALSE → no addMarkers
   result2 <- expect_no_warning(tc_leaflet(parts, show_points = FALSE))
   call_methods2 <- vapply(result2$x$calls, `[[`, character(1), "method")
   expect_false("addMarkers" %in% call_methods2,
-               info = "show_points = FALSE should suppress cross markers")
+    info = "show_points = FALSE should suppress cross markers"
+  )
 })
 
 test_that("tc_leaflet works with method='projected'", {
@@ -431,8 +455,10 @@ test_that("tc_leaflet works with method='projected'", {
 
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic", method = "projected")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic", method = "projected"
+    )
   )
   # Leaflet renders original lon/lat — projected method only affects distance
   result <- expect_no_warning(tc_leaflet(trj))
@@ -447,8 +473,10 @@ test_that("tc_leaflet.tc_traclus dispatches to tc_representatives", {
 
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic"
+    )
   )
   result <- suppressMessages(suppressWarnings(
     tc_traclus(trj, eps = 500000, min_lns = 2)
@@ -465,10 +493,12 @@ test_that("tc_leaflet emits message for >10 clusters (tc_clusters)", {
   skip_if_not_installed("leaflet")
   skip_if_not_installed("viridisLite")
 
-  geo  <- generate_geo_trajectories()
-  trj  <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic", verbose = FALSE)
+  geo <- generate_geo_trajectories()
+  trj <- suppressMessages(
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic", verbose = FALSE
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   clust <- suppressMessages(suppressWarnings(
@@ -480,15 +510,15 @@ test_that("tc_leaflet emits message for >10 clusters (tc_clusters)", {
   segs <- clust$segments
   if (nrow(segs) < n_target) {
     extra <- segs[rep(1L, n_target - nrow(segs)), ]
-    segs  <- rbind(segs, extra)
+    segs <- rbind(segs, extra)
     rownames(segs) <- NULL
   } else {
     segs <- segs[seq_len(n_target), ]
   }
-  segs$cluster_id  <- seq_len(n_target)
-  clust$segments   <- segs
+  segs$cluster_id <- seq_len(n_target)
+  clust$segments <- segs
   clust$n_clusters <- n_target
-  clust$n_noise    <- 0L
+  clust$n_noise <- 0L
 
   expect_message(tc_leaflet(clust), "Legend suppressed")
 })

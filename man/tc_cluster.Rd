@@ -70,8 +70,10 @@ and degenerate representative trajectories — see \code{\link[=tc_represent]{tc
 details for the trajectory diversity check that mitigates this.
 }
 \examples{
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                        x = "x", y = "y", coord_type = "euclidean")
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
 parts <- tc_partition(trj)
 \donttest{
 clust <- tc_cluster(parts, eps = 10, min_lns = 3)

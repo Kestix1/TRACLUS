@@ -51,8 +51,10 @@ if (requireNamespace("leaflet", quietly = TRUE)) {
     system.file("extdata", "hurdat2_1950_2004.txt", package = "TRACLUS"),
     min_points = 80
   )
-  trj <- tc_trajectories(storms, traj_id = "storm_id",
-                         x = "lon", y = "lat", coord_type = "geographic")
+  trj <- tc_trajectories(storms,
+    traj_id = "storm_id",
+    x = "lon", y = "lat", coord_type = "geographic"
+  )
   tc_leaflet(trj)
 }
 }

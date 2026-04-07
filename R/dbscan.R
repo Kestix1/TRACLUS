@@ -17,7 +17,7 @@
 
   # Cluster assignment: 0 = unclassified, -1 = noise, >0 = cluster ID
 
-  cluster_id <- integer(n)  # all zeros = unclassified
+  cluster_id <- integer(n) # all zeros = unclassified
   current_cluster <- 0L
 
   # Pre-allocate a queue (vector used as FIFO via index tracking)
@@ -107,7 +107,9 @@
 #' @keywords internal
 .renumber_clusters <- function(cluster_ids) {
   unique_ids <- sort(unique(cluster_ids[cluster_ids > 0L]))
-  if (length(unique_ids) == 0L) return(cluster_ids)
+  if (length(unique_ids) == 0L) {
+    return(cluster_ids)
+  }
 
   # Create mapping: old_id -> new_id
   mapping <- integer(max(unique_ids))

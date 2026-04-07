@@ -2,8 +2,9 @@
 
 test_that("tc_partition works on toy data", {
   trj <- tc_trajectories(generate_toy_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   expect_s3_class(parts, "tc_partitions")
@@ -12,8 +13,10 @@ test_that("tc_partition works on toy data", {
   expect_equal(parts$method, "euclidean")
 
   # Segments data.frame has correct columns
-  expect_named(parts$segments,
-               c("traj_id", "seg_id", "sx", "sy", "ex", "ey"))
+  expect_named(
+    parts$segments,
+    c("traj_id", "seg_id", "sx", "sy", "ex", "ey")
+  )
 
   # All trajectory IDs from input are represented
   expect_true(all(unique(trj$data$traj_id) %in% unique(parts$segments$traj_id)))
@@ -25,8 +28,10 @@ test_that("tc_partition works on toy data", {
 
 test_that("tc_partition works on geographic data (haversine)", {
   geo <- generate_geo_trajectories()
-  trj <- tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                         coord_type = "geographic", verbose = FALSE)
+  trj <- tc_trajectories(geo,
+    traj_id = "storm_id", x = "lon", y = "lat",
+    coord_type = "geographic", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   expect_s3_class(parts, "tc_partitions")
@@ -37,9 +42,11 @@ test_that("tc_partition works on geographic data (haversine)", {
 test_that("tc_partition works in paper replication mode", {
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic", method = "euclidean",
-                    verbose = TRUE)
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic", method = "euclidean",
+      verbose = TRUE
+    )
   )
   parts <- tc_partition(trj, verbose = FALSE)
 
@@ -49,8 +56,9 @@ test_that("tc_partition works in paper replication mode", {
 
 test_that("two-point trajectories produce exactly 1 segment each", {
   trj <- tc_trajectories(generate_two_point_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   # Each 2-point trajectory should produce exactly 1 segment (no split possible)
@@ -65,8 +73,10 @@ test_that("straight-line trajectory is not partitioned", {
     x = rep(seq(0, 90, by = 10), 2),
     y = c(rep(0, 10), rep(10, 10))
   )
-  trj <- tc_trajectories(straight, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(straight,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   # Straight trajectory should yield exactly 1 segment
@@ -78,13 +88,19 @@ test_that("sharply bent trajectory gets partitioned", {
   # L-shaped trajectory: strong direction change should trigger a split
   bent <- data.frame(
     traj_id = rep(c("B1", "B2"), each = 6),
-    x = c(0, 20, 40, 60, 60, 60,
-          0, 0, 0, 20, 40, 60),
-    y = c(0, 0, 0, 0, 20, 40,
-          0, 20, 40, 40, 40, 40)
+    x = c(
+      0, 20, 40, 60, 60, 60,
+      0, 0, 0, 20, 40, 60
+    ),
+    y = c(
+      0, 0, 0, 0, 20, 40,
+      0, 20, 40, 40, 40, 40
+    )
   )
-  trj <- tc_trajectories(bent, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(bent,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   # Should have more than 1 segment due to direction change
@@ -94,8 +110,9 @@ test_that("sharply bent trajectory gets partitioned", {
 
 test_that("partition segments cover the trajectory range", {
   trj <- tc_trajectories(generate_toy_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   # For each trajectory, the first segment starts at the first point
@@ -119,14 +136,20 @@ test_that("consecutive segments are connected", {
   # Use sharply bent data that produces multiple segments per trajectory
   bent <- data.frame(
     traj_id = rep(c("B1", "B2"), each = 6),
-    x = c(0, 20, 40, 60, 60, 60,
-          0, 0, 0, 20, 40, 60),
-    y = c(0, 0, 0, 0, 20, 40,
-          0, 20, 40, 40, 40, 40)
+    x = c(
+      0, 20, 40, 60, 60, 60,
+      0, 0, 0, 20, 40, 60
+    ),
+    y = c(
+      0, 0, 0, 0, 20, 40,
+      0, 20, 40, 40, 40, 40
+    )
   )
   trj <- suppressWarnings(
-    tc_trajectories(bent, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean", verbose = FALSE)
+    tc_trajectories(bent,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    )
   )
   parts <- tc_partition(trj, verbose = FALSE)
 
@@ -147,8 +170,9 @@ test_that("consecutive segments are connected", {
 
 test_that("seg_id is 1-based and sequential within each trajectory", {
   trj <- tc_trajectories(generate_toy_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   for (tid in unique(parts$segments$traj_id)) {
@@ -170,22 +194,25 @@ test_that("tc_partition rejects wrong input class", {
 
 test_that("verbose message is printed when verbose = TRUE", {
   trj <- tc_trajectories(generate_toy_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   expect_message(tc_partition(trj, verbose = TRUE), "Partitioned")
 })
 
 test_that("no message when verbose = FALSE", {
   trj <- tc_trajectories(generate_toy_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   expect_silent(tc_partition(trj, verbose = FALSE))
 })
 
 test_that("print.tc_partitions works", {
   trj <- tc_trajectories(generate_toy_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   output <- capture.output(print(parts))
@@ -199,8 +226,9 @@ test_that("print.tc_partitions works", {
 
 test_that("summary.tc_partitions works", {
   trj <- tc_trajectories(generate_toy_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   output <- capture.output(summary(parts))
@@ -216,8 +244,10 @@ test_that("summary.tc_partitions works", {
 
 test_that("safe_log2 clamps values below 1", {
   # For values >= 1, log2 is returned normally
-  costpar_10 <- TRACLUS:::.cpp_mdl_costpar(0, 0, 10, 0,
-                                            c(0, 10), c(0, 0), 0L)
+  costpar_10 <- TRACLUS:::.cpp_mdl_costpar(
+    0, 0, 10, 0,
+    c(0, 10), c(0, 0), 0L
+  )
   # L(H) = log2(10) = 3.32..., L(D|H) for identical segment = log2(0)+log2(0) = 0+0
   # But with safe_log2, log2(max(0,1)) = 0
   expect_true(is.finite(costpar_10))
@@ -236,17 +266,23 @@ test_that("costpar for identical sub-segment equals log2(length)", {
   # When the partition segment IS the sub-segment, d_perp = 0, d_angle = 0
   # so L(D|H) = safe_log2(0) + safe_log2(0) = 0 + 0 = 0
   # costpar = L(H) = log2(10) = 3.32...
-  costpar <- TRACLUS:::.cpp_mdl_costpar(0, 0, 10, 0,
-                                         c(0, 10), c(0, 0), 0L)
+  costpar <- TRACLUS:::.cpp_mdl_costpar(
+    0, 0, 10, 0,
+    c(0, 10), c(0, 0), 0L
+  )
   expect_equal(costpar, log2(10), tolerance = 1e-10)
 })
 
 test_that("costpar increases with perpendicular deviation", {
   # Sub-segment that deviates from the partition line
-  cost_aligned <- TRACLUS:::.cpp_mdl_costpar(0, 0, 20, 0,
-                                              c(0, 10, 20), c(0, 0, 0), 0L)
-  cost_deviated <- TRACLUS:::.cpp_mdl_costpar(0, 0, 20, 0,
-                                               c(0, 10, 20), c(0, 5, 0), 0L)
+  cost_aligned <- TRACLUS:::.cpp_mdl_costpar(
+    0, 0, 20, 0,
+    c(0, 10, 20), c(0, 0, 0), 0L
+  )
+  cost_deviated <- TRACLUS:::.cpp_mdl_costpar(
+    0, 0, 20, 0,
+    c(0, 10, 20), c(0, 5, 0), 0L
+  )
   expect_true(cost_deviated > cost_aligned)
 })
 
@@ -283,9 +319,9 @@ test_that("cpp_partition_single splits sharp turns", {
 test_that("partition works with haversine method (single trajectory)", {
   # Geographic straight path along equator
   cp <- TRACLUS:::.cpp_partition_single(
-    c(0, 1, 2, 3, 4, 5),  # longitudes
-    c(0, 0, 0, 0, 0, 0),  # equator
-    1L  # haversine
+    c(0, 1, 2, 3, 4, 5), # longitudes
+    c(0, 0, 0, 0, 0, 0), # equator
+    1L # haversine
   )
   # Straight path: should not split
   expect_equal(cp, c(1L, 6L))
@@ -299,10 +335,12 @@ test_that("partition handles many trajectories", {
     traj_id = rep(paste0("T", 1:20), each = 6),
     x = rep(seq(0, 50, by = 10), 20),
     y = rep(seq(0, 19) * 5, each = 6) +
-        rep(c(0, 0.5, -0.3, 0.8, -0.2, 0), 20)
+      rep(c(0, 0.5, -0.3, 0.8, -0.2, 0), 20)
   )
-  trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   expect_s3_class(parts, "tc_partitions")
@@ -311,21 +349,23 @@ test_that("partition handles many trajectories", {
 
 test_that("segments have positive length (no zero-length segments)", {
   trj <- tc_trajectories(generate_toy_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   seg_lens <- sqrt(
     (parts$segments$ex - parts$segments$sx)^2 +
-    (parts$segments$ey - parts$segments$sy)^2
+      (parts$segments$ey - parts$segments$sy)^2
   )
   expect_true(all(seg_lens > 0))
 })
 
 test_that("n_segments matches actual segment count", {
   trj <- tc_trajectories(generate_toy_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   expect_equal(parts$n_segments, nrow(parts$segments))
@@ -333,21 +373,24 @@ test_that("n_segments matches actual segment count", {
 
 test_that("partition result is pipeable", {
   trj <- tc_trajectories(generate_toy_trajectories(),
-                         traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   # tc_partition should accept the output of tc_trajectories
   parts <- trj |> tc_partition(verbose = FALSE)
   expect_s3_class(parts, "tc_partitions")
 })
 
 test_that("traclus_toy dataset partitions correctly", {
-  trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                         x = "x", y = "y", coord_type = "euclidean",
-                         verbose = FALSE)
+  trj <- tc_trajectories(traclus_toy,
+    traj_id = "traj_id",
+    x = "x", y = "y", coord_type = "euclidean",
+    verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   expect_s3_class(parts, "tc_partitions")
-  expect_true(parts$n_segments >= 6)  # At least 1 segment per trajectory
+  expect_true(parts$n_segments >= 6) # At least 1 segment per trajectory
   expect_true(parts$n_segments <= 36) # At most 6 segments per trajectory
 })
 
@@ -432,15 +475,19 @@ test_that("golden: MDL split decision — costpar > costnopar at bend", {
   # costpar = 20.186 (see test above)
   # costnopar = 1 + 3*log2(10) = 10.966
   # costpar > costnopar => the algorithm splits.
-  costpar <- TRACLUS:::.cpp_mdl_costpar(0, 0, 20, 10,
-                                         c(0, 10, 20, 20), c(0, 0, 0, 10), 0L)
+  costpar <- TRACLUS:::.cpp_mdl_costpar(
+    0, 0, 20, 10,
+    c(0, 10, 20, 20), c(0, 0, 0, 10), 0L
+  )
   costnopar <- TRACLUS:::.cpp_mdl_costnopar(c(0, 10, 20, 20), c(0, 0, 0, 10), 0L)
 
   expect_true(costpar > costnopar)
 
   # The collinear portion p1->p3 should NOT trigger a split:
-  costpar_lin <- TRACLUS:::.cpp_mdl_costpar(0, 0, 20, 0,
-                                             c(0, 10, 20), c(0, 0, 0), 0L)
+  costpar_lin <- TRACLUS:::.cpp_mdl_costpar(
+    0, 0, 20, 0,
+    c(0, 10, 20), c(0, 0, 0), 0L
+  )
   costnopar_lin <- TRACLUS:::.cpp_mdl_costnopar(c(0, 10, 20), c(0, 0, 0), 0L)
   expect_true(costpar_lin < costnopar_lin)
 })
@@ -453,7 +500,7 @@ test_that("golden: expected characteristic points for L-shaped trajectory", {
   #   Seg 2: (20,0)->(20,20) vertical
   cp <- TRACLUS:::.cpp_partition_single(
     c(0, 10, 20, 20, 20),
-    c(0,  0,  0, 10, 20),
+    c(0, 0, 0, 10, 20),
     0L
   )
   expect_equal(cp, c(1L, 3L, 5L))
@@ -463,11 +510,13 @@ test_that("golden: full pipeline partitions L-shape at the corner", {
   # tc_trajectories requires >= 2 trajectories, so add a second straight one.
   df <- data.frame(
     traj_id = c(rep("L1", 5), rep("L2", 3)),
-    x = c(0, 10, 20, 20, 20,  0, 10, 20),
-    y = c(0,  0,  0, 10, 20,  5,  5,  5)
+    x = c(0, 10, 20, 20, 20, 0, 10, 20),
+    y = c(0, 0, 0, 10, 20, 5, 5, 5)
   )
-  trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
 
   # L1 should be partitioned into 2 segments (split at corner)
@@ -498,11 +547,13 @@ test_that("all segments zero-length after partitioning gives error", {
   df <- data.frame(
     traj_id = rep(c("A", "B", "C"), each = 2),
     x       = c(0, 1e-16, 0, 1e-16, 0, 1e-16),
-    y       = c(0, 0,     1, 1,     2, 2)
+    y       = c(0, 0, 1, 1, 2, 2)
   )
   trj <- suppressMessages(
-    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean", verbose = FALSE)
+    tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    )
   )
   expect_error(
     suppressWarnings(tc_partition(trj)),

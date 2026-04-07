@@ -4,8 +4,10 @@
 make_full_workflow <- function() {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   clust <- suppressMessages(suppressWarnings(
@@ -26,8 +28,10 @@ test_that("print.tc_clusters returns invisible(x)", {
 test_that("print.tc_traclus returns invisible(x)", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   result_obj <- suppressMessages(suppressWarnings(
     tc_traclus(trj, eps = 25, min_lns = 3)
@@ -39,8 +43,10 @@ test_that("print.tc_traclus returns invisible(x)", {
 test_that("print.tc_estimate returns invisible(x)", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   est <- suppressMessages(tc_estimate_params(parts))
@@ -61,8 +67,10 @@ test_that("print.tc_trajectories shows trajectory count", {
 test_that("print.tc_clusters shows haversine unit for geographic data", {
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   clust <- suppressMessages(suppressWarnings(
@@ -102,8 +110,10 @@ test_that("summary.tc_representatives returns invisible(object)", {
 test_that("summary.tc_traclus returns invisible(object)", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   result_obj <- suppressMessages(suppressWarnings(
     tc_traclus(trj, eps = 25, min_lns = 3)
@@ -133,8 +143,10 @@ test_that("summary.tc_clusters shows noise percentage", {
 test_that("summary.tc_traclus shows full pipeline stats", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   result <- suppressMessages(suppressWarnings(
     tc_traclus(trj, eps = 25, min_lns = 3)

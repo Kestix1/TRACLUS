@@ -53,8 +53,10 @@ displacement, and angular difference respectively.
 ```{r eps-demo}
 library(TRACLUS)
 
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                       x = "x", y = "y", coord_type = "euclidean")
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
 parts <- tc_partition(trj)
 
 # Too small: 0 clusters
@@ -156,15 +158,19 @@ The three distance components can be weighted differently using
 ```{r weights}
 # Emphasise angular similarity
 c_angle <- suppressWarnings(
-  tc_cluster(parts, eps = 25, min_lns = 3,
-             w_perp = 0.5, w_par = 0.5, w_angle = 2)
+  tc_cluster(parts,
+    eps = 25, min_lns = 3,
+    w_perp = 0.5, w_par = 0.5, w_angle = 2
+  )
 )
 cat("Angle-heavy: ", c_angle$n_clusters, "clusters\n")
 
 # Emphasise perpendicular distance
 c_perp <- suppressWarnings(
-  tc_cluster(parts, eps = 25, min_lns = 3,
-             w_perp = 2, w_par = 0.5, w_angle = 0.5)
+  tc_cluster(parts,
+    eps = 25, min_lns = 3,
+    w_perp = 2, w_par = 0.5, w_angle = 0.5
+  )
 )
 cat("Perp-heavy:  ", c_perp$n_clusters, "clusters\n")
 ```

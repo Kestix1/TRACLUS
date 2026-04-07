@@ -82,21 +82,38 @@ trajectories. (c) Remove trajectories with fewer than 2 points.
 5 if many are affected.
 \item \strong{Final check}: Error if fewer than 2 valid trajectories remain.
 }
+
+\strong{sf input requirements:}
+\itemize{
+\item \strong{Geometry type}: The sf object must contain \code{POINT} geometry.
+Other types (e.g., \code{LINESTRING}, \code{MULTIPOINT}) must be cast first:
+\code{sf::st_cast(data, "POINT")}.
+\item \strong{CRS}: A coordinate reference system must be set on the object.
+If no CRS is present, assign one with
+\code{sf::st_set_crs(data, 4326)} (WGS-84) before calling
+\code{tc_trajectories()}.
+\item \strong{Z/M dimensions}: Elevation (Z) or measure (M) coordinates are
+dropped automatically. Only X and Y are retained.
+}
 }
 \examples{
 # Euclidean example with built-in toy data
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                       x = "x", y = "y", coord_type = "euclidean")
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
 print(trj)
 
 # Geographic example
 geo <- data.frame(
   id = rep(c("A", "B", "C"), each = 5),
-  lon = c(-80,-78,-76,-74,-72, -82,-79,-76,-73,-70, -60,-58,-56,-54,-52),
-  lat = c(25,26,27,28,29, 24,25,26,27,28, 30,31,32,33,34)
+  lon = c(-80, -78, -76, -74, -72, -82, -79, -76, -73, -70, -60, -58, -56, -54, -52),
+  lat = c(25, 26, 27, 28, 29, 24, 25, 26, 27, 28, 30, 31, 32, 33, 34)
 )
-trj_geo <- tc_trajectories(geo, traj_id = "id", x = "lon", y = "lat",
-                           coord_type = "geographic")
+trj_geo <- tc_trajectories(geo,
+  traj_id = "id", x = "lon", y = "lat",
+  coord_type = "geographic"
+)
 
 # sf input (coord_type inferred from CRS)
 \donttest{

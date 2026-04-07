@@ -11,7 +11,10 @@
 
 \item{coord_type}{Character: "euclidean" or "geographic".}
 
-\item{method}{Character: "euclidean" or "haversine".}
+\item{method}{Character: "euclidean", "haversine", or "projected".}
+
+\item{proj_params}{Optional list with lat_mean and lon_mean for
+method = "projected". NULL for other methods.}
 }
 \value{
 A tc_trajectories S3 object.

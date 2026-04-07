@@ -60,23 +60,40 @@
 #'   \item **Final check**: Error if fewer than 2 valid trajectories remain.
 #' }
 #'
+#' **sf input requirements:**
+#' \itemize{
+#'   \item **Geometry type**: The sf object must contain `POINT` geometry.
+#'     Other types (e.g., `LINESTRING`, `MULTIPOINT`) must be cast first:
+#'     `sf::st_cast(data, "POINT")`.
+#'   \item **CRS**: A coordinate reference system must be set on the object.
+#'     If no CRS is present, assign one with
+#'     `sf::st_set_crs(data, 4326)` (WGS-84) before calling
+#'     `tc_trajectories()`.
+#'   \item **Z/M dimensions**: Elevation (Z) or measure (M) coordinates are
+#'     dropped automatically. Only X and Y are retained.
+#' }
+#'
 #' @family workflow functions
 #' @export
 #'
 #' @examples
 #' # Euclidean example with built-in toy data
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                        x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #' print(trj)
 #'
 #' # Geographic example
 #' geo <- data.frame(
 #'   id = rep(c("A", "B", "C"), each = 5),
-#'   lon = c(-80,-78,-76,-74,-72, -82,-79,-76,-73,-70, -60,-58,-56,-54,-52),
-#'   lat = c(25,26,27,28,29, 24,25,26,27,28, 30,31,32,33,34)
+#'   lon = c(-80, -78, -76, -74, -72, -82, -79, -76, -73, -70, -60, -58, -56, -54, -52),
+#'   lat = c(25, 26, 27, 28, 29, 24, 25, 26, 27, 28, 30, 31, 32, 33, 34)
 #' )
-#' trj_geo <- tc_trajectories(geo, traj_id = "id", x = "lon", y = "lat",
-#'                            coord_type = "geographic")
+#' trj_geo <- tc_trajectories(geo,
+#'   traj_id = "id", x = "lon", y = "lat",
+#'   coord_type = "geographic"
+#' )
 #'
 #' # sf input (coord_type inferred from CRS)
 #' \donttest{
@@ -105,13 +122,14 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
     # data.frame / tibble: x, y, coord_type are required
     if (is.null(x) || is.null(y) || is.null(coord_type)) {
       stop("x, y, and coord_type are required for data.frame input.",
-           call. = FALSE)
+        call. = FALSE
+      )
     }
   }
 
   # --- Validate coord_type (before resolve_method) ---
   if (!is.character(coord_type) || length(coord_type) != 1 ||
-      !coord_type %in% c("euclidean", "geographic")) {
+    !coord_type %in% c("euclidean", "geographic")) {
     stop("'coord_type' must be 'euclidean' or 'geographic'.", call. = FALSE)
   }
 
@@ -122,8 +140,10 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
   required_cols <- c(traj_id, x, y)
   missing_cols <- setdiff(required_cols, names(data))
   if (length(missing_cols) > 0) {
-    stop(sprintf("Column(s) not found in data: %s",
-                 paste(missing_cols, collapse = ", ")), call. = FALSE)
+    stop(sprintf(
+      "Column(s) not found in data: %s",
+      paste(missing_cols, collapse = ", ")
+    ), call. = FALSE)
   }
 
   # Coerce to plain data.frame to avoid tibble issues
@@ -153,20 +173,24 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
       # Out of range warning
       if (any(finite_x < -180 | finite_x > 180)) {
         warning("Some x values are outside [-180, 180]. ",
-                "For geographic data, x = longitude (-180 to 180).",
-                call. = FALSE)
+          "For geographic data, x = longitude (-180 to 180).",
+          call. = FALSE
+        )
       }
       if (any(finite_y < -90 | finite_y > 90)) {
         warning("Some y values are outside [-90, 90]. ",
-                "For geographic data, y = latitude (-90 to 90).",
-                call. = FALSE)
+          "For geographic data, y = latitude (-90 to 90).",
+          call. = FALSE
+        )
       }
       # Swapped coordinate detection
       if (all(finite_x >= -90 & finite_x <= 90) &&
-          any(finite_y < -90 | finite_y > 90)) {
+        any(finite_y < -90 | finite_y > 90)) {
         warning("It looks like x and y might be swapped. ",
-                "For geographic data, x = longitude (-180 to 180) ",
-                "and y = latitude (-90 to 90).", call. = FALSE)
+          "For geographic data, x = longitude (-180 to 180) ",
+          "and y = latitude (-90 to 90).",
+          call. = FALSE
+        )
       }
     }
   }
@@ -188,10 +212,12 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
       # Real geographic data typically has negative values or values > 90 in x
       # (longitude), and y-range is bounded but not trivially small.
       has_negative_or_large <- any(finite_x < -10 | finite_x > 90) ||
-                               any(finite_y < -10 | finite_y > 60)
+        any(finite_y < -10 | finite_y > 60)
       if (looks_like_lon && looks_like_lat && has_negative_or_large) {
         warning("Coordinate values look like geographic data (lon/lat range). ",
-                "Did you mean coord_type = 'geographic'?", call. = FALSE)
+          "Did you mean coord_type = 'geographic'?",
+          call. = FALSE
+        )
       }
     }
   }
@@ -200,8 +226,7 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
   df <- data.frame(
     traj_id = id_vals,
     x = x_vals,
-    y = y_vals,
-    stringsAsFactors = FALSE
+    y = y_vals
   )
 
   # --- Stage 1b: Antimeridian check (before filtering) ---
@@ -210,7 +235,6 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
   }
 
   # --- Stage 2: Filtering ---
-  n_before <- nrow(df)
 
   # (a) Remove rows with non-finite x, y or NA traj_id
   bad_rows <- !is.finite(df$x) | !is.finite(df$y) | is.na(df$traj_id)
@@ -234,29 +258,34 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
 
   # --- Stage 3: Warnings ---
   if (n_nonfinite > 0) {
-    warning(sprintf("Removed %d row(s) with non-finite coordinates or NA traj_id.",
-                    n_nonfinite), call. = FALSE)
+    warning(sprintf(
+      "Removed %d row(s) with non-finite coordinates or NA traj_id.",
+      n_nonfinite
+    ), call. = FALSE)
   }
   if (n_dups > 0) {
     warning(sprintf("Removed %d consecutive duplicate point(s).", n_dups),
-            call. = FALSE)
+      call. = FALSE
+    )
   }
   if (length(removed_short_ids) > 0) {
     id_msg <- .truncate_ids(removed_short_ids, max_show = 5)
-    warning(sprintf("Removed %d trajectory(ies) with < 2 points: %s",
-                    length(removed_short_ids), id_msg), call. = FALSE)
+    warning(sprintf(
+      "Removed %d trajectory(ies) with < 2 points: %s",
+      length(removed_short_ids), id_msg
+    ), call. = FALSE)
   }
 
   # --- Stage 4: Final check ---
   unique_ids <- unique(df$traj_id)
   if (length(unique_ids) < 2) {
     stop("Fewer than 2 valid trajectories remain after filtering. ",
-         "TRACLUS requires multiple trajectories for clustering.",
-         call. = FALSE)
+      "TRACLUS requires multiple trajectories for clustering.",
+      call. = FALSE
+    )
   }
 
   # Reset row names
-
   rownames(df) <- NULL
 
   # --- Compute projection parameters for method = "projected" ---
@@ -277,8 +306,10 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
   )
 
   if (verbose) {
-    message(sprintf("Loaded %d trajectories (%d points).",
-                    result$n_trajectories, result$n_points))
+    message(sprintf(
+      "Loaded %d trajectories (%d points).",
+      result$n_trajectories, result$n_points
+    ))
   }
 
   result
@@ -296,11 +327,13 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
 #'
 #' @param data data.frame with columns traj_id, x, y.
 #' @param coord_type Character: "euclidean" or "geographic".
-#' @param method Character: "euclidean" or "haversine".
+#' @param method Character: "euclidean", "haversine", or "projected".
+#' @param proj_params Optional list with lat_mean and lon_mean for
+#'   method = "projected". NULL for other methods.
 #' @return A tc_trajectories S3 object.
 #' @keywords internal
 .new_tc_trajectories <- function(data, coord_type, method,
-                                  proj_params = NULL) {
+                                 proj_params = NULL) {
   obj <- list(
     data = data,
     coord_type = coord_type,
@@ -328,10 +361,14 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
 .resolve_method <- function(coord_type, method, verbose) {
   if (coord_type == "euclidean") {
     if (!is.null(method) && method %in% c("haversine", "projected")) {
-      stop(sprintf("method = '%s' is not compatible with coord_type = 'euclidean'. ",
-                   method),
-           "Haversine and projected require geographic coordinates.",
-           call. = FALSE)
+      stop(
+        sprintf(
+          "method = '%s' is not compatible with coord_type = 'euclidean'. ",
+          method
+        ),
+        "Haversine and projected require geographic coordinates.",
+        call. = FALSE
+      )
     }
     return("euclidean")
   }
@@ -342,8 +379,10 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
     }
     if (method == "euclidean") {
       # Paper replication mode — always inform user
-      message("Using euclidean distances on geographic coordinates ",
-              "(paper replication mode).")
+      message(
+        "Using euclidean distances on geographic coordinates ",
+        "(paper replication mode)."
+      )
       return("euclidean")
     }
     if (method == "haversine") {
@@ -353,7 +392,8 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
       return("projected")
     }
     stop("'method' must be 'euclidean', 'haversine', or 'projected'.",
-         call. = FALSE)
+      call. = FALSE
+    )
   }
 
   stop("'coord_type' must be 'euclidean' or 'geographic'.", call. = FALSE)
@@ -368,7 +408,9 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
 .handle_sf_input <- function(data, traj_id, x, y, coord_type, method) {
   if (!requireNamespace("sf", quietly = TRUE)) {
     stop("Package 'sf' is required to process sf objects. ",
-         "Install it with install.packages('sf').", call. = FALSE)
+      "Install it with install.packages('sf').",
+      call. = FALSE
+    )
   }
 
   # Geometry must be POINT
@@ -376,15 +418,18 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
   point_types <- c("POINT", "POINT Z", "POINT M", "POINT ZM")
   if (!all(geom_type %in% point_types)) {
     stop("sf input must have POINT geometry. ",
-         "Use sf::st_cast('POINT') to convert LINESTRING geometry.",
-         call. = FALSE)
+      "Use sf::st_cast('POINT') to convert LINESTRING geometry.",
+      call. = FALSE
+    )
   }
 
   # CRS must be present
   crs <- sf::st_crs(data)
   if (is.na(crs)) {
     stop("sf object must have a valid CRS. ",
-         "Set one with sf::st_set_crs().", call. = FALSE)
+      "Set one with sf::st_set_crs().",
+      call. = FALSE
+    )
   }
 
   # Determine coord_type from CRS
@@ -419,13 +464,17 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
   if (!is.null(x) && x %in% names(df)) {
     if (!all(df[[x]] == df$.tc_x, na.rm = TRUE)) {
       warning("Specified 'x' column differs from sf geometry x-coordinates. ",
-              "Using coordinates from geometry.", call. = FALSE)
+        "Using coordinates from geometry.",
+        call. = FALSE
+      )
     }
   }
   if (!is.null(y) && y %in% names(df)) {
     if (!all(df[[y]] == df$.tc_y, na.rm = TRUE)) {
       warning("Specified 'y' column differs from sf geometry y-coordinates. ",
-              "Using coordinates from geometry.", call. = FALSE)
+        "Using coordinates from geometry.",
+        call. = FALSE
+      )
     }
   }
 
@@ -443,7 +492,9 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
 #' @return data.frame reordered by traj_id groups.
 #' @keywords internal
 .group_by_traj_id <- function(df) {
-  if (nrow(df) == 0) return(df)
+  if (nrow(df) == 0) {
+    return(df)
+  }
   # Preserve first-appearance order of traj_ids
   unique_ids <- unique(df$traj_id)
   id_order <- match(df$traj_id, unique_ids)
@@ -456,7 +507,9 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
 #' @return List with data (filtered df) and n_removed (integer).
 #' @keywords internal
 .remove_consecutive_duplicates <- function(df) {
-  if (nrow(df) <= 1) return(list(data = df, n_removed = 0L))
+  if (nrow(df) <= 1) {
+    return(list(data = df, n_removed = 0L))
+  }
 
   # A point is a consecutive duplicate if it has the same traj_id, x, y
   # as the previous row
@@ -479,7 +532,9 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
 #' @return List with data (filtered df) and removed_ids (character vector).
 #' @keywords internal
 .remove_short_trajectories <- function(df, min_points = 2) {
-  if (nrow(df) == 0) return(list(data = df, removed_ids = character(0)))
+  if (nrow(df) == 0) {
+    return(list(data = df, removed_ids = character(0)))
+  }
 
   counts <- table(df$traj_id)
   short_ids <- names(counts[counts < min_points])
@@ -499,7 +554,9 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
 #' @return NULL (invisible). May issue a warning.
 #' @keywords internal
 .check_antimeridian <- function(df) {
-  if (nrow(df) < 2) return(invisible(NULL))
+  if (nrow(df) < 2) {
+    return(invisible(NULL))
+  }
 
   # Check within each trajectory for consecutive lon difference > 180
   same_traj <- df$traj_id[-1] == df$traj_id[-nrow(df)]
@@ -510,11 +567,13 @@ tc_trajectories <- function(data, traj_id, x = NULL, y = NULL,
     crossing_idx <- which(crossing)
     crossing_ids <- unique(df$traj_id[crossing_idx])
     id_msg <- .truncate_ids(crossing_ids, max_show = 5)
-    warning(sprintf(
-      "Trajectory %s appears to cross the antimeridian. ",
-      id_msg
-    ), "See vignette('TRACLUS-spherical-geometry') for details.",
-    call. = FALSE)
+    warning(
+      sprintf(
+        "Trajectory %s appears to cross the antimeridian. ",
+        id_msg
+      ), "See vignette('TRACLUS-spherical-geometry') for details.",
+      call. = FALSE
+    )
   }
 
   invisible(NULL)

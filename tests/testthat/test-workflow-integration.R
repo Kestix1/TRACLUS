@@ -7,8 +7,10 @@ test_that("full euclidean workflow produces valid results", {
 
   # Step 1: Load
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   expect_s3_class(trj, "tc_trajectories")
 
@@ -40,8 +42,10 @@ test_that("full euclidean workflow produces valid results", {
 test_that("tc_traclus wrapper gives same results as step-by-step", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
 
   # All-in-one
@@ -58,8 +62,10 @@ test_that("tc_traclus wrapper gives same results as step-by-step", {
 test_that("re-clustering same partitions with different params works", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
 
@@ -85,15 +91,18 @@ test_that("re-clustering same partitions with different params works", {
 
 test_that("HURDAT2 to TRACLUS pipeline works", {
   filepath <- system.file("extdata", "hurdat2_1950_2004.txt",
-                          package = "TRACLUS")
+    package = "TRACLUS"
+  )
   skip_if(filepath == "", "HURDAT2 test file not found")
 
   # Use high min_points to get a small subset for fast testing
   storms <- suppressMessages(tc_read_hurdat2(filepath, min_points = 80))
 
   trj <- suppressMessages(
-    tc_trajectories(storms, traj_id = "storm_id",
-                    x = "lon", y = "lat", coord_type = "geographic")
+    tc_trajectories(storms,
+      traj_id = "storm_id",
+      x = "lon", y = "lat", coord_type = "geographic"
+    )
   )
   expect_s3_class(trj, "tc_trajectories")
   expect_equal(trj$coord_type, "geographic")
@@ -118,8 +127,10 @@ test_that("HURDAT2 to TRACLUS pipeline works", {
 test_that("tc_estimate_params integrates with clustering workflow", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
 
@@ -140,8 +151,10 @@ test_that("geographic full pipeline (haversine) end-to-end", {
 
   # Step 1: Load with geographic coord_type
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic"
+    )
   )
   expect_equal(trj$method, "haversine")
 
@@ -165,9 +178,9 @@ test_that("geographic full pipeline (haversine) end-to-end", {
     expect_true(all(is.finite(repr$representatives$rx)))
     expect_true(all(is.finite(repr$representatives$ry)))
     expect_true(all(repr$representatives$rx >= -180 &
-                    repr$representatives$rx <= 180))
+      repr$representatives$rx <= 180))
     expect_true(all(repr$representatives$ry >= -90 &
-                    repr$representatives$ry <= 90))
+      repr$representatives$ry <= 90))
   }
 
   # Reference chain preserved

@@ -57,8 +57,10 @@
 #' @export
 #'
 #' @examples
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                         x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #' parts <- tc_partition(trj)
 #' \donttest{
 #' clust <- tc_cluster(parts, eps = 25, min_lns = 3)
@@ -78,22 +80,24 @@ tc_represent <- function(x, gamma = 1, min_lns = NULL, verbose = TRUE) {
   } else {
     .validate_min_lns(min_lns)
     min_lns <- as.integer(min_lns)
-    message(sprintf("Using custom min_lns = %d for representation (clustering used %d).",
-                    min_lns, x$params$min_lns))
+    message(sprintf(
+      "Using custom min_lns = %d for representation (clustering used %d).",
+      min_lns, x$params$min_lns
+    ))
   }
 
   # --- Handle 0 clusters ---
   if (x$n_clusters == 0L) {
     warning("No clusters to represent (all segments are noise).",
-            call. = FALSE)
+      call. = FALSE
+    )
     return(.new_tc_representatives(
       segments = x$segments,
       representatives = data.frame(
         cluster_id = integer(0),
         point_id = integer(0),
         rx = numeric(0),
-        ry = numeric(0),
-        stringsAsFactors = FALSE
+        ry = numeric(0)
       ),
       clusters = x,
       n_clusters = 0L,
@@ -145,9 +149,10 @@ tc_represent <- function(x, gamma = 1, min_lns = NULL, verbose = TRUE) {
     }
 
     # Run sweep-line algorithm
-    result <- .sweep_line_representative(w_sx, w_sy, w_ex, w_ey,
-                                          traj_id = cl_segs$traj_id,
-                                          min_lns = min_lns, gamma = gamma)
+    result <- .sweep_line_representative(w_sx, w_sy, w_ex, w_ey, # nolint: object_usage_linter.
+      traj_id = cl_segs$traj_id,
+      min_lns = min_lns, gamma = gamma
+    )
 
     if (is.null(result)) {
       # Cluster failed: < 2 waypoints
@@ -166,8 +171,7 @@ tc_represent <- function(x, gamma = 1, min_lns = NULL, verbose = TRUE) {
       cluster_id = cid,
       point_id = seq_len(nrow(result)),
       rx = result$rx,
-      ry = result$ry,
-      stringsAsFactors = FALSE
+      ry = result$ry
     )
   }
 
@@ -175,7 +179,7 @@ tc_represent <- function(x, gamma = 1, min_lns = NULL, verbose = TRUE) {
   if (length(failed_clusters) > 0L) {
     for (fc in failed_clusters) {
       out_segments$cluster_id[out_segments$cluster_id == fc &
-                                !is.na(out_segments$cluster_id)] <- NA_integer_
+        !is.na(out_segments$cluster_id)] <- NA_integer_
     }
   }
 
@@ -209,8 +213,7 @@ tc_represent <- function(x, gamma = 1, min_lns = NULL, verbose = TRUE) {
       cluster_id = integer(0),
       point_id = integer(0),
       rx = numeric(0),
-      ry = numeric(0),
-      stringsAsFactors = FALSE
+      ry = numeric(0)
     )
   }
 
@@ -238,10 +241,13 @@ tc_represent <- function(x, gamma = 1, min_lns = NULL, verbose = TRUE) {
     if (n_lost > 0L) {
       message(sprintf(
         "Representatives: %d trajectory(ies) (%d cluster(s) lost to cleanup).",
-        final_n_clusters, n_lost))
+        final_n_clusters, n_lost
+      ))
     } else {
-      message(sprintf("Representatives: %d trajectory(ies).",
-                      final_n_clusters))
+      message(sprintf(
+        "Representatives: %d trajectory(ies).",
+        final_n_clusters
+      ))
     }
   }
 
@@ -269,8 +275,8 @@ tc_represent <- function(x, gamma = 1, min_lns = NULL, verbose = TRUE) {
 #' @return A tc_representatives S3 object.
 #' @keywords internal
 .new_tc_representatives <- function(segments, representatives, clusters,
-                                     n_clusters, n_noise, params,
-                                     coord_type, method) {
+                                    n_clusters, n_noise, params,
+                                    coord_type, method) {
   structure(
     list(
       segments = segments,

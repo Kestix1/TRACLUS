@@ -58,8 +58,10 @@
 #' @export
 #'
 #' @examples
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                         x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #' parts <- tc_partition(trj)
 #' \donttest{
 #' clust <- tc_cluster(parts, eps = 10, min_lns = 3)
@@ -75,9 +77,10 @@ tc_cluster <- function(x, eps, min_lns,
   # Paper: eps and min_lns are user-chosen, no sensible defaults
   if (missing(eps) || missing(min_lns)) {
     stop("'eps' and 'min_lns' are required. Choose values by trial and ",
-         "error or use tc_estimate_params() after tc_partition() for a ",
-         "data-driven starting point.",
-         call. = FALSE)
+      "error or use tc_estimate_params() after tc_partition() for a ",
+      "data-driven starting point.",
+      call. = FALSE
+    )
   }
 
   # --- Parameter validation ---
@@ -88,7 +91,6 @@ tc_cluster <- function(x, eps, min_lns,
 
   # --- Extract segment data ---
   segs <- x$segments
-  n_segs <- nrow(segs)
 
   # --- Project coordinates if method = "projected" ---
   is_projected <- (x$method == "projected")
@@ -96,12 +98,16 @@ tc_cluster <- function(x, eps, min_lns,
     proj_params <- x$trajectories$proj_params
     proj_s <- .equirectangular_proj(segs$sx, segs$sy, proj_params$lat_mean)
     proj_e <- .equirectangular_proj(segs$ex, segs$ey, proj_params$lat_mean)
-    c_sx <- proj_s$x;  c_sy <- proj_s$y
-    c_ex <- proj_e$x;  c_ey <- proj_e$y
+    c_sx <- proj_s$x
+    c_sy <- proj_s$y
+    c_ex <- proj_e$x
+    c_ey <- proj_e$y
     c_method <- "euclidean"
   } else {
-    c_sx <- segs$sx;  c_sy <- segs$sy
-    c_ex <- segs$ex;  c_ey <- segs$ey
+    c_sx <- segs$sx
+    c_sy <- segs$sy
+    c_ex <- segs$ex
+    c_ey <- segs$ey
     c_method <- x$method
   }
 
@@ -124,7 +130,6 @@ tc_cluster <- function(x, eps, min_lns,
 
   # --- Trajectory cardinality check (Paper Section 4.3) ---
   # Clusters whose segments originate from fewer than min_lns distinct
-
   # trajectories are removed — their segments become noise
   if (any(cluster_ids > 0L)) {
     unique_clusters <- sort(unique(cluster_ids[cluster_ids > 0L]))
@@ -156,8 +161,7 @@ tc_cluster <- function(x, eps, min_lns,
     sy = segs$sy,
     ex = segs$ex,
     ey = segs$ey,
-    cluster_id = cluster_ids,
-    stringsAsFactors = FALSE
+    cluster_id = cluster_ids
   )
 
   # --- Cluster summary ---
@@ -174,8 +178,7 @@ tc_cluster <- function(x, eps, min_lns,
         data.frame(
           cluster_id = cid,
           n_segments = sum(mask),
-          n_trajectories = length(unique(clustered$traj_id[mask])),
-          stringsAsFactors = FALSE
+          n_trajectories = length(unique(clustered$traj_id[mask]))
         )
       }
     ))
@@ -183,8 +186,7 @@ tc_cluster <- function(x, eps, min_lns,
     cluster_summary <- data.frame(
       cluster_id = integer(0),
       n_segments = integer(0),
-      n_trajectories = integer(0),
-      stringsAsFactors = FALSE
+      n_trajectories = integer(0)
     )
   }
 
@@ -216,8 +218,10 @@ tc_cluster <- function(x, eps, min_lns,
   )
 
   if (verbose) {
-    message(sprintf("Clustering: %d cluster(s), %d noise segment(s).",
-                    n_clusters, n_noise))
+    message(sprintf(
+      "Clustering: %d cluster(s), %d noise segment(s).",
+      n_clusters, n_noise
+    ))
   }
 
   obj

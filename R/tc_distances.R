@@ -155,29 +155,39 @@ tc_dist_angle <- function(si, ei, sj, ej, method = "euclidean") {
 #'
 #' # Custom weights emphasising perpendicular distance
 #' tc_dist_segments(c(0, 0), c(10, 0), c(0, 5), c(8, 6),
-#'                  w_perp = 2, w_par = 0.5, w_angle = 1)
+#'   w_perp = 2, w_par = 0.5, w_angle = 1
+#' )
 tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
                              w_angle = 1, method = "euclidean") {
   .validate_dist_inputs(si, ei, sj, ej, method)
   .validate_weights(w_perp, w_par, w_angle)
 
   d_p <- if (w_perp > 0) {
-    if (method == "euclidean") .r_d_perp_euc(si, ei, sj, ej)
-    else .r_d_perp_sph(si, ei, sj, ej)
+    if (method == "euclidean") {
+      .r_d_perp_euc(si, ei, sj, ej)
+    } else {
+      .r_d_perp_sph(si, ei, sj, ej)
+    }
   } else {
     0.0
   }
 
   d_l <- if (w_par > 0) {
-    if (method == "euclidean") .r_d_par_euc(si, ei, sj, ej)
-    else .r_d_par_sph(si, ei, sj, ej)
+    if (method == "euclidean") {
+      .r_d_par_euc(si, ei, sj, ej)
+    } else {
+      .r_d_par_sph(si, ei, sj, ej)
+    }
   } else {
     0.0
   }
 
   d_a <- if (w_angle > 0) {
-    if (method == "euclidean") .r_d_angle_euc(si, ei, sj, ej)
-    else .r_d_angle_sph(si, ei, sj, ej)
+    if (method == "euclidean") {
+      .r_d_angle_euc(si, ei, sj, ej)
+    } else {
+      .r_d_angle_sph(si, ei, sj, ej)
+    }
   } else {
     0.0
   }
@@ -209,7 +219,9 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   dx <- le[1] - ls[1]
   dy <- le[2] - ls[2]
   len_sq <- dx * dx + dy * dy
-  if (len_sq < 1e-15) return(0.0)
+  if (len_sq < 1e-15) {
+    return(0.0)
+  }
   ((p[1] - ls[1]) * dx + (p[2] - ls[2]) * dy) / len_sq
 }
 
@@ -251,7 +263,9 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   l1 <- .r_point_to_line_dist(s$sj, s$si, s$ei)
   l2 <- .r_point_to_line_dist(s$ej, s$si, s$ei)
   total <- l1 + l2
-  if (total < 1e-15) return(0.0)
+  if (total < 1e-15) {
+    return(0.0)
+  }
   (l1^2 + l2^2) / total
 }
 
@@ -286,8 +300,12 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   len_i <- .r_seg_len_euc(s$si, s$ei)
   len_j <- .r_seg_len_euc(s$sj, s$ej)
 
-  if (len_j < 1e-15) return(0.0)
-  if (len_i < 1e-15) return(len_j)
+  if (len_j < 1e-15) {
+    return(0.0)
+  }
+  if (len_i < 1e-15) {
+    return(len_j)
+  }
 
   # Direction vectors
   di <- s$ei - s$si
@@ -316,7 +334,7 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
 #' @return Distance in meters (double).
 #' @keywords internal
 .r_haversine <- function(p1, p2) {
-  R <- 6371000.0
+  r_earth_m <- 6371000.0
   lat1 <- p1[2] * pi / 180
   lat2 <- p2[2] * pi / 180
   dlat <- (p2[2] - p1[2]) * pi / 180
@@ -324,7 +342,7 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
 
   a <- sin(dlat / 2)^2 + cos(lat1) * cos(lat2) * sin(dlon / 2)^2
   a <- max(0, min(1, a))
-  2 * R * asin(sqrt(a))
+  2 * r_earth_m * asin(sqrt(a))
 }
 
 #' R reference: initial bearing (forward azimuth) in degrees [0, 360)
@@ -351,15 +369,15 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
 #' @return Absolute cross-track distance in meters (double).
 #' @keywords internal
 .r_cross_track <- function(p, a, b) {
-  R <- 6371000.0
+  r_earth_m <- 6371000.0
   d_ap <- .r_haversine(a, p)
   bearing_ap <- .r_bearing(a, p) * pi / 180
   bearing_ab <- .r_bearing(a, b) * pi / 180
-  angular_ap <- d_ap / R
+  angular_ap <- d_ap / r_earth_m
 
   sin_xt <- sin(angular_ap) * sin(bearing_ap - bearing_ab)
   sin_xt <- max(-1, min(1, sin_xt))
-  abs(asin(sin_xt)) * R
+  abs(asin(sin_xt)) * r_earth_m
 }
 
 #' R reference: signed along-track distance (meters)
@@ -369,28 +387,34 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
 #' @return Signed along-track distance in meters (double).
 #' @keywords internal
 .r_along_track_signed <- function(p, a, b) {
-  R <- 6371000.0
+  r_earth_m <- 6371000.0
   d_ap <- .r_haversine(a, p)
   d_xt <- .r_cross_track(p, a, b)
 
-  angular_ap <- d_ap / R
-  angular_xt <- d_xt / R
+  angular_ap <- d_ap / r_earth_m
+  angular_xt <- d_xt / r_earth_m
 
   cos_xt <- cos(angular_xt)
-  if (abs(cos_xt) < 1e-15) return(0.0)
+  if (abs(cos_xt) < 1e-15) {
+    return(0.0)
+  }
 
   cos_at <- cos(angular_ap) / cos_xt
   cos_at <- max(-1, min(1, cos_at))
-  d_at <- acos(cos_at) * R
+  d_at <- acos(cos_at) * r_earth_m
 
   # Sign from bearing comparison
   bearing_ap <- .r_bearing(a, p)
   bearing_ab <- .r_bearing(a, b)
 
   bearing_diff <- abs(bearing_ap - bearing_ab)
-  if (bearing_diff > 180) bearing_diff <- 360 - bearing_diff
+  if (bearing_diff > 180) {
+    bearing_diff <- 360 - bearing_diff
+  }
 
-  if (bearing_diff > 90) d_at <- -d_at
+  if (bearing_diff > 90) {
+    d_at <- -d_at
+  }
 
   d_at
 }
@@ -420,7 +444,9 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   l2 <- .r_cross_track(s$ej, s$si, s$ei)
 
   total <- l1 + l2
-  if (total < 1e-15) return(0.0)
+  if (total < 1e-15) {
+    return(0.0)
+  }
   (l1^2 + l2^2) / total
 }
 
@@ -452,17 +478,25 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   len_i <- .r_haversine(s$si, s$ei)
   len_j <- .r_haversine(s$sj, s$ej)
 
-  if (len_j < 1e-15) return(0.0)
-  if (len_i < 1e-15) return(len_j)
+  if (len_j < 1e-15) {
+    return(0.0)
+  }
+  if (len_i < 1e-15) {
+    return(len_j)
+  }
 
   bearing_i <- .r_bearing(s$si, s$ei)
   bearing_j <- .r_bearing(s$sj, s$ej)
 
   # Bearing difference normalised to [0, 180]
   diff_deg <- abs(bearing_i - bearing_j)
-  if (diff_deg > 180) diff_deg <- 360 - diff_deg
+  if (diff_deg > 180) {
+    diff_deg <- 360 - diff_deg
+  }
 
-  if (diff_deg >= 90) return(len_j)
+  if (diff_deg >= 90) {
+    return(len_j)
+  }
 
   len_j * sin(diff_deg * pi / 180)
 }
@@ -491,13 +525,14 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
     stop("'ej' must be a numeric vector of length 2.", call. = FALSE)
   }
   if (!is.character(method) || length(method) != 1 ||
-      !method %in% c("euclidean", "haversine")) {
+    !method %in% c("euclidean", "haversine")) {
     stop("'method' must be one of 'euclidean' or 'haversine'.", call. = FALSE)
   }
   # Check for non-finite values
   if (any(!is.finite(c(si, ei, sj, ej)))) {
     stop("All coordinate values must be finite (no NA, NaN, or Inf).",
-         call. = FALSE)
+      call. = FALSE
+    )
   }
   # Plausibility check for haversine coordinates
   if (method == "haversine") {
@@ -505,13 +540,15 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
     lons <- c(si[1], ei[1], sj[1], ej[1])
     if (any(lats < -90 | lats > 90)) {
       warning("Latitude values outside [-90, 90]. ",
-              "For haversine, coordinates are (longitude, latitude).",
-              call. = FALSE)
+        "For haversine, coordinates are (longitude, latitude).",
+        call. = FALSE
+      )
     }
     if (any(lons < -180 | lons > 180)) {
       warning("Longitude values outside [-180, 180]. ",
-              "For haversine, coordinates are (longitude, latitude).",
-              call. = FALSE)
+        "For haversine, coordinates are (longitude, latitude).",
+        call. = FALSE
+      )
     }
   }
   invisible(NULL)

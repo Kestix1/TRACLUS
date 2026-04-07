@@ -57,7 +57,8 @@ tc_dist_segments(c(0, 0), c(10, 0), c(0, 5), c(8, 6))
 
 # Custom weights emphasising perpendicular distance
 tc_dist_segments(c(0, 0), c(10, 0), c(0, 5), c(8, 6),
-                 w_perp = 2, w_par = 0.5, w_angle = 1)
+  w_perp = 2, w_par = 0.5, w_angle = 1
+)
 }
 \seealso{
 Other distance functions: 

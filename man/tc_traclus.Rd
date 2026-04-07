@@ -66,8 +66,10 @@ partition once with \code{\link[=tc_partition]{tc_partition()}}, then re-cluster
 partitions object with different \code{eps}/\code{min_lns} values.
 }
 \examples{
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                        x = "x", y = "y", coord_type = "euclidean")
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
 \donttest{
 result <- tc_traclus(trj, eps = 25, min_lns = 3)
 print(result)

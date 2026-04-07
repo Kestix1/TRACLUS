@@ -4,8 +4,10 @@
 make_test_clusters <- function(eps = 25, min_lns = 3) {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   suppressMessages(suppressWarnings(tc_cluster(parts, eps = eps, min_lns = min_lns)))
@@ -27,16 +29,18 @@ test_that("tc_representatives object has correct structure", {
   repr <- suppressMessages(tc_represent(clust))
 
   # Required elements
-  expect_true(all(c("segments", "representatives", "clusters",
-                     "n_clusters", "n_noise", "params",
-                     "coord_type", "method") %in% names(repr)))
+  expect_true(all(c(
+    "segments", "representatives", "clusters",
+    "n_clusters", "n_noise", "params",
+    "coord_type", "method"
+  ) %in% names(repr)))
 
   # Representatives data.frame columns
   expect_true(all(c("cluster_id", "point_id", "rx", "ry")
-                  %in% names(repr$representatives)))
+  %in% names(repr$representatives)))
 
   # Segments data.frame has cluster_id column
- expect_true("cluster_id" %in% names(repr$segments))
+  expect_true("cluster_id" %in% names(repr$segments))
 
   # Params
   expect_equal(repr$params$gamma, 1)
@@ -92,12 +96,16 @@ test_that("n_noise and n_clusters are consistent with segments", {
   repr <- suppressMessages(tc_represent(clust))
 
   expect_equal(repr$n_noise, sum(is.na(repr$segments$cluster_id)))
-  expect_equal(repr$n_clusters,
-               length(unique(repr$segments$cluster_id[
-                 !is.na(repr$segments$cluster_id)
-               ])))
-  expect_equal(repr$n_noise + sum(!is.na(repr$segments$cluster_id)),
-               nrow(repr$segments))
+  expect_equal(
+    repr$n_clusters,
+    length(unique(repr$segments$cluster_id[
+      !is.na(repr$segments$cluster_id)
+    ]))
+  )
+  expect_equal(
+    repr$n_noise + sum(!is.na(repr$segments$cluster_id)),
+    nrow(repr$segments)
+  )
 })
 
 # --- Parameter handling -----------------------------------------------------
@@ -134,8 +142,10 @@ test_that("wrong input class gives informative error", {
   )
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   expect_error(
@@ -198,8 +208,10 @@ test_that("gamma = 0.001 produces more waypoints than gamma = 10", {
 
   # Fine gamma should produce at least as many waypoints
   if (repr_fine$n_clusters > 0 && repr_coarse$n_clusters > 0) {
-    expect_gte(nrow(repr_fine$representatives),
-               nrow(repr_coarse$representatives))
+    expect_gte(
+      nrow(repr_fine$representatives),
+      nrow(repr_coarse$representatives)
+    )
   }
 })
 
@@ -267,7 +279,7 @@ test_that(".compute_average_direction warns on cancellation", {
 })
 
 test_that(".rotate_to_axis and .rotate_from_axis are inverses", {
-  dir_vec <- c(cos(pi / 6), sin(pi / 6))  # 30 degrees
+  dir_vec <- c(cos(pi / 6), sin(pi / 6)) # 30 degrees
   x_orig <- c(3, 7, -2)
   y_orig <- c(4, -1, 5)
 
@@ -593,10 +605,12 @@ test_that("tc_represent result can be printed invisibly", {
 
 
 test_that("geographic haversine representation: representatives in valid lon/lat range", {
-  geo  <- generate_geo_trajectories()
-  trj  <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic", verbose = FALSE)
+  geo <- generate_geo_trajectories()
+  trj <- suppressMessages(
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic", verbose = FALSE
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   clust <- suppressMessages(suppressWarnings(

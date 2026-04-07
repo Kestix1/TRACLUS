@@ -34,8 +34,9 @@ NULL
   if (magnitude < 1e-15) {
     # Segments cancel out — fall back to X-axis direction
     warning("Cluster segments cancel out in direction. ",
-            "Using X-axis as fallback direction.",
-            call. = FALSE)
+      "Using X-axis as fallback direction.",
+      call. = FALSE
+    )
     return(c(1, 0))
   }
 
@@ -114,7 +115,9 @@ NULL
 #' @keywords internal
 .sweep_line_representative <- function(sx, sy, ex, ey, traj_id, min_lns, gamma) {
   n_segs <- length(sx)
-  if (n_segs == 0) return(NULL)
+  if (n_segs == 0) {
+    return(NULL)
+  }
 
   # --- Step 1: Average direction vector ---
   dir_vec <- .compute_average_direction(sx, sy, ex, ey)
@@ -140,14 +143,16 @@ NULL
   # Filter out zero-length segments in the rotated system
   seg_len <- right_x - left_x
   valid <- seg_len > 1e-15
-  if (sum(valid) == 0) return(NULL)
+  if (sum(valid) == 0) {
+    return(NULL)
+  }
 
   left_x <- left_x[valid]
   right_x <- right_x[valid]
   left_y <- left_y[valid]
   right_y <- right_y[valid]
   seg_len <- seg_len[valid]
-  seg_traj_id <- traj_id[valid]  # trajectory ID per valid segment
+  seg_traj_id <- traj_id[valid] # trajectory ID per valid segment
   n_valid <- sum(valid)
 
   # --- Step 4: Create entry/exit events ---
@@ -176,7 +181,7 @@ NULL
   #   3. Process all exits    (deactivate segments, decrement count)
   active <- logical(n_valid)
   count <- 0L
-  last_wp_x <- -Inf  # x-position of last generated waypoint
+  last_wp_x <- -Inf # x-position of last generated waypoint
 
   k <- 1L
   n_events <- length(event_x)
@@ -209,15 +214,15 @@ NULL
         # Skip waypoint: insufficient trajectory diversity
         # (all active segments from the same trajectory)
       } else {
-      t_vals <- (cur_x - left_x[active_idx]) / seg_len[active_idx]
-      y_interp <- left_y[active_idx] +
-        t_vals * (right_y[active_idx] - left_y[active_idx])
-      mean_y <- mean(y_interp)
+        t_vals <- (cur_x - left_x[active_idx]) / seg_len[active_idx]
+        y_interp <- left_y[active_idx] +
+          t_vals * (right_y[active_idx] - left_y[active_idx])
+        mean_y <- mean(y_interp)
 
-      wp_count <- wp_count + 1L
-      wp_x[wp_count] <- cur_x
-      wp_y[wp_count] <- mean_y
-      last_wp_x <- cur_x
+        wp_count <- wp_count + 1L
+        wp_x[wp_count] <- cur_x
+        wp_y[wp_count] <- mean_y
+        last_wp_x <- cur_x
       } # end else (diversity check passed)
     }
 
@@ -231,7 +236,9 @@ NULL
     k <- j
   }
 
-  if (wp_count < 2L) return(NULL)
+  if (wp_count < 2L) {
+    return(NULL)
+  }
   wp_x <- wp_x[seq_len(wp_count)]
   wp_y <- wp_y[seq_len(wp_count)]
 

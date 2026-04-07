@@ -1,11 +1,14 @@
-# --- Tests for tc_trajectories() — input validation, sf-handling, coord_type/method resolution, filtering, grouping, edge cases ---
+# --- Tests for tc_trajectories() ---
+# Covers: input validation, sf-handling, coord_type/method resolution, filtering, grouping, edge cases
 
 # --- Basic happy path ---
 
 test_that("tc_trajectories creates valid object from data.frame", {
   toy <- generate_toy_trajectories()
-  trj <- tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(toy,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   expect_s3_class(trj, "tc_trajectories")
   expect_equal(trj$n_trajectories, 6L)
   expect_equal(trj$n_points, 40L)
@@ -17,8 +20,10 @@ test_that("tc_trajectories creates valid object from data.frame", {
 
 test_that("tc_trajectories works with geographic data", {
   geo <- generate_geo_trajectories()
-  trj <- tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                         coord_type = "geographic", verbose = FALSE)
+  trj <- tc_trajectories(geo,
+    traj_id = "storm_id", x = "lon", y = "lat",
+    coord_type = "geographic", verbose = FALSE
+  )
   expect_equal(trj$coord_type, "geographic")
   expect_equal(trj$method, "haversine")
   expect_equal(trj$n_trajectories, 3L)
@@ -26,8 +31,10 @@ test_that("tc_trajectories works with geographic data", {
 
 test_that("tc_trajectories returns correct column names", {
   toy <- generate_toy_trajectories()
-  trj <- tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(toy,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   expect_equal(names(trj$data), c("traj_id", "x", "y"))
 })
 
@@ -35,24 +42,30 @@ test_that("tc_trajectories returns correct column names", {
 
 test_that("method defaults to 'haversine' for geographic", {
   geo <- generate_geo_trajectories()
-  trj <- tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                         coord_type = "geographic", verbose = FALSE)
+  trj <- tc_trajectories(geo,
+    traj_id = "storm_id", x = "lon", y = "lat",
+    coord_type = "geographic", verbose = FALSE
+  )
   expect_equal(trj$method, "haversine")
 })
 
 test_that("method defaults to 'euclidean' for euclidean", {
   toy <- generate_toy_trajectories()
-  trj <- tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(toy,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   expect_equal(trj$method, "euclidean")
 })
 
 test_that("paper replication mode: geographic + euclidean method", {
   geo <- generate_geo_trajectories()
   expect_message(
-    trj <- tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                           coord_type = "geographic", method = "euclidean",
-                           verbose = TRUE),
+    trj <- tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic", method = "euclidean",
+      verbose = TRUE
+    ),
     "paper replication mode"
   )
   expect_equal(trj$method, "euclidean")
@@ -61,9 +74,11 @@ test_that("paper replication mode: geographic + euclidean method", {
 
 test_that("method = 'projected' works with geographic data", {
   geo <- generate_geo_trajectories()
-  trj <- tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                         coord_type = "geographic", method = "projected",
-                         verbose = FALSE)
+  trj <- tc_trajectories(geo,
+    traj_id = "storm_id", x = "lon", y = "lat",
+    coord_type = "geographic", method = "projected",
+    verbose = FALSE
+  )
   expect_equal(trj$method, "projected")
   expect_equal(trj$coord_type, "geographic")
   expect_false(is.null(trj$proj_params))
@@ -76,9 +91,11 @@ test_that("method = 'projected' works with geographic data", {
 test_that("method = 'projected' is rejected for euclidean data", {
   toy <- generate_toy_trajectories()
   expect_error(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean", method = "projected",
-                    verbose = FALSE),
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", method = "projected",
+      verbose = FALSE
+    ),
     "not compatible"
   )
 })
@@ -86,9 +103,11 @@ test_that("method = 'projected' is rejected for euclidean data", {
 test_that("haversine + euclidean coord_type is rejected", {
   toy <- generate_toy_trajectories()
   expect_error(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean", method = "haversine",
-                    verbose = FALSE),
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", method = "haversine",
+      verbose = FALSE
+    ),
     "not compatible"
   )
 })
@@ -106,18 +125,24 @@ test_that("missing x, y, coord_type for data.frame input stops", {
 test_that("non-existent column names stop with error", {
   toy <- generate_toy_trajectories()
   expect_error(
-    tc_trajectories(toy, traj_id = "nonexistent", x = "x", y = "y",
-                    coord_type = "euclidean", verbose = FALSE),
+    tc_trajectories(toy,
+      traj_id = "nonexistent", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "not found"
   )
 })
 
 test_that("non-numeric x/y columns stop with error", {
-  bad <- data.frame(traj_id = rep("A", 3), x = c("a", "b", "c"),
-                    y = c(1, 2, 3), stringsAsFactors = FALSE)
+  bad <- data.frame(
+    traj_id = rep("A", 3), x = c("a", "b", "c"),
+    y = c(1, 2, 3), stringsAsFactors = FALSE
+  )
   expect_error(
-    tc_trajectories(bad, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean", verbose = FALSE),
+    tc_trajectories(bad,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "numeric"
   )
 })
@@ -131,8 +156,10 @@ test_that("rows with NA coordinates are removed", {
     y = c(0, 1, 2, 3, 0, 1, 2, 3)
   )
   expect_warning(
-    trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                           coord_type = "euclidean", verbose = FALSE),
+    trj <- tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "non-finite"
   )
   expect_equal(trj$n_points, 7L)
@@ -145,8 +172,10 @@ test_that("rows with Inf coordinates are removed", {
     y = c(0, 1, 2, 0, 1, 2)
   )
   expect_warning(
-    trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                           coord_type = "euclidean", verbose = FALSE),
+    trj <- tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "non-finite"
   )
   expect_equal(trj$n_points, 5L)
@@ -159,8 +188,10 @@ test_that("rows with NaN coordinates are removed", {
     y = c(0, 1, 2, 0, 1, 2)
   )
   expect_warning(
-    trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                           coord_type = "euclidean", verbose = FALSE),
+    trj <- tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "non-finite"
   )
 })
@@ -172,8 +203,10 @@ test_that("consecutive duplicates are removed", {
     y = c(0, 0, 1, 2, 0, 1, 1, 2)
   )
   expect_warning(
-    trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                           coord_type = "euclidean", verbose = FALSE),
+    trj <- tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "consecutive duplicate"
   )
   expect_equal(trj$n_points, 6L)
@@ -186,8 +219,10 @@ test_that("trajectories with < 2 points are removed", {
     y = c(0, 0, 1, 0, 1, 2)
   )
   expect_warning(
-    trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                           coord_type = "euclidean", verbose = FALSE),
+    trj <- tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "< 2 points"
   )
   expect_false("A" %in% trj$data$traj_id)
@@ -200,8 +235,10 @@ test_that("filtering to < 2 trajectories stops with error", {
     y = c(0, 1, 2, 3, 4)
   )
   expect_error(
-    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean", verbose = FALSE),
+    tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "Fewer than 2"
   )
 })
@@ -214,8 +251,10 @@ test_that("unsorted input is grouped correctly by traj_id", {
     x = c(10, 0, 11, 1, 12, 2),
     y = c(10, 0, 11, 1, 12, 2)
   )
-  trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   # Check that within each trajectory, points are in original order
   a_data <- trj$data[trj$data$traj_id == "A", ]
   expect_equal(a_data$x, c(0, 1, 2))
@@ -229,8 +268,10 @@ test_that("first-appearance order of traj_ids is preserved", {
     x = c(10, 0, 11, 1, 12, 2),
     y = c(10, 0, 11, 1, 12, 2)
   )
-  trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   # B appeared first, so B's data should come before A's
   first_ids <- unique(trj$data$traj_id)
   expect_equal(first_ids[1], "B")
@@ -244,8 +285,10 @@ test_that("integer traj_id is converted to character", {
     x = rep(c(0, 1, 2), 3),
     y = rep(c(0, 1, 2), 3)
   )
-  trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   expect_true(is.character(trj$data$traj_id))
 })
 
@@ -255,8 +298,10 @@ test_that("factor traj_id is converted to character", {
     x = rep(c(0, 1, 2), 3),
     y = rep(c(0, 1, 2), 3)
   )
-  trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   expect_true(is.character(trj$data$traj_id))
 })
 
@@ -267,12 +312,14 @@ test_that("geographic data warns about swapped coordinates", {
   # (longitude range) — suggests x and y are swapped
   df <- data.frame(
     traj_id = rep(c("A", "B"), each = 3),
-    x = c(25, 26, 27, 30, 31, 32),       # lat range in x
-    y = c(-120, -118, -116, -100, -98, -96)  # lon range in y (outside [-90,90])
+    x = c(25, 26, 27, 30, 31, 32), # lat range in x
+    y = c(-120, -118, -116, -100, -98, -96) # lon range in y (outside [-90,90])
   )
   expect_warning(
-    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "geographic", verbose = FALSE),
+    tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "geographic", verbose = FALSE
+    ),
     "swapped"
   )
 })
@@ -280,8 +327,10 @@ test_that("geographic data warns about swapped coordinates", {
 test_that("euclidean data warns about potential geographic values", {
   geo <- generate_geo_trajectories()
   expect_warning(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "euclidean", verbose = FALSE),
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "geographic"
   )
 })
@@ -291,8 +340,10 @@ test_that("euclidean data warns about potential geographic values", {
 test_that("verbose = TRUE produces message", {
   toy <- generate_toy_trajectories()
   expect_message(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean", verbose = TRUE),
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = TRUE
+    ),
     "Loaded"
   )
 })
@@ -300,8 +351,10 @@ test_that("verbose = TRUE produces message", {
 test_that("verbose = FALSE suppresses messages", {
   toy <- generate_toy_trajectories()
   expect_no_message(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean", verbose = FALSE)
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    )
   )
 })
 
@@ -309,8 +362,10 @@ test_that("verbose = FALSE suppresses messages", {
 
 test_that("print.tc_trajectories returns invisible(x)", {
   toy <- generate_toy_trajectories()
-  trj <- tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(toy,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   out <- capture.output(result <- print(trj))
   expect_identical(result, trj)
   expect_true(any(grepl("TRACLUS Trajectories", out)))
@@ -319,8 +374,10 @@ test_that("print.tc_trajectories returns invisible(x)", {
 
 test_that("summary.tc_trajectories returns invisible(object)", {
   toy <- generate_toy_trajectories()
-  trj <- tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(toy,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   out <- capture.output(result <- summary(trj))
   expect_identical(result, trj)
   expect_true(any(grepl("Summary", out)))
@@ -368,10 +425,14 @@ test_that("sf input with consecutive duplicate points: warning and correct point
   # Build an sf POINT object (CRS 4326) with consecutive duplicates in traj "A"
   pts <- data.frame(
     storm_id = c("A", "A", "A", "A", "B", "B", "B"),
-    lon = c(-80, -80, -78, -76,   # A: point 1 duplicated consecutively
-            -82, -79, -76),
-    lat = c(25, 25, 27, 29,
-            24, 26, 28)
+    lon = c(
+      -80, -80, -78, -76, # A: point 1 duplicated consecutively
+      -82, -79, -76
+    ),
+    lat = c(
+      25, 25, 27, 29,
+      24, 26, 28
+    )
   )
   sf_pts <- sf::st_as_sf(pts, coords = c("lon", "lat"), crs = 4326)
 
@@ -393,8 +454,10 @@ test_that("sf input with consecutive duplicate points: warning and correct point
 
 test_that("two-point trajectories are valid", {
   df <- generate_two_point_trajectories()
-  trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   expect_equal(trj$n_trajectories, 2L)
   expect_equal(trj$n_points, 4L)
 })
@@ -406,8 +469,10 @@ test_that("NA in traj_id column is removed", {
     y = c(0, 1, 2, 3, 4, 5)
   )
   expect_warning(
-    trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                           coord_type = "euclidean", verbose = FALSE),
+    trj <- tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "non-finite|NA"
   )
   expect_false(any(is.na(trj$data$traj_id)))
@@ -423,8 +488,10 @@ test_that("dedup then short-traj removal chain works correctly", {
     y = c(0, 0, 1, 2, 2, 3, 4, 5)
   )
   suppressWarnings(
-    trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                           coord_type = "euclidean", verbose = FALSE)
+    trj <- tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    )
   )
   expect_equal(trj$n_trajectories, 2L)
   expect_true("A" %in% trj$data$traj_id)
@@ -437,12 +504,14 @@ test_that("dedup then short-traj removal chain works correctly", {
 test_that("antimeridian crossing produces warning for geographic data", {
   df <- data.frame(
     traj_id = rep(c("A", "B"), each = 3),
-    x = c(170, -170, -160, -80, -78, -76),   # A crosses antimeridian
+    x = c(170, -170, -160, -80, -78, -76), # A crosses antimeridian
     y = c(30, 30, 30, 25, 26, 27)
   )
   expect_warning(
-    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "geographic", verbose = FALSE),
+    tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "geographic", verbose = FALSE
+    ),
     "antimeridian"
   )
 })
@@ -450,13 +519,17 @@ test_that("antimeridian crossing produces warning for geographic data", {
 test_that("invalid coord_type gives informative error", {
   toy <- generate_toy_trajectories()
   expect_error(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "cartesian", verbose = FALSE),
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "cartesian", verbose = FALSE
+    ),
     "'coord_type'"
   )
   expect_error(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "WGS84", verbose = FALSE),
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "WGS84", verbose = FALSE
+    ),
     "'coord_type'"
   )
 })
@@ -464,8 +537,10 @@ test_that("invalid coord_type gives informative error", {
 test_that("missing x column gives informative error", {
   toy <- generate_toy_trajectories()
   expect_error(
-    tc_trajectories(toy, traj_id = "traj_id", x = "lon", y = "y",
-                    coord_type = "euclidean", verbose = FALSE),
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "lon", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "not found"
   )
 })
@@ -473,8 +548,10 @@ test_that("missing x column gives informative error", {
 test_that("missing y column gives informative error", {
   toy <- generate_toy_trajectories()
   expect_error(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "lat",
-                    coord_type = "euclidean", verbose = FALSE),
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "lat",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "not found"
   )
 })
@@ -485,18 +562,24 @@ test_that("traclus_toy dataset loads and works", {
   expect_true(is.data.frame(traclus_toy))
   expect_equal(nrow(traclus_toy), 40L)
   expect_true(all(c("traj_id", "x", "y") %in% names(traclus_toy)))
-  trj <- tc_trajectories(traclus_toy, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(traclus_toy,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   expect_s3_class(trj, "tc_trajectories")
   expect_equal(trj$n_trajectories, 6L)
 })
 
 test_that("non-numeric y column gives error", {
-  bad <- data.frame(traj_id = rep("A", 3), x = c(1, 2, 3),
-                    y = c("a", "b", "c"), stringsAsFactors = FALSE)
+  bad <- data.frame(
+    traj_id = rep("A", 3), x = c(1, 2, 3),
+    y = c("a", "b", "c"), stringsAsFactors = FALSE
+  )
   expect_error(
-    tc_trajectories(bad, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean", verbose = FALSE),
+    tc_trajectories(bad,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "numeric"
   )
 })
@@ -510,7 +593,7 @@ test_that("sf POINT Z input emits message about dropping Z dimension", {
     z   = c(10, 20, 30, 10, 20, 30)
   )
   sf_pts <- sf::st_as_sf(pts, coords = c("x", "y", "z"))
-  sf_pts <- sf::st_set_crs(sf_pts, 3857)  # projected CRS → euclidean
+  sf_pts <- sf::st_set_crs(sf_pts, 3857) # projected CRS → euclidean
   expect_message(
     tc_trajectories(sf_pts, traj_id = "id", verbose = FALSE),
     "Z/M"
@@ -520,7 +603,7 @@ test_that("sf POINT Z input emits message about dropping Z dimension", {
 test_that("sf non-POINT geometry gives error", {
   skip_if_not_installed("sf")
   line_sf <- sf::st_sf(
-    id       = c("A", "B"),
+    id = c("A", "B"),
     geometry = sf::st_sfc(
       sf::st_linestring(rbind(c(-80, 25), c(-78, 26), c(-76, 27))),
       sf::st_linestring(rbind(c(-82, 24), c(-80, 25), c(-78, 26)))
@@ -538,24 +621,28 @@ test_that("non-consecutive duplicate points are NOT removed", {
   # non-consecutive (pos 2 differs) → all 4 points must be retained.
   df <- data.frame(
     traj_id = c(rep("A", 4), rep("B", 3)),
-    x       = c(0, 1, 0, 2,   3, 4, 5),
-    y       = c(0, 1, 0, 2,   3, 4, 5)
+    x       = c(0, 1, 0, 2, 3, 4, 5),
+    y       = c(0, 1, 0, 2, 3, 4, 5)
   )
-  trj    <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                             coord_type = "euclidean", verbose = FALSE)
-  a_pts  <- trj$data[trj$data$traj_id == "A", ]
+  trj <- tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
+  a_pts <- trj$data[trj$data$traj_id == "A", ]
   expect_equal(nrow(a_pts), 4L)
 })
 
 test_that("geographic x outside [-180, 180] gives warning", {
   df <- data.frame(
     traj_id = rep(c("A", "B"), each = 3),
-    x       = c(185, 186, 187,   10, 11, 12),  # A has longitude > 180
-    y       = c(30, 31, 32,      40, 41, 42)
+    x       = c(185, 186, 187, 10, 11, 12), # A has longitude > 180
+    y       = c(30, 31, 32, 40, 41, 42)
   )
   expect_warning(
-    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "geographic", verbose = FALSE),
+    tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "geographic", verbose = FALSE
+    ),
     "outside|\\[-180"
   )
 })
@@ -565,12 +652,14 @@ test_that("geographic y outside [-90, 90] gives warning", {
   # ensuring only the out-of-range warning fires.
   df <- data.frame(
     traj_id = rep(c("A", "B"), each = 3),
-    x       = c(10, 11, 12,    100, 101, 102),
-    y       = c(95, 96, 97,    40,  41,  42)   # A has latitude > 90
+    x       = c(10, 11, 12, 100, 101, 102),
+    y       = c(95, 96, 97, 40, 41, 42) # A has latitude > 90
   )
   expect_warning(
-    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "geographic", verbose = FALSE),
+    tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "geographic", verbose = FALSE
+    ),
     "outside|\\[-90"
   )
 })
@@ -578,8 +667,10 @@ test_that("geographic y outside [-90, 90] gives warning", {
 test_that("missing x gives package-specific error", {
   toy <- generate_toy_trajectories()
   expect_error(
-    tc_trajectories(toy, traj_id = "traj_id", y = "y",
-                    coord_type = "euclidean", verbose = FALSE),
+    tc_trajectories(toy,
+      traj_id = "traj_id", y = "y",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "x, y, and coord_type are required"
   )
 })
@@ -587,8 +678,10 @@ test_that("missing x gives package-specific error", {
 test_that("missing y gives package-specific error", {
   toy <- generate_toy_trajectories()
   expect_error(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x",
-                    coord_type = "euclidean", verbose = FALSE),
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x",
+      coord_type = "euclidean", verbose = FALSE
+    ),
     "x, y, and coord_type are required"
   )
 })
@@ -596,9 +689,10 @@ test_that("missing y gives package-specific error", {
 test_that("missing coord_type gives package-specific error", {
   toy <- generate_toy_trajectories()
   expect_error(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    verbose = FALSE),
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      verbose = FALSE
+    ),
     "x, y, and coord_type are required"
   )
 })
-

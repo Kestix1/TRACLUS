@@ -45,8 +45,10 @@ trajectories:
 ```{r load-data}
 head(traclus_toy)
 
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                       x = "x", y = "y", coord_type = "euclidean")
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
 trj
 ```
 
@@ -146,19 +148,25 @@ values — no need to re-partition every time:
 parts <- tc_partition(trj)
 
 # Try different clustering parameters on the same partitions
-clust_tight  <- tc_cluster(parts, eps = 15, min_lns = 3)
+clust_tight <- tc_cluster(parts, eps = 15, min_lns = 3)
 clust_medium <- tc_cluster(parts, eps = 25, min_lns = 3)
-clust_wide   <- tc_cluster(parts, eps = 40, min_lns = 2)
+clust_wide <- tc_cluster(parts, eps = 40, min_lns = 2)
 
-cat(sprintf("eps=15: %d cluster(s), %.0f%% noise\n",
-            clust_tight$n_clusters,
-            100 * clust_tight$n_noise / nrow(clust_tight$segments)))
-cat(sprintf("eps=25: %d cluster(s), %.0f%% noise\n",
-            clust_medium$n_clusters,
-            100 * clust_medium$n_noise / nrow(clust_medium$segments)))
-cat(sprintf("eps=40: %d cluster(s), %.0f%% noise\n",
-            clust_wide$n_clusters,
-            100 * clust_wide$n_noise / nrow(clust_wide$segments)))
+cat(sprintf(
+  "eps=15: %d cluster(s), %.0f%% noise\n",
+  clust_tight$n_clusters,
+  100 * clust_tight$n_noise / nrow(clust_tight$segments)
+))
+cat(sprintf(
+  "eps=25: %d cluster(s), %.0f%% noise\n",
+  clust_medium$n_clusters,
+  100 * clust_medium$n_noise / nrow(clust_medium$segments)
+))
+cat(sprintf(
+  "eps=40: %d cluster(s), %.0f%% noise\n",
+  clust_wide$n_clusters,
+  100 * clust_wide$n_noise / nrow(clust_wide$segments)
+))
 ```
 
 This makes parameter exploration fast and convenient. See
@@ -201,6 +209,37 @@ with the optional `method` argument:
 
 See `vignette("TRACLUS-spherical-geometry")` for a full comparison of
 the three available methods.
+
+## Using sf objects
+
+If your data is already an `sf` object, you can pass it directly to
+`tc_trajectories()` — no need to specify `x`, `y`, or `coord_type`:
+
+```{r sf-example, eval = requireNamespace("sf", quietly = TRUE)}
+if (requireNamespace("sf", quietly = TRUE)) {
+  geo <- data.frame(
+    id  = rep(c("A", "B", "C"), each = 5),
+    lon = c(-80, -78, -76, -74, -72, -82, -79, -76, -73, -70, -60, -58, -56, -54, -52),
+    lat = c(25, 26, 27, 28, 29, 24, 25, 26, 27, 28, 30, 31, 32, 33, 34)
+  )
+  geo_sf <- sf::st_as_sf(geo, coords = c("lon", "lat"), crs = 4326)
+  trj_sf <- tc_trajectories(geo_sf, traj_id = "id")
+  trj_sf
+}
+```
+
+Three requirements apply to sf input:
+
+1. **POINT geometry required.** Other geometry types must be converted first:
+   ```r
+   point_sf <- sf::st_cast(your_sf, "POINT")
+   ```
+2. **CRS must be set.** The CRS determines whether distances are geographic
+   or euclidean. If missing, assign it before calling `tc_trajectories()`:
+   ```r
+   data_sf <- sf::st_set_crs(data_sf, 4326)  # WGS-84
+   ```
+3. **Z/M coordinates are dropped.** Only X and Y are used by TRACLUS.
 
 ## Next steps
 

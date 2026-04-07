@@ -46,8 +46,10 @@ for colourblind-safe display and accept \code{...} for standard plot
 parameters (\code{main}, \code{xlim}, \code{ylim}, \code{cex}, etc.).
 }
 \examples{
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                       x = "x", y = "y", coord_type = "euclidean")
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
 plot(trj)
 
 }

@@ -33,7 +33,8 @@ fewer than a minimum number of track points:
 library(TRACLUS)
 
 filepath <- system.file("extdata", "hurdat2_1950_2004.txt",
-                        package = "TRACLUS")
+  package = "TRACLUS"
+)
 storms <- tc_read_hurdat2(filepath, min_points = 3)
 cat("Storms:", length(unique(storms$storm_id)), "\n")
 cat("Points:", nrow(storms), "\n")
@@ -60,9 +61,11 @@ For geographic data, set `coord_type = "geographic"`. The x-column must
 contain longitude and the y-column must contain latitude:
 
 ```{r trajectories}
-trj <- tc_trajectories(long_storms, traj_id = "storm_id",
-                       x = "lon", y = "lat",
-                       coord_type = "geographic")
+trj <- tc_trajectories(long_storms,
+  traj_id = "storm_id",
+  x = "lon", y = "lat",
+  coord_type = "geographic"
+)
 trj
 ```
 

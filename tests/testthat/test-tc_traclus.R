@@ -3,8 +3,10 @@
 test_that("tc_traclus missing eps/min_lns gives custom error", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
 
   expect_error(tc_traclus(trj), "'eps' and 'min_lns' are required")
@@ -14,8 +16,10 @@ test_that("tc_traclus missing eps/min_lns gives custom error", {
 test_that("tc_traclus validates parameters before computation", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
 
   expect_error(tc_traclus(trj, eps = -1, min_lns = 3), "'eps'")
@@ -27,19 +31,24 @@ test_that("tc_traclus validates parameters before computation", {
 test_that("tc_traclus rejects wrong input class", {
   parts <- suppressMessages(tc_partition(
     suppressMessages(tc_trajectories(
-      generate_toy_trajectories(), traj_id = "traj_id",
+      generate_toy_trajectories(),
+      traj_id = "traj_id",
       x = "x", y = "y", coord_type = "euclidean"
     ))
   ))
-  expect_error(tc_traclus(parts, eps = 25, min_lns = 3),
-               "Expected a 'tc_trajectories' object")
+  expect_error(
+    tc_traclus(parts, eps = 25, min_lns = 3),
+    "Expected a 'tc_trajectories' object"
+  )
 })
 
 test_that("tc_traclus passes verbose to all sub-functions", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
 
   # verbose = TRUE: should produce messages from partition, cluster, represent
@@ -55,8 +64,10 @@ test_that("tc_traclus passes verbose to all sub-functions", {
 test_that("tc_traclus verbose = FALSE suppresses all messages", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
 
   expect_no_message(
@@ -67,8 +78,10 @@ test_that("tc_traclus verbose = FALSE suppresses all messages", {
 test_that("tc_traclus repr_min_lns overrides min_lns for representation", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
 
   # Use repr_min_lns = 2 (different from clustering min_lns = 3)
@@ -83,8 +96,10 @@ test_that("tc_traclus repr_min_lns overrides min_lns for representation", {
 test_that("tc_traclus custom weights are passed through", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
 
   result <- suppressMessages(suppressWarnings(
@@ -98,8 +113,10 @@ test_that("tc_traclus custom weights are passed through", {
 test_that("print.tc_traclus works", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   result <- suppressMessages(tc_traclus(trj, eps = 25, min_lns = 3))
 
@@ -111,17 +128,19 @@ test_that("print.tc_traclus works", {
 test_that("tc_traclus() result is identical to manual step-by-step chain", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
 
   # All-in-one
   result <- suppressMessages(tc_traclus(trj, eps = 25, min_lns = 3))
 
   # Re-run the same steps manually using the partitions stored in the result
-  parts   <- result$clusters$partitions
+  parts <- result$clusters$partitions
   clust_m <- suppressMessages(tc_cluster(parts, eps = 25, min_lns = 3))
-  repr_m  <- suppressMessages(tc_represent(clust_m))
+  repr_m <- suppressMessages(tc_represent(clust_m))
 
   # Cluster count must match
   expect_equal(result$n_clusters, repr_m$n_clusters)
@@ -131,15 +150,18 @@ test_that("tc_traclus() result is identical to manual step-by-step chain", {
 
   # Representative coordinates must match (order by cluster_id for comparison)
   if (result$n_clusters > 0) {
-    r1 <- result$representatives[order(result$representatives$cluster_id,
-                                       result$representatives$rx,
-                                       result$representatives$ry), ]
-    r2 <- repr_m$representatives[order(repr_m$representatives$cluster_id,
-                                       repr_m$representatives$rx,
-                                       repr_m$representatives$ry), ]
+    r1 <- result$representatives[order(
+      result$representatives$cluster_id,
+      result$representatives$rx,
+      result$representatives$ry
+    ), ]
+    r2 <- repr_m$representatives[order(
+      repr_m$representatives$cluster_id,
+      repr_m$representatives$rx,
+      repr_m$representatives$ry
+    ), ]
     expect_equal(r1$rx, r2$rx, tolerance = 1e-10)
     expect_equal(r1$ry, r2$ry, tolerance = 1e-10)
     expect_equal(r1$cluster_id, r2$cluster_id)
   }
 })
-

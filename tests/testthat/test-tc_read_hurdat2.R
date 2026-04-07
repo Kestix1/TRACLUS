@@ -81,8 +81,10 @@ test_that("min_points = 1 keeps all storms", {
   # Should have more storms than with min_points = 10
   result10 <- suppressMessages(tc_read_hurdat2(filepath, min_points = 10))
 
-  expect_gt(length(unique(result$storm_id)),
-            length(unique(result10$storm_id)))
+  expect_gt(
+    length(unique(result$storm_id)),
+    length(unique(result10$storm_id))
+  )
 })
 
 test_that("filtering produces message about removed storms", {
@@ -100,11 +102,13 @@ test_that("higher min_points yields fewer storms", {
   filepath <- get_hurdat2_path()
   skip_if(filepath == "", "HURDAT2 test file not found")
 
-  r5  <- suppressMessages(tc_read_hurdat2(filepath, min_points = 5))
+  r5 <- suppressMessages(tc_read_hurdat2(filepath, min_points = 5))
   r50 <- suppressMessages(tc_read_hurdat2(filepath, min_points = 50))
 
-  expect_gt(length(unique(r5$storm_id)),
-            length(unique(r50$storm_id)))
+  expect_gt(
+    length(unique(r5$storm_id)),
+    length(unique(r50$storm_id))
+  )
 })
 
 # --- Performance ---
@@ -124,8 +128,10 @@ test_that("parser reads large file in reasonable time", {
 # --- Input validation ---
 
 test_that("non-existent file gives error", {
-  expect_error(tc_read_hurdat2("nonexistent_file.txt"),
-               "File not found")
+  expect_error(
+    tc_read_hurdat2("nonexistent_file.txt"),
+    "File not found"
+  )
 })
 
 test_that("invalid filepath type gives error", {
@@ -162,13 +168,15 @@ test_that(".parse_hurdat2_coord returns NA for invalid input", {
 test_that(".parse_hurdat2_coord_vec is consistent with scalar version", {
   strs <- c("25.0N", "10.5S", "80.0W", "150.2E", "", "25.0Q")
 
-  scalar_ns <- sapply(strs[1:2], function(s)
-    TRACLUS:::.parse_hurdat2_coord(s, "NS"))
+  scalar_ns <- sapply(strs[1:2], function(s) {
+    TRACLUS:::.parse_hurdat2_coord(s, "NS")
+  })
   vec_ns <- TRACLUS:::.parse_hurdat2_coord_vec(strs[1:2], "NS")
   expect_equal(unname(scalar_ns), vec_ns)
 
-  scalar_ew <- sapply(strs[3:4], function(s)
-    TRACLUS:::.parse_hurdat2_coord(s, "EW"))
+  scalar_ew <- sapply(strs[3:4], function(s) {
+    TRACLUS:::.parse_hurdat2_coord(s, "EW")
+  })
   vec_ew <- TRACLUS:::.parse_hurdat2_coord_vec(strs[3:4], "EW")
   expect_equal(unname(scalar_ew), vec_ew)
 })

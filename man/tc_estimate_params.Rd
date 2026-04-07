@@ -76,8 +76,10 @@ workflow object). Use \code{result$eps} and \code{result$min_lns} to extract
 the values for \code{\link[=tc_cluster]{tc_cluster()}}.
 }
 \examples{
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                        x = "x", y = "y", coord_type = "euclidean")
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
 parts <- tc_partition(trj)
 \donttest{
 est <- tc_estimate_params(parts)

@@ -43,7 +43,8 @@
 #' @examples
 #' # Read the bundled HURDAT2 dataset (Atlantic 1950-2004, 826 storms)
 #' filepath <- system.file("extdata", "hurdat2_1950_2004.txt",
-#'                         package = "TRACLUS")
+#'   package = "TRACLUS"
+#' )
 #' \donttest{
 #' storms <- tc_read_hurdat2(filepath)
 #' head(storms)
@@ -57,7 +58,7 @@ tc_read_hurdat2 <- function(filepath, min_points = 3L) {
     stop(sprintf("File not found: %s", filepath), call. = FALSE)
   }
   if (!is.numeric(min_points) || length(min_points) != 1 ||
-      !is.finite(min_points) || min_points < 1) {
+    !is.finite(min_points) || min_points < 1) {
     stop("'min_points' must be a positive integer >= 1.", call. = FALSE)
   }
   min_points <- as.integer(min_points)
@@ -127,8 +128,7 @@ tc_read_hurdat2 <- function(filepath, min_points = 3L) {
   result <- data.frame(
     storm_id = storm_ids,
     lat = lats,
-    lon = lons,
-    stringsAsFactors = FALSE
+    lon = lons
   )
 
   # --- Filter storms with < min_points observations ---
@@ -147,8 +147,10 @@ tc_read_hurdat2 <- function(filepath, min_points = 3L) {
   rownames(result) <- NULL
 
   if (n_removed > 0) {
-    message(sprintf("Filtered %d storm(s) with < %d points.",
-                    n_removed, min_points))
+    message(sprintf(
+      "Filtered %d storm(s) with < %d points.",
+      n_removed, min_points
+    ))
   }
 
   result
@@ -167,23 +169,27 @@ tc_read_hurdat2 <- function(filepath, min_points = 3L) {
 #' @keywords internal
 .parse_hurdat2_coord <- function(coord_str, directions) {
   coord_str <- trimws(coord_str)
-  if (nchar(coord_str) < 2) return(NA_real_)
+  if (nchar(coord_str) < 2) {
+    return(NA_real_)
+  }
 
   # Extract direction suffix (last character)
   dir_char <- substr(coord_str, nchar(coord_str), nchar(coord_str))
   num_str <- substr(coord_str, 1, nchar(coord_str) - 1)
 
   val <- suppressWarnings(as.numeric(num_str))
-  if (is.na(val)) return(NA_real_)
+  if (is.na(val)) {
+    return(NA_real_)
+  }
 
   # Apply sign based on direction
-  pos_dir <- substr(directions, 1, 1)  # N or E
-  neg_dir <- substr(directions, 2, 2)  # S or W
+  pos_dir <- substr(directions, 1, 1) # N or E
+  neg_dir <- substr(directions, 2, 2) # S or W
 
   if (dir_char == neg_dir) {
     val <- -val
   } else if (dir_char != pos_dir) {
-    return(NA_real_)  # Unknown direction
+    return(NA_real_) # Unknown direction
   }
 
   val

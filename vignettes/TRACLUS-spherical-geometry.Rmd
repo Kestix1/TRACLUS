@@ -57,19 +57,24 @@ distances are measured:
 library(TRACLUS)
 
 filepath <- system.file("extdata", "hurdat2_1950_2004.txt",
-                        package = "TRACLUS")
+  package = "TRACLUS"
+)
 storms <- tc_read_hurdat2(filepath, min_points = 80)
 
 # Default: method = NULL resolves to "projected" for geographic data
-trj_proj <- tc_trajectories(storms, traj_id = "storm_id",
-                            x = "lon", y = "lat",
-                            coord_type = "geographic")
+trj_proj <- tc_trajectories(storms,
+  traj_id = "storm_id",
+  x = "lon", y = "lat",
+  coord_type = "geographic"
+)
 
 # Explicit haversine for comparison
-trj_hav <- tc_trajectories(storms, traj_id = "storm_id",
-                           x = "lon", y = "lat",
-                           coord_type = "geographic",
-                           method = "haversine")
+trj_hav <- tc_trajectories(storms,
+  traj_id = "storm_id",
+  x = "lon", y = "lat",
+  coord_type = "geographic",
+  method = "haversine"
+)
 
 cat("projected method:", trj_proj$method, "\n")
 cat("haversine method:", trj_hav$method, "\n")
@@ -140,16 +145,16 @@ distance API.
 
 ```{r distance-example}
 # Two segments near the English Channel
-si <- c(-0.1278, 51.5074)   # London
-ei <- c(2.3522, 48.8566)    # Paris
-sj <- c(0.5, 50.5)          # mid-Channel
-ej <- c(3.0, 49.5)          # Belgian coast
+si <- c(-0.1278, 51.5074) # London
+ei <- c(2.3522, 48.8566) # Paris
+sj <- c(0.5, 50.5) # mid-Channel
+ej <- c(3.0, 49.5) # Belgian coast
 
 # Spherical distances (metres)
 d_perp_sph <- tc_dist_perpendicular(si, ei, sj, ej, method = "haversine")
-d_par_sph  <- tc_dist_parallel(si, ei, sj, ej, method = "haversine")
-d_ang_sph  <- tc_dist_angle(si, ei, sj, ej, method = "haversine")
-d_tot_sph  <- tc_dist_segments(si, ei, sj, ej, method = "haversine")
+d_par_sph <- tc_dist_parallel(si, ei, sj, ej, method = "haversine")
+d_ang_sph <- tc_dist_angle(si, ei, sj, ej, method = "haversine")
+d_tot_sph <- tc_dist_segments(si, ei, sj, ej, method = "haversine")
 
 cat(sprintf("Perpendicular: %.0f m\n", d_perp_sph))
 cat(sprintf("Parallel:      %.0f m\n", d_par_sph))
@@ -176,9 +181,11 @@ Neighbourhood computation uses the distance method chosen at
 `"haversine"` and `"projected"`:
 
 ```{r geographic-workflow}
-trj <- tc_trajectories(storms, traj_id = "storm_id",
-                       x = "lon", y = "lat",
-                       coord_type = "geographic")   # method = "projected" default
+trj <- tc_trajectories(storms,
+  traj_id = "storm_id",
+  x = "lon", y = "lat",
+  coord_type = "geographic"
+) # method = "projected" default
 
 parts <- tc_partition(trj)
 clust <- tc_cluster(parts, eps = 500000, min_lns = 3)

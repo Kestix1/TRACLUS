@@ -21,8 +21,10 @@ an appropriate \code{eps} value.
 }
 \examples{
 \donttest{
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                       x = "x", y = "y", coord_type = "euclidean")
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
 parts <- tc_partition(trj)
 est <- tc_estimate_params(parts)
 plot(est)

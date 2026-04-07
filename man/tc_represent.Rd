@@ -66,8 +66,10 @@ is already sufficient. See \code{vignette("algorithm-details")} for a
 detailed explanation.
 }
 \examples{
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                        x = "x", y = "y", coord_type = "euclidean")
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
 parts <- tc_partition(trj)
 \donttest{
 clust <- tc_cluster(parts, eps = 25, min_lns = 3)

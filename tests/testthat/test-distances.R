@@ -139,7 +139,8 @@ test_that("weighted total distance with default weights", {
 test_that("weighted total distance with zero weights", {
   # Only perpendicular
   d <- tc_dist_segments(c(0, 0), c(10, 0), c(0, 5), c(10, 5),
-                        w_perp = 1, w_par = 0, w_angle = 0)
+    w_perp = 1, w_par = 0, w_angle = 0
+  )
   expect_equal(d, 5.0, tolerance = 1e-10)
 })
 
@@ -149,28 +150,43 @@ test_that("weighted total distance with custom weights", {
   d_ang <- tc_dist_angle(c(0, 0), c(10, 0), c(0, 5), c(8, 6))
 
   d_custom <- tc_dist_segments(c(0, 0), c(10, 0), c(0, 5), c(8, 6),
-                               w_perp = 2, w_par = 0.5, w_angle = 3)
+    w_perp = 2, w_par = 0.5, w_angle = 3
+  )
   expect_equal(d_custom, 2 * d_perp + 0.5 * d_par + 3 * d_ang, tolerance = 1e-10)
 })
 
 test_that("distance functions reject invalid inputs", {
-  expect_error(tc_dist_perpendicular(c(0), c(10, 0), c(0, 5), c(10, 5)),
-               "length 2")
-  expect_error(tc_dist_perpendicular("a", c(10, 0), c(0, 5), c(10, 5)),
-               "numeric")
-  expect_error(tc_dist_perpendicular(c(0, 0), c(10, 0), c(0, 5), c(10, 5),
-                                     method = "invalid"),
-               "method")
-  expect_error(tc_dist_perpendicular(c(NA, 0), c(10, 0), c(0, 5), c(10, 5)),
-               "finite")
-  expect_error(tc_dist_perpendicular(c(Inf, 0), c(10, 0), c(0, 5), c(10, 5)),
-               "finite")
+  expect_error(
+    tc_dist_perpendicular(c(0), c(10, 0), c(0, 5), c(10, 5)),
+    "length 2"
+  )
+  expect_error(
+    tc_dist_perpendicular("a", c(10, 0), c(0, 5), c(10, 5)),
+    "numeric"
+  )
+  expect_error(
+    tc_dist_perpendicular(c(0, 0), c(10, 0), c(0, 5), c(10, 5),
+      method = "invalid"
+    ),
+    "method"
+  )
+  expect_error(
+    tc_dist_perpendicular(c(NA, 0), c(10, 0), c(0, 5), c(10, 5)),
+    "finite"
+  )
+  expect_error(
+    tc_dist_perpendicular(c(Inf, 0), c(10, 0), c(0, 5), c(10, 5)),
+    "finite"
+  )
 })
 
 test_that("weight validation rejects negative values", {
-  expect_error(tc_dist_segments(c(0, 0), c(10, 0), c(0, 5), c(10, 5),
-                                w_perp = -1),
-               "non-negative")
+  expect_error(
+    tc_dist_segments(c(0, 0), c(10, 0), c(0, 5), c(10, 5),
+      w_perp = -1
+    ),
+    "non-negative"
+  )
 })
 
 test_that("distance symmetry: dist(A,B) == dist(B,A)", {
@@ -207,11 +223,14 @@ test_that("all distance components are non-negative", {
   for (name in names(segs)) {
     s <- segs[[name]]
     expect_gte(tc_dist_perpendicular(s$si, s$ei, s$sj, s$ej), 0,
-               label = paste("perp:", name))
+      label = paste("perp:", name)
+    )
     expect_gte(tc_dist_parallel(s$si, s$ei, s$sj, s$ej), 0,
-               label = paste("par:", name))
+      label = paste("par:", name)
+    )
     expect_gte(tc_dist_angle(s$si, s$ei, s$sj, s$ej), 0,
-               label = paste("angle:", name))
+      label = paste("angle:", name)
+    )
   }
 })
 
@@ -236,7 +255,8 @@ test_that("golden: Pair A (orthogonal) — all three components", {
   # Lehmer mean: (0^2 + 4^2) / (0 + 4) = 16/4 = 4.0
   expect_equal(
     tc_dist_perpendicular(c(0, 0), c(10, 0), c(3, 0), c(3, 4)),
-    4.0, tolerance = 1e-10
+    4.0,
+    tolerance = 1e-10
   )
 
   # --- d_par (Definition 2) ---
@@ -247,7 +267,8 @@ test_that("golden: Pair A (orthogonal) — all three components", {
   # d_par = min(3, 3) = 3.0
   expect_equal(
     tc_dist_parallel(c(0, 0), c(10, 0), c(3, 0), c(3, 4)),
-    3.0, tolerance = 1e-10
+    3.0,
+    tolerance = 1e-10
   )
 
   # --- d_angle (Definition 3) ---
@@ -256,7 +277,8 @@ test_that("golden: Pair A (orthogonal) — all three components", {
   # theta >= 90°  =>  d_angle = |Lj| = 4.0
   expect_equal(
     tc_dist_angle(c(0, 0), c(10, 0), c(3, 0), c(3, 4)),
-    4.0, tolerance = 1e-10
+    4.0,
+    tolerance = 1e-10
   )
 })
 
@@ -277,7 +299,8 @@ test_that("golden: Pair B (oblique, projection outside segment) — all three co
   # Lehmer mean: (1^2 + 3^2) / (1 + 3) = (1+9)/4 = 10/4 = 2.5
   expect_equal(
     tc_dist_perpendicular(c(0, 0), c(6, 0), c(8, 1), c(10, 3)),
-    2.5, tolerance = 1e-10
+    2.5,
+    tolerance = 1e-10
   )
 
   # --- d_par ---
@@ -289,7 +312,8 @@ test_that("golden: Pair B (oblique, projection outside segment) — all three co
   # NOTE: l_par > 0 because both projections lie outside Li.
   expect_equal(
     tc_dist_parallel(c(0, 0), c(6, 0), c(8, 1), c(10, 3)),
-    2.0, tolerance = 1e-10
+    2.0,
+    tolerance = 1e-10
   )
 
   # --- d_angle ---
@@ -299,7 +323,8 @@ test_that("golden: Pair B (oblique, projection outside segment) — all three co
   # theta < 90°  =>  d_angle = |Lj| * sin(45°) = 2*sqrt(2) * (1/sqrt(2)) = 2.0
   expect_equal(
     tc_dist_angle(c(0, 0), c(6, 0), c(8, 1), c(10, 3)),
-    2.0, tolerance = 1e-10
+    2.0,
+    tolerance = 1e-10
   )
 })
 
@@ -308,43 +333,52 @@ test_that("golden: weighted total distance for Pair A and Pair B", {
   # w=(1,1,1): 4+3+4 = 11.0
   expect_equal(
     tc_dist_segments(c(0, 0), c(10, 0), c(3, 0), c(3, 4)),
-    11.0, tolerance = 1e-10
+    11.0,
+    tolerance = 1e-10
   )
   # w=(2,0,1): 2*4 + 0*3 + 1*4 = 12.0
   expect_equal(
     tc_dist_segments(c(0, 0), c(10, 0), c(3, 0), c(3, 4),
-                     w_perp = 2, w_par = 0, w_angle = 1),
-    12.0, tolerance = 1e-10
+      w_perp = 2, w_par = 0, w_angle = 1
+    ),
+    12.0,
+    tolerance = 1e-10
   )
 
   # Pair B: d_perp=2.5, d_par=2.0, d_angle=2.0
   # w=(1,1,1): 2.5+2+2 = 6.5
   expect_equal(
     tc_dist_segments(c(0, 0), c(6, 0), c(8, 1), c(10, 3)),
-    6.5, tolerance = 1e-10
+    6.5,
+    tolerance = 1e-10
   )
   # w=(2,0,1): 2*2.5 + 0*2 + 1*2 = 7.0
   expect_equal(
     tc_dist_segments(c(0, 0), c(6, 0), c(8, 1), c(10, 3),
-                     w_perp = 2, w_par = 0, w_angle = 1),
-    7.0, tolerance = 1e-10
+      w_perp = 2, w_par = 0, w_angle = 1
+    ),
+    7.0,
+    tolerance = 1e-10
   )
 })
 
 test_that("all weights = 0 yields distance 0 for any segment pair", {
   # With w_perp=w_par=w_angle=0, tc_dist_segments returns 0 regardless of geometry
   d1 <- tc_dist_segments(c(0, 0), c(10, 0), c(0, 5), c(10, 5),
-                         w_perp = 0, w_par = 0, w_angle = 0)
+    w_perp = 0, w_par = 0, w_angle = 0
+  )
   expect_equal(d1, 0.0)
 
   # Very dissimilar segments — still 0
   d2 <- tc_dist_segments(c(0, 0), c(10, 0), c(100, 100), c(200, 200),
-                         w_perp = 0, w_par = 0, w_angle = 0)
+    w_perp = 0, w_par = 0, w_angle = 0
+  )
   expect_equal(d2, 0.0)
 
   # Perpendicular segments — still 0
   d3 <- tc_dist_segments(c(0, 0), c(10, 0), c(5, -3), c(5, 3),
-                         w_perp = 0, w_par = 0, w_angle = 0)
+    w_perp = 0, w_par = 0, w_angle = 0
+  )
   expect_equal(d3, 0.0)
 })
 
@@ -383,14 +417,20 @@ test_that("zero-length Li (before swap) returns 0 via swap convention", {
 
 test_that("golden: swap symmetry — dist(Li,Lj) == dist(Lj,Li)", {
   # Pair A
-  si_a <- c(0, 0); ei_a <- c(10, 0); sj_a <- c(3, 0); ej_a <- c(3, 4)
+  si_a <- c(0, 0)
+  ei_a <- c(10, 0)
+  sj_a <- c(3, 0)
+  ej_a <- c(3, 4)
   expect_equal(
     tc_dist_segments(si_a, ei_a, sj_a, ej_a),
     tc_dist_segments(sj_a, ej_a, si_a, ei_a),
     tolerance = 1e-10
   )
   # Pair B
-  si_b <- c(0, 0); ei_b <- c(6, 0); sj_b <- c(8, 1); ej_b <- c(10, 3)
+  si_b <- c(0, 0)
+  ei_b <- c(6, 0)
+  sj_b <- c(8, 1)
+  ej_b <- c(10, 3)
   expect_equal(
     tc_dist_segments(si_b, ei_b, sj_b, ej_b),
     tc_dist_segments(sj_b, ej_b, si_b, ei_b),
@@ -410,14 +450,14 @@ test_that("TRACLUS d_perp can violate the triangle inequality (not a metric)", {
   #
   # Triangle inequality violated: d(A,C) = 125 > d(A,B) + d(B,C) = 100 + 0
 
-  d_AB <- tc_dist_perpendicular(c(0, 0), c(100, 0), c(50, 0),  c(50, 100))
-  d_BC <- tc_dist_perpendicular(c(50, 0), c(50, 100), c(50, 50), c(50, 150))
-  d_AC <- tc_dist_perpendicular(c(0, 0), c(100, 0), c(50, 50), c(50, 150))
+  d_ab <- tc_dist_perpendicular(c(0, 0), c(100, 0), c(50, 0), c(50, 100))
+  d_bc <- tc_dist_perpendicular(c(50, 0), c(50, 100), c(50, 50), c(50, 150))
+  d_ac <- tc_dist_perpendicular(c(0, 0), c(100, 0), c(50, 50), c(50, 150))
 
-  expect_equal(d_AB, 100, tolerance = 1e-10)
-  expect_equal(d_BC,   0, tolerance = 1e-10)
-  expect_equal(d_AC, 125, tolerance = 1e-10)
+  expect_equal(d_ab, 100, tolerance = 1e-10)
+  expect_equal(d_bc, 0, tolerance = 1e-10)
+  expect_equal(d_ac, 125, tolerance = 1e-10)
 
   # The triangle inequality d(A,C) <= d(A,B) + d(B,C) is violated here:
-  expect_gt(d_AC, d_AB + d_BC)
+  expect_gt(d_ac, d_ab + d_bc)
 })

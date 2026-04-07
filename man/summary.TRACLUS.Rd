@@ -35,8 +35,10 @@ Detailed summaries of TRACLUS workflow objects, printed via \code{\link[=cat]{ca
 All methods return the object invisibly.
 }
 \examples{
-trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-                       x = "x", y = "y", coord_type = "euclidean")
+trj <- tc_trajectories(traclus_toy,
+  traj_id = "traj_id",
+  x = "x", y = "y", coord_type = "euclidean"
+)
 summary(trj)
 
 }

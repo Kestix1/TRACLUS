@@ -87,28 +87,33 @@ test_that("spherical perpendicular: parallel equatorial segments", {
   # Two parallel segments near equator offset by 1 degree latitude
   # Should give approximately 111 km perpendicular distance
   d <- tc_dist_perpendicular(c(0, 0), c(5, 0), c(0, 1), c(5, 1),
-                             method = "haversine")
+    method = "haversine"
+  )
   expect_equal(d, 111320, tolerance = 500)
 })
 
 test_that("spherical perpendicular: identical segments give 0", {
   d <- tc_dist_perpendicular(c(0, 0), c(5, 0), c(0, 0), c(5, 0),
-                             method = "haversine")
+    method = "haversine"
+  )
   expect_equal(d, 0.0, tolerance = 1)
 })
 
 test_that("spherical perpendicular: swap gives same result", {
   segs <- generate_geo_test_segments()$london_paris
   d1 <- tc_dist_perpendicular(segs$si, segs$ei, segs$sj, segs$ej,
-                              method = "haversine")
+    method = "haversine"
+  )
   d2 <- tc_dist_perpendicular(segs$sj, segs$ej, segs$si, segs$ei,
-                              method = "haversine")
+    method = "haversine"
+  )
   expect_equal(d1, d2, tolerance = 1)
 })
 
 test_that("spherical parallel: aligned segments give 0", {
   d <- tc_dist_parallel(c(0, 0), c(5, 0), c(0, 1), c(5, 1),
-                        method = "haversine")
+    method = "haversine"
+  )
   # Both projections coincide with endpoints of Li approximately
   expect_lt(d, 5000)
 })
@@ -116,15 +121,18 @@ test_that("spherical parallel: aligned segments give 0", {
 test_that("spherical parallel: swap gives same result", {
   segs <- generate_geo_test_segments()$london_paris
   d1 <- tc_dist_parallel(segs$si, segs$ei, segs$sj, segs$ej,
-                         method = "haversine")
+    method = "haversine"
+  )
   d2 <- tc_dist_parallel(segs$sj, segs$ej, segs$si, segs$ei,
-                         method = "haversine")
+    method = "haversine"
+  )
   expect_equal(d1, d2, tolerance = 1)
 })
 
 test_that("spherical angle: nearly parallel segments give small angle distance", {
   d <- tc_dist_angle(c(0, 0), c(5, 0), c(0, 1), c(5, 1),
-                     method = "haversine")
+    method = "haversine"
+  )
   # Both segments head roughly east; bearing difference is small but non-zero
 
   # because bearings converge towards poles (meridian convergence)
@@ -137,7 +145,8 @@ test_that("spherical angle: orthogonal segments give len(Lj)", {
   # Li: (0,0) to (5,0) — heading east (bearing ~90)
   # Lj: (2,0) to (2,3) — heading north (bearing ~0)
   d <- tc_dist_angle(c(0, 0), c(5, 0), c(2, 0), c(2, 3),
-                     method = "haversine")
+    method = "haversine"
+  )
   len_j <- TRACLUS:::.r_haversine(c(2, 0), c(2, 3))
   expect_equal(d, len_j, tolerance = 100)
 })
@@ -145,22 +154,28 @@ test_that("spherical angle: orthogonal segments give len(Lj)", {
 test_that("spherical angle: swap gives same result", {
   segs <- generate_geo_test_segments()$london_paris
   d1 <- tc_dist_angle(segs$si, segs$ei, segs$sj, segs$ej,
-                      method = "haversine")
+    method = "haversine"
+  )
   d2 <- tc_dist_angle(segs$sj, segs$ej, segs$si, segs$ei,
-                      method = "haversine")
+    method = "haversine"
+  )
   expect_equal(d1, d2, tolerance = 1)
 })
 
 test_that("spherical total distance: sum of weighted components", {
   segs <- generate_geo_test_segments()$london_paris
   d_total <- tc_dist_segments(segs$si, segs$ei, segs$sj, segs$ej,
-                              method = "haversine")
+    method = "haversine"
+  )
   d_p <- tc_dist_perpendicular(segs$si, segs$ei, segs$sj, segs$ej,
-                               method = "haversine")
+    method = "haversine"
+  )
   d_l <- tc_dist_parallel(segs$si, segs$ei, segs$sj, segs$ej,
-                          method = "haversine")
+    method = "haversine"
+  )
   d_a <- tc_dist_angle(segs$si, segs$ei, segs$sj, segs$ej,
-                       method = "haversine")
+    method = "haversine"
+  )
   expect_equal(d_total, d_p + d_l + d_a, tolerance = 1)
 })
 
@@ -168,15 +183,24 @@ test_that("all spherical components are non-negative", {
   segs_list <- generate_geo_test_segments()
   for (name in names(segs_list)) {
     s <- segs_list[[name]]
-    expect_gte(tc_dist_perpendicular(s$si, s$ei, s$sj, s$ej,
-                                     method = "haversine"), 0,
-               label = paste("perp:", name))
-    expect_gte(tc_dist_parallel(s$si, s$ei, s$sj, s$ej,
-                                method = "haversine"), 0,
-               label = paste("par:", name))
-    expect_gte(tc_dist_angle(s$si, s$ei, s$sj, s$ej,
-                             method = "haversine"), 0,
-               label = paste("angle:", name))
+    expect_gte(
+      tc_dist_perpendicular(s$si, s$ei, s$sj, s$ej,
+        method = "haversine"
+      ), 0,
+      label = paste("perp:", name)
+    )
+    expect_gte(
+      tc_dist_parallel(s$si, s$ei, s$sj, s$ej,
+        method = "haversine"
+      ), 0,
+      label = paste("par:", name)
+    )
+    expect_gte(
+      tc_dist_angle(s$si, s$ei, s$sj, s$ej,
+        method = "haversine"
+      ), 0,
+      label = paste("angle:", name)
+    )
   }
 })
 
@@ -223,8 +247,10 @@ test_that("golden: Pair C (mid-latitude NE) — all three components", {
   #            = 19947529.2 / 4583.67 = 4351.87 m
   expect_equal(
     tc_dist_perpendicular(c(-74, 40), c(-73, 40.5), c(-73.8, 40.1), c(-73.5, 40.3),
-                          method = "haversine"),
-    4351.87, tolerance = 0.5
+      method = "haversine"
+    ),
+    4351.87,
+    tolerance = 0.5
   )
 
   # --- d_par (spherical Definition 2) ---
@@ -238,8 +264,10 @@ test_that("golden: Pair C (mid-latitude NE) — all three components", {
   # d_par = min(20333.0, 47615.9) = 20333.0 m
   expect_equal(
     tc_dist_parallel(c(-74, 40), c(-73, 40.5), c(-73.8, 40.1), c(-73.5, 40.3),
-                     method = "haversine"),
-    20333.0, tolerance = 0.5
+      method = "haversine"
+    ),
+    20333.0,
+    tolerance = 0.5
   )
 
   # --- d_angle (spherical Definition 3) ---
@@ -249,8 +277,10 @@ test_that("golden: Pair C (mid-latitude NE) — all three components", {
   #         = 33819.4 * 0.13336 = 4508.4 m
   expect_equal(
     tc_dist_angle(c(-74, 40), c(-73, 40.5), c(-73.8, 40.1), c(-73.5, 40.3),
-                  method = "haversine"),
-    4508.4, tolerance = 0.5
+      method = "haversine"
+    ),
+    4508.4,
+    tolerance = 0.5
   )
 })
 
@@ -269,8 +299,10 @@ test_that("golden: Pair D (equatorial, perpendicular) — all three components",
   # d_perp = 5/3 * 55597.46 = 92662.44 m
   expect_equal(
     tc_dist_perpendicular(c(0, 0), c(1, 0), c(0.5, 0.5), c(0.5, 1.0),
-                          method = "haversine"),
-    92662.44, tolerance = 0.5
+      method = "haversine"
+    ),
+    92662.44,
+    tolerance = 0.5
   )
 
   # --- d_par ---
@@ -282,8 +314,10 @@ test_that("golden: Pair D (equatorial, perpendicular) — all three components",
   # d_par = 55597.46 m
   expect_equal(
     tc_dist_parallel(c(0, 0), c(1, 0), c(0.5, 0.5), c(0.5, 1.0),
-                     method = "haversine"),
-    55597.46, tolerance = 0.5
+      method = "haversine"
+    ),
+    55597.46,
+    tolerance = 0.5
   )
 
   # --- d_angle ---
@@ -291,8 +325,10 @@ test_that("golden: Pair D (equatorial, perpendicular) — all three components",
   # Bearing difference = 90°   =>  d_angle = |Lj| = 55597.46 m
   expect_equal(
     tc_dist_angle(c(0, 0), c(1, 0), c(0.5, 0.5), c(0.5, 1.0),
-                  method = "haversine"),
-    55597.46, tolerance = 0.5
+      method = "haversine"
+    ),
+    55597.46,
+    tolerance = 0.5
   )
 })
 
@@ -301,16 +337,20 @@ test_that("golden: weighted total distances and symmetry (spherical)", {
   # Total (1,1,1) = 29193.3 m
   expect_equal(
     tc_dist_segments(c(-74, 40), c(-73, 40.5), c(-73.8, 40.1), c(-73.5, 40.3),
-                     method = "haversine"),
-    29193.3, tolerance = 0.5
+      method = "haversine"
+    ),
+    29193.3,
+    tolerance = 0.5
   )
 
   # Pair D: d_perp=92662.44, d_par=55597.46, d_angle=55597.46
   # Total (1,1,1) = 203857.4 m
   expect_equal(
     tc_dist_segments(c(0, 0), c(1, 0), c(0.5, 0.5), c(0.5, 1.0),
-                     method = "haversine"),
-    203857.4, tolerance = 0.5
+      method = "haversine"
+    ),
+    203857.4,
+    tolerance = 0.5
   )
 
   # R = 6371000 is used correctly (sanity check: 1° at equator)
@@ -323,16 +363,20 @@ test_that("golden: weighted total distances and symmetry (spherical)", {
   # Symmetry: dist(Li,Lj) == dist(Lj,Li)
   expect_equal(
     tc_dist_segments(c(-74, 40), c(-73, 40.5), c(-73.8, 40.1), c(-73.5, 40.3),
-                     method = "haversine"),
+      method = "haversine"
+    ),
     tc_dist_segments(c(-73.8, 40.1), c(-73.5, 40.3), c(-74, 40), c(-73, 40.5),
-                     method = "haversine"),
+      method = "haversine"
+    ),
     tolerance = 0.5
   )
   expect_equal(
     tc_dist_segments(c(0, 0), c(1, 0), c(0.5, 0.5), c(0.5, 1.0),
-                     method = "haversine"),
+      method = "haversine"
+    ),
     tc_dist_segments(c(0.5, 0.5), c(0.5, 1.0), c(0, 0), c(1, 0),
-                     method = "haversine"),
+      method = "haversine"
+    ),
     tolerance = 0.5
   )
 })
@@ -346,7 +390,8 @@ test_that("bearing with identical points does not crash", {
 
   # Also test via tc_dist_angle with identical start/end on one segment
   d <- tc_dist_angle(c(10, 50), c(10, 50), c(0, 0), c(5, 0),
-                     method = "haversine")
+    method = "haversine"
+  )
   expect_true(is.finite(d))
   expect_gte(d, 0)
 })
@@ -369,7 +414,8 @@ test_that("along-track cos_xt guard prevents division by zero", {
 test_that("d_angle_sph zero-length Lj returns 0", {
   # sj == ej (zero haversine distance) → len_j < threshold → 0
   d <- tc_dist_angle(c(0, 0), c(5, 0), c(2, 1), c(2, 1),
-                     method = "haversine")
+    method = "haversine"
+  )
   expect_equal(d, 0.0, tolerance = 1)
   expect_false(is.nan(d))
 })
@@ -378,7 +424,8 @@ test_that("d_angle_sph zero-length Li returns 0 via swap", {
   # si == ei (zero haversine distance), sj != ej — swap puts zero-length as Lj
   # → len_j < threshold → returns 0
   d <- tc_dist_angle(c(2, 1), c(2, 1), c(0, 0), c(5, 0),
-                     method = "haversine")
+    method = "haversine"
+  )
   expect_equal(d, 0.0, tolerance = 1)
   expect_false(is.nan(d))
 })
@@ -387,7 +434,8 @@ test_that("haversine warns on latitude out of range (> 90)", {
   # y-coordinate (latitude) > 90 is outside valid haversine range
   expect_warning(
     tc_dist_segments(c(0, 95), c(5, 95), c(0, 0), c(5, 0),
-                     method = "haversine"),
+      method = "haversine"
+    ),
     "Latitude"
   )
 })
@@ -396,7 +444,8 @@ test_that("haversine warns on longitude out of range (> 180)", {
   # x-coordinate (longitude) > 180 is outside valid haversine range
   expect_warning(
     tc_dist_segments(c(185, 0), c(190, 0), c(0, 0), c(5, 0),
-                     method = "haversine"),
+      method = "haversine"
+    ),
     "Longitude"
   )
 })
@@ -407,11 +456,13 @@ test_that("d_angle_sph bearing diff normalised to [0°, 180°]", {
   # Naive bearing diff = |359 - 1| = 358° (> 180)
   # Normalised: 360 - 358 = 2° → d = len_j * sin(2°)  ≈  0.035 * len_j
   # Without normalisation: diff > 90° → d = len_j (full segment length)
-  li_s <- c(0, 0);    li_e <- c(-0.001, 0.1)
-  lj_s <- c(5, 0);    lj_e <- c(5.001, 0.1)
+  li_s <- c(0, 0)
+  li_e <- c(-0.001, 0.1)
+  lj_s <- c(5, 0)
+  lj_e <- c(5.001, 0.1)
   len_j <- TRACLUS:::.r_haversine(lj_s, lj_e)
   d <- tc_dist_angle(li_s, li_e, lj_s, lj_e, method = "haversine")
   # With correct normalisation the angle distance is a small fraction of len_j
   expect_gte(d, 0)
-  expect_lt(d, len_j * 0.1)   # << len_j confirms normalisation occurred
+  expect_lt(d, len_j * 0.1) # << len_j confirms normalisation occurred
 })

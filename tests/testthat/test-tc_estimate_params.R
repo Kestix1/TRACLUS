@@ -3,8 +3,10 @@
 make_test_partitions_for_estimate <- function() {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   suppressMessages(tc_partition(trj))
 }
@@ -24,11 +26,13 @@ test_that("tc_estimate object has correct structure", {
   parts <- make_test_partitions_for_estimate()
   est <- suppressMessages(tc_estimate_params(parts))
 
-  expect_true(all(c("eps", "min_lns", "w_perp", "w_par", "w_angle",
-                     "entropy_df") %in% names(est)))
+  expect_true(all(c(
+    "eps", "min_lns", "w_perp", "w_par", "w_angle",
+    "entropy_df"
+  ) %in% names(est)))
   expect_s3_class(est$entropy_df, "data.frame")
   expect_true(all(c("eps", "entropy") %in% names(est$entropy_df)))
-  expect_equal(nrow(est$entropy_df), 50)  # default grid size
+  expect_equal(nrow(est$entropy_df), 50) # default grid size
 })
 
 test_that("entropy values are non-negative", {
@@ -83,20 +87,28 @@ test_that("custom weights are stored in result", {
 test_that("wrong input class gives informative error", {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
-  expect_error(tc_estimate_params(trj),
-               "Expected a 'tc_partitions' object")
+  expect_error(
+    tc_estimate_params(trj),
+    "Expected a 'tc_partitions' object"
+  )
 })
 
 test_that("invalid eps_grid is rejected", {
   parts <- make_test_partitions_for_estimate()
 
-  expect_error(tc_estimate_params(parts, eps_grid = c(-1, 5)),
-               "'eps_grid'")
-  expect_error(tc_estimate_params(parts, eps_grid = 5),
-               "'eps_grid'")  # less than 2 elements
+  expect_error(
+    tc_estimate_params(parts, eps_grid = c(-1, 5)),
+    "'eps_grid'"
+  )
+  expect_error(
+    tc_estimate_params(parts, eps_grid = 5),
+    "'eps_grid'"
+  ) # less than 2 elements
 })
 
 test_that("invalid sample_size is rejected", {
@@ -168,13 +180,13 @@ test_that("entropy formula -sum(p_i * log2(p_i)) is correctly implemented", {
   #   Outside-nb counts: {1, 1, 2}, sizes (self-inclusive +1): {2, 2, 3}, total=7
   #   H = -2*(2/7)*log2(2/7) - (3/7)*log2(3/7)
   pair_dists <- c(1.0, 2.0, 3.0)
-  expected_H <- -2 * (2/7) * log2(2/7) - (3/7) * log2(3/7)
+  expected_h <- -2 * (2 / 7) * log2(2 / 7) - (3 / 7) * log2(3 / 7)
 
   result <- TRACLUS:::.cpp_count_neighbours_multi_eps(pair_dists, 3L, c(1.5))
-  expect_equal(result$entropy_vals[1], expected_H, tolerance = 1e-10)
+  expect_equal(result$entropy_vals[1], expected_h, tolerance = 1e-10)
 
   # Also verify mean_nb_size: (2+2+3)/3 = 7/3
-  expect_equal(result$mean_nb_sizes[1], 7/3, tolerance = 1e-10)
+  expect_equal(result$mean_nb_sizes[1], 7 / 3, tolerance = 1e-10)
 })
 
 test_that("degenerate eps_grid (q5 >= q95) uses fallback without error", {
@@ -184,11 +196,13 @@ test_that("degenerate eps_grid (q5 >= q95) uses fallback without error", {
   df <- data.frame(
     traj_id = rep(c("T1", "T2", "T3", "T4"), each = 2),
     x       = rep(c(0, 10), 4),
-    y       = rep(c(0, 0),  4)
+    y       = rep(c(0, 0), 4)
   )
   trj <- suppressMessages(
-    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
 
@@ -216,12 +230,14 @@ test_that("min_lns formula ceiling(mean_nb_size) + 1 applied correctly", {
   # Verify tc_estimate_params uses same formula: min_lns >= ceiling(mean_nb) + 1
   df <- data.frame(
     traj_id = rep(paste0("T", 1:4), each = 3),
-    x = c(0,5,10, 0,5,10, 0,5,10, 0,5,10),
-    y = c(0,0,0,  1,1,1,  2,2,2,  3,3,3)
+    x = c(0, 5, 10, 0, 5, 10, 0, 5, 10, 0, 5, 10),
+    y = c(0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3)
   )
   trj <- suppressMessages(
-    tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(df,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   est <- suppressMessages(tc_estimate_params(parts))
@@ -234,8 +250,10 @@ test_that("min_lns formula ceiling(mean_nb_size) + 1 applied correctly", {
 test_that("tc_estimate_params with method='projected' returns meter-scale eps", {
   geo <- generate_geo_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(geo, traj_id = "storm_id", x = "lon", y = "lat",
-                    coord_type = "geographic", method = "projected")
+    tc_trajectories(geo,
+      traj_id = "storm_id", x = "lon", y = "lat",
+      coord_type = "geographic", method = "projected"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
   est <- suppressMessages(tc_estimate_params(parts))

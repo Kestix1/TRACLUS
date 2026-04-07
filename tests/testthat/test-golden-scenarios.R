@@ -12,8 +12,10 @@
 # --- Shared helper: build trajectories from coordinate vectors ---
 make_trajs <- function(ids, xs, ys) {
   df <- data.frame(traj_id = ids, x = xs, y = ys)
-  tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                  coord_type = "euclidean", verbose = FALSE)
+  tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
 }
 
 # --- Scenario 1 | Two parallel, equal-length segments ---
@@ -65,7 +67,7 @@ test_that("S01 Phase3: representative is midline y=0.5", {
     ys  = c(0, 0, 1, 1)
   )
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 1.1, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 1.1, min_lns = 2))
   repr <- suppressMessages(tc_represent(clu, gamma = 1))
 
   expect_equal(repr$n_clusters, 1)
@@ -97,7 +99,7 @@ test_that("S03 Phase2: angular distance prevents clustering at 180 deg", {
     ys  = c(0, 0, 0.5, 0.5)
   )
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(suppressWarnings(
+  clu <- suppressMessages(suppressWarnings(
     tc_cluster(part, eps = 2.0, min_lns = 2)
   ))
   expect_equal(clu$n_clusters, 0)
@@ -159,11 +161,14 @@ test_that("S06 Phase2: angular gradient separates similar from different", {
 
   # Verify hand-computed distances
   expect_equal(d12, 50 / (3 * sqrt(101)) + 1 / sqrt(101) + 10 / sqrt(101),
-               tolerance = 1e-4)
+    tolerance = 1e-4
+  )
   expect_equal(d13, 290 / (7 * sqrt(109)) + 6 / sqrt(109) + 30 / sqrt(109),
-               tolerance = 1e-4)
+    tolerance = 1e-4
+  )
   expect_equal(d23, 25 / sqrt(109) + 3 / sqrt(109) + 20 / sqrt(109),
-               tolerance = 1e-4)
+    tolerance = 1e-4
+  )
 
   # eps=3.0: T1+T2 cluster, T3 noise
   trj <- make_trajs(
@@ -172,7 +177,7 @@ test_that("S06 Phase2: angular gradient separates similar from different", {
     ys  = c(0, 0, 1, 2, 2, 5)
   )
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 3.0, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 3.0, min_lns = 2))
 
   expect_equal(clu$n_clusters, 1)
   expect_equal(clu$n_noise, 1)
@@ -193,7 +198,7 @@ test_that("S06 Phase3: tilted representative from non-horizontal cluster", {
     ys  = c(0, 0, 1, 2, 2, 5)
   )
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 3.0, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 3.0, min_lns = 2))
   repr <- suppressMessages(tc_represent(clu, gamma = 1))
 
   expect_equal(repr$n_clusters, 1)
@@ -270,7 +275,7 @@ test_that("S08 Phase2: same trajectory in two different clusters", {
     ys  = c(0, 0, 5, 0.5, 0.5, 0, 5)
   )
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 1.0, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 1.0, min_lns = 2))
 
   expect_equal(clu$n_clusters, 2)
   expect_equal(clu$n_noise, 0)
@@ -288,7 +293,7 @@ test_that("S08 Phase3: two independent representatives", {
     ys  = c(0, 0, 5, 0.5, 0.5, 0, 5)
   )
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 1.0, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 1.0, min_lns = 2))
   repr <- suppressMessages(tc_represent(clu, gamma = 1))
 
   expect_equal(repr$n_clusters, 2)
@@ -336,7 +341,7 @@ test_that("S09 Phase2: vertical segments cluster correctly", {
     ys  = c(0, 10, 0, 10)
   )
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 1.1, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 1.1, min_lns = 2))
 
   expect_equal(clu$n_clusters, 1)
   expect_equal(clu$n_noise, 0)
@@ -365,7 +370,7 @@ test_that("S09 Phase3: end-to-end vertical representative", {
     ys  = c(0, 10, 0, 10)
   )
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 1.1, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 1.1, min_lns = 2))
   repr <- suppressMessages(tc_represent(clu, gamma = 1))
 
   expect_equal(repr$n_clusters, 1)
@@ -431,9 +436,9 @@ make_scenario11 <- function() {
 }
 
 test_that("S11 Phase2: eps=1.5 separates two groups", {
-  trj  <- make_scenario11()
+  trj <- make_scenario11()
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 1.5, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 1.5, min_lns = 2))
 
   expect_equal(clu$n_clusters, 2)
   expect_equal(clu$n_noise, 0)
@@ -443,9 +448,9 @@ test_that("S11 Phase2: eps=1.5 separates two groups", {
 })
 
 test_that("S11 Phase2: eps=15 merges both groups", {
-  trj  <- make_scenario11()
+  trj <- make_scenario11()
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 15.0, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 15.0, min_lns = 2))
 
   expect_equal(clu$n_clusters, 1)
   expect_equal(clu$n_noise, 0)
@@ -453,9 +458,9 @@ test_that("S11 Phase2: eps=15 merges both groups", {
 })
 
 test_that("S11 Phase3: two separate representatives at eps=1.5", {
-  trj  <- make_scenario11()
+  trj <- make_scenario11()
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 1.5, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 1.5, min_lns = 2))
   repr <- suppressMessages(tc_represent(clu, gamma = 1))
 
   expect_equal(repr$n_clusters, 2)
@@ -477,9 +482,9 @@ test_that("S11 Phase3: two separate representatives at eps=1.5", {
 })
 
 test_that("S11 Phase3: one merged representative at eps=15", {
-  trj  <- make_scenario11()
+  trj <- make_scenario11()
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 15.0, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 15.0, min_lns = 2))
   repr <- suppressMessages(tc_represent(clu, gamma = 1))
 
   expect_equal(repr$n_clusters, 1)
@@ -500,12 +505,14 @@ test_that("S11 Phase3: one merged representative at eps=15", {
 make_geo_trajs_for_projected <- function() {
   df <- data.frame(
     traj_id = c("A", "A", "B", "B"),
-    x = c(-80, -70, -80, -70),   # lon
-    y = c(30, 30, 31, 31)         # lat
+    x = c(-80, -70, -80, -70), # lon
+    y = c(30, 30, 31, 31) # lat
   )
-  tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                  coord_type = "geographic", method = "projected",
-                  verbose = FALSE)
+  tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "geographic", method = "projected",
+    verbose = FALSE
+  )
 }
 
 test_that("P1-projected: tc_trajectories stores proj_params", {
@@ -521,7 +528,7 @@ test_that("P1-projected: partition preserves lon/lat coordinates", {
   expect_equal(nrow(part$segments), 2)
   # Segments should still be in lon/lat, not meters
   expect_true(all(part$segments$sx >= -180 & part$segments$sx <= 180))
-  expect_true(all(part$segments$sy >= -90  & part$segments$sy <= 90))
+  expect_true(all(part$segments$sy >= -90 & part$segments$sy <= 90))
 })
 
 test_that("P1-projected: clustering uses equirectangular distances", {
@@ -544,7 +551,7 @@ test_that("P1-projected: clustering uses equirectangular distances", {
 test_that("P1-projected: representative is in lon/lat midline", {
   trj <- make_geo_trajs_for_projected()
   part <- suppressMessages(tc_partition(trj))
-  clu  <- suppressMessages(tc_cluster(part, eps = 200000, min_lns = 2))
+  clu <- suppressMessages(tc_cluster(part, eps = 200000, min_lns = 2))
   repr <- suppressMessages(tc_represent(clu, gamma = 1))
 
   expect_equal(repr$n_clusters, 1)

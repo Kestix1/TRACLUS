@@ -4,8 +4,10 @@
 make_test_partitions <- function() {
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   suppressMessages(tc_partition(trj))
 }
@@ -29,17 +31,19 @@ test_that("tc_clusters object has correct structure", {
   clust <- suppressMessages(tc_cluster(parts, eps = 25, min_lns = 3))
 
   # Required elements
-  expect_true(all(c("segments", "cluster_summary", "n_clusters", "n_noise",
-                     "params", "partitions", "coord_type", "method")
-                  %in% names(clust)))
+  expect_true(all(c(
+    "segments", "cluster_summary", "n_clusters", "n_noise",
+    "params", "partitions", "coord_type", "method"
+  )
+  %in% names(clust)))
 
   # Segments data.frame columns
   expect_true(all(c("traj_id", "seg_id", "sx", "sy", "ex", "ey", "cluster_id")
-                  %in% names(clust$segments)))
+  %in% names(clust$segments)))
 
   # Cluster summary columns
   expect_true(all(c("cluster_id", "n_segments", "n_trajectories")
-                  %in% names(clust$cluster_summary)))
+  %in% names(clust$cluster_summary)))
 
   # Params list
   expect_equal(clust$params$eps, 25)
@@ -88,8 +92,10 @@ test_that("cluster_summary matches segments data", {
       cid <- clust$cluster_summary$cluster_id[i]
       mask <- clust$segments$cluster_id == cid & !is.na(clust$segments$cluster_id)
       expect_equal(clust$cluster_summary$n_segments[i], sum(mask))
-      expect_equal(clust$cluster_summary$n_trajectories[i],
-                   length(unique(clust$segments$traj_id[mask])))
+      expect_equal(
+        clust$cluster_summary$n_trajectories[i],
+        length(unique(clust$segments$traj_id[mask]))
+      )
     }
   }
 })
@@ -101,7 +107,8 @@ test_that("TR6 (vertical outlier) is noise with appropriate params", {
   # TR6 is nearly vertical, far from the horizontal cluster
   tr6_segs <- clust$segments[clust$segments$traj_id == "TR6", ]
   expect_true(all(is.na(tr6_segs$cluster_id)),
-              info = "TR6 (vertical outlier) should be classified as noise")
+    info = "TR6 (vertical outlier) should be classified as noise"
+  )
 })
 
 # --- Parameter validation ---------------------------------------------------
@@ -155,8 +162,10 @@ test_that("wrong input class gives informative error", {
   )
   toy <- generate_toy_trajectories()
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   expect_error(
     tc_cluster(trj, eps = 10, min_lns = 3),
@@ -205,16 +214,22 @@ test_that("trajectory cardinality check removes single-trajectory clusters", {
   # Create data where 2 trajectories form a pair and 1 is far away alone
   toy <- data.frame(
     traj_id = rep(c("A", "B", "C"), each = 3),
-    x = c(0, 5, 10,        # A: at y=0
-          0, 5, 10,         # B: at y=1 (close to A)
-          100, 105, 110),   # C: far away alone
-    y = c(0, 0, 0,
-          1, 1, 1,
-          100, 100, 100)
+    x = c(
+      0, 5, 10, # A: at y=0
+      0, 5, 10, # B: at y=1 (close to A)
+      100, 105, 110
+    ), # C: far away alone
+    y = c(
+      0, 0, 0,
+      1, 1, 1,
+      100, 100, 100
+    )
   )
   trj <- suppressMessages(
-    tc_trajectories(toy, traj_id = "traj_id", x = "x", y = "y",
-                    coord_type = "euclidean")
+    tc_trajectories(toy,
+      traj_id = "traj_id", x = "x", y = "y",
+      coord_type = "euclidean"
+    )
   )
   parts <- suppressMessages(tc_partition(trj))
 
@@ -238,8 +253,10 @@ test_that("custom weights influence clustering", {
   )
   # Only perpendicular distance (more lenient since we skip parallel + angle)
   clust2 <- suppressMessages(
-    suppressWarnings(tc_cluster(parts, eps = 25, min_lns = 3,
-                                w_perp = 1, w_par = 0, w_angle = 0))
+    suppressWarnings(tc_cluster(parts,
+      eps = 25, min_lns = 3,
+      w_perp = 1, w_par = 0, w_angle = 0
+    ))
   )
 
   # At minimum, the function should work without error
@@ -253,11 +270,11 @@ test_that(".dbscan_expand correctly identifies clusters in simple case", {
   # Adjacency lists store only OTHER neighbours (self not stored).
   # |Nε| = length(nb) + 1 (paper: self-inclusive).
   neighbours <- list(
-    c(2L, 3L),    # seg 1: |Nε|=3
-    c(1L, 3L),    # seg 2: |Nε|=3
-    c(1L, 2L),    # seg 3: |Nε|=3
-    c(5L),        # seg 4: |Nε|=2
-    c(4L)         # seg 5: |Nε|=2
+    c(2L, 3L), # seg 1: |Nε|=3
+    c(1L, 3L), # seg 2: |Nε|=3
+    c(1L, 2L), # seg 3: |Nε|=3
+    c(5L), # seg 4: |Nε|=2
+    c(4L) # seg 5: |Nε|=2
   )
   result <- TRACLUS:::.dbscan_expand(neighbours, min_lns = 2L)
 
@@ -275,10 +292,10 @@ test_that(".dbscan_expand: noise absorbed by core expansion", {
   # seg 1-3 form a core chain; seg 4 is connected to 3 but not core;
   # seg 4 should be absorbed into the cluster via seg 3's expansion
   neighbours <- list(
-    c(2L, 3L),      # seg 1: core (2 neighbours)
-    c(1L, 3L),      # seg 2: core (2 neighbours)
-    c(1L, 2L, 4L),  # seg 3: core (3 neighbours)
-    c(3L)            # seg 4: only 1 neighbour -> not core, but reachable from core
+    c(2L, 3L), # seg 1: core (2 neighbours)
+    c(1L, 3L), # seg 2: core (2 neighbours)
+    c(1L, 2L, 4L), # seg 3: core (3 neighbours)
+    c(3L) # seg 4: only 1 neighbour -> not core, but reachable from core
   )
   result <- TRACLUS:::.dbscan_expand(neighbours, min_lns = 2L)
 
@@ -290,9 +307,9 @@ test_that(".dbscan_expand: noise absorbed by core expansion", {
 test_that(".dbscan_expand marks isolated segments as noise", {
   # Segment with no neighbours. |Nε| = length(nb) + 1 (self-inclusive).
   neighbours <- list(
-    integer(0),   # seg 1: |Nε|=1 < 2 => noise
-    c(3L),        # seg 2: |Nε|=2 >= 2 => core
-    c(2L)         # seg 3: |Nε|=2 >= 2 => core
+    integer(0), # seg 1: |Nε|=1 < 2 => noise
+    c(3L), # seg 2: |Nε|=2 >= 2 => core
+    c(2L) # seg 3: |Nε|=2 >= 2 => core
   )
   result <- TRACLUS:::.dbscan_expand(neighbours, min_lns = 2L)
 
@@ -354,8 +371,11 @@ test_that("C++ neighbourhood is symmetric", {
   for (i in seq_along(nb)) {
     for (j in nb[[i]]) {
       expect_true(i %in% nb[[j]],
-                  info = sprintf("Symmetry violated: %d in nb[%d] but %d not in nb[%d]",
-                                 j, i, i, j))
+        info = sprintf(
+          "Symmetry violated: %d in nb[%d] but %d not in nb[%d]",
+          j, i, i, j
+        )
+      )
     }
   }
 })
@@ -383,10 +403,12 @@ test_that("C++ neighbourhood matches R distance function", {
       in_nb <- j %in% nb[[i]]
       if (r_dist <= eps) {
         expect_true(in_nb,
-                    info = sprintf("d(%d,%d)=%.2f <= eps but not neighbours", i, j, r_dist))
+          info = sprintf("d(%d,%d)=%.2f <= eps but not neighbours", i, j, r_dist)
+        )
       } else {
         expect_false(in_nb,
-                     info = sprintf("d(%d,%d)=%.2f > eps but are neighbours", i, j, r_dist))
+          info = sprintf("d(%d,%d)=%.2f > eps but are neighbours", i, j, r_dist)
+        )
       }
     }
   }
@@ -513,8 +535,10 @@ make_golden_partitions <- function() {
     x = c(0, 10, 0, 10, 0, 10, 0, 10, 50, 60, 0, 10),
     y = c(0, 0, 1, 1, 2, 2, 3, 3, 50, 50, 100, 100)
   )
-  trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   tc_partition(trj, verbose = FALSE)
 }
 
@@ -523,17 +547,20 @@ test_that("golden: pairwise distances for parallel horizontal segments", {
   # Noise segments are very far away (dist > 80).
   expect_equal(
     tc_dist_segments(c(0, 0), c(10, 0), c(0, 1), c(10, 1)),
-    1.0, tolerance = 1e-10
+    1.0,
+    tolerance = 1e-10
   )
   expect_equal(
     tc_dist_segments(c(0, 0), c(10, 0), c(0, 3), c(10, 3)),
-    3.0, tolerance = 1e-10
+    3.0,
+    tolerance = 1e-10
   )
   # Noise segment S5 is far from S1
   # d_perp=50, d_par=40, d_angle=0  => dist=90
   expect_equal(
     tc_dist_segments(c(0, 0), c(10, 0), c(50, 50), c(60, 50)),
-    90.0, tolerance = 1e-10
+    90.0,
+    tolerance = 1e-10
   )
 })
 
@@ -620,8 +647,10 @@ test_that("golden: two segments with min_lns=2 form a cluster (self-inclusive)",
     x = c(0, 50, 0, 50),
     y = c(0, 0, 10, 10)
   )
-  trj <- tc_trajectories(df, traj_id = "traj_id", x = "x", y = "y",
-                         coord_type = "euclidean", verbose = FALSE)
+  trj <- tc_trajectories(df,
+    traj_id = "traj_id", x = "x", y = "y",
+    coord_type = "euclidean", verbose = FALSE
+  )
   parts <- tc_partition(trj, verbose = FALSE)
   clust <- suppressMessages(tc_cluster(parts, eps = 10, min_lns = 2))
 
@@ -637,8 +666,10 @@ test_that("all weights = 0 yields all distances 0 — one giant cluster", {
   n_segs <- nrow(parts$segments)
 
   clust <- suppressMessages(
-    tc_cluster(parts, eps = 0.001, min_lns = 2,
-               w_perp = 0, w_par = 0, w_angle = 0)
+    tc_cluster(parts,
+      eps = 0.001, min_lns = 2,
+      w_perp = 0, w_par = 0, w_angle = 0
+    )
   )
 
   expect_equal(clust$n_noise, 0L)

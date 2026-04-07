@@ -37,8 +37,10 @@
 #' @export
 #'
 #' @examples
-#' trj <- tc_trajectories(traclus_toy, traj_id = "traj_id",
-#'                        x = "x", y = "y", coord_type = "euclidean")
+#' trj <- tc_trajectories(traclus_toy,
+#'   traj_id = "traj_id",
+#'   x = "x", y = "y", coord_type = "euclidean"
+#' )
 #' parts <- tc_partition(trj)
 #' print(parts)
 tc_partition <- function(x, verbose = TRUE) {
@@ -47,13 +49,16 @@ tc_partition <- function(x, verbose = TRUE) {
 
   # --- Resolve method code for C++ ---
   # "projected" uses euclidean C++ on projected coordinates
+  # C++ method code: 0 = euclidean, 1 = haversine (see src/distances.cpp)
   is_projected <- (x$method == "projected")
   method_code <- if (x$method == "haversine") 1L else 0L
 
   # --- Project coordinates if needed ---
   if (is_projected) {
-    proj <- .equirectangular_proj(x$data$x, x$data$y,
-                                  x$proj_params$lat_mean)
+    proj <- .equirectangular_proj(
+      x$data$x, x$data$y,
+      x$proj_params$lat_mean
+    )
     x_in <- proj$x
     y_in <- proj$y
   } else {
@@ -71,10 +76,14 @@ tc_partition <- function(x, verbose = TRUE) {
 
   # --- Inverse-project segment endpoints back to lon/lat ---
   if (is_projected) {
-    inv_s <- .equirectangular_inverse(result$sx, result$sy,
-                                       x$proj_params$lat_mean)
-    inv_e <- .equirectangular_inverse(result$ex, result$ey,
-                                       x$proj_params$lat_mean)
+    inv_s <- .equirectangular_inverse(
+      result$sx, result$sy,
+      x$proj_params$lat_mean
+    )
+    inv_e <- .equirectangular_inverse(
+      result$ex, result$ey,
+      x$proj_params$lat_mean
+    )
     result$sx <- inv_s$lon
     result$sy <- inv_s$lat
     result$ex <- inv_e$lon
@@ -88,15 +97,16 @@ tc_partition <- function(x, verbose = TRUE) {
     sx = result$sx,
     sy = result$sy,
     ex = result$ex,
-    ey = result$ey,
-    stringsAsFactors = FALSE
+    ey = result$ey
   )
 
   # --- Warn about null segments removed in C++ ---
   n_null_removed <- result$n_null_removed
   if (n_null_removed > 0L) {
-    warning(sprintf("Removed %d zero-length segment(s) after partitioning.",
-                    n_null_removed), call. = FALSE)
+    warning(sprintf(
+      "Removed %d zero-length segment(s) after partitioning.",
+      n_null_removed
+    ), call. = FALSE)
   }
 
   n_input_trajs <- x$n_trajectories
@@ -105,8 +115,9 @@ tc_partition <- function(x, verbose = TRUE) {
   if (nrow(segments) == 0) {
     # All segments were null — catastrophic
     stop("No segments remain after partitioning. ",
-         "All trajectory segments have zero or near-zero length.",
-         call. = FALSE)
+      "All trajectory segments have zero or near-zero length.",
+      call. = FALSE
+    )
   }
 
   if (n_output_trajs < n_input_trajs) {
@@ -127,8 +138,10 @@ tc_partition <- function(x, verbose = TRUE) {
   )
 
   if (verbose) {
-    message(sprintf("Partitioned %d trajectories into %d line segments.",
-                    n_input_trajs, obj$n_segments))
+    message(sprintf(
+      "Partitioned %d trajectories into %d line segments.",
+      n_input_trajs, obj$n_segments
+    ))
   }
 
   obj
