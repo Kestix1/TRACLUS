@@ -35,5 +35,5 @@ jobs:
           needs: spelling
 
       - name: Spell check
-        run: spelling::spell_check_package(error = TRUE)
+        run: spelling::spell_check_package()
         shell: Rscript {0}

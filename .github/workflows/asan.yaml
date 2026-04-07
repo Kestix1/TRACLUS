@@ -23,7 +23,7 @@ jobs:
   asan:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/rocker-org/r-devel-san:latest
+      image: ghcr.io/r-hub/containers/asan:latest
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
