@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/TRACLUS)](https://CRAN.R-project.org/package=TRACLUS)
 [![R-CMD-check](https://github.com/MartinHoblisch/TRACLUS/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MartinHoblisch/TRACLUS/actions/workflows/R-CMD-check.yaml)
-[![test-coverage](https://github.com/MartinHoblisch/TRACLUS/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/MartinHoblisch/TRACLUS/actions/workflows/test-coverage.yaml)
+[![codecov](https://codecov.io/gh/MartinHoblisch/TRACLUS/graph/badge.svg)](https://codecov.io/gh/MartinHoblisch/TRACLUS)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![License: GPL-3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![r-universe](https://martinhoblisch.r-universe.dev/badges/TRACLUS)](https://martinhoblisch.r-universe.dev/TRACLUS)
