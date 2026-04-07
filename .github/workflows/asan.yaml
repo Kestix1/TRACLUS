@@ -23,7 +23,7 @@ jobs:
   asan:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/r-hub/containers/asan:latest
+      image: wch1/r-debug:latest
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -40,12 +40,12 @@ jobs:
 
       - name: Install R dependencies
         run: |
-          Rscript -e 'install.packages(c("remotes", "rcmdcheck"), repos = "https://cloud.r-project.org")'
-          Rscript -e 'remotes::install_deps(dependencies = TRUE, repos = "https://cloud.r-project.org")'
+          RDsan -e 'install.packages(c("remotes", "rcmdcheck"), repos = "https://cloud.r-project.org")'
+          RDsan -e 'remotes::install_deps(dependencies = TRUE, repos = "https://cloud.r-project.org")'
 
       - name: Check with ASAN/UBSAN
         run: |
-          Rscript -e 'rcmdcheck::rcmdcheck(
+          RDsan -e 'rcmdcheck::rcmdcheck(
             args = c("--no-manual", "--as-cran"),
             error_on = "warning",
             check_dir = "check"
