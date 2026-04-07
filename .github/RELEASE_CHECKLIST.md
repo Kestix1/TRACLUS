@@ -37,8 +37,36 @@ Step-by-step process before submitting to CRAN. Complete every item in order.
 
 - [ ] GitHub Actions R-CMD-check green on all 5 matrix jobs
 - [ ] ASAN/UBSAN workflow (`asan.yaml`) passes — **mandatory for Rcpp packages**
-- [ ] r-hub check on Fedora/GCC + Debian/Clang + Windows UCRT (`rhub.yaml`)
-- [ ] `devtools::check_win_devel()` submitted and result reviewed
+- [ ] r-hub check green (see below)
+- [ ] Valgrind check green (see below)
+- [ ] `devtools::check_win_devel()` submitted and result reviewed (see below)
+
+### How to run the manual platform checks
+
+**r-hub** (tests on Fedora/GCC, Debian/Clang, Windows UCRT):
+
+```
+Option A — GitHub UI (recommended):
+  Repo → Actions → R-hub → Run workflow → Run
+
+Option B — R console (triggers rhub.yaml via the API):
+  rhub::rhub_check()   # opens browser for platform selection
+```
+
+**Valgrind** (memory error check, ~30–60 min):
+
+```
+GitHub UI → Actions → valgrind → Run workflow → Run
+→ wait for green; on failure: download the artifact and inspect the log
+```
+
+**WinBuilder** (CRAN's own Windows server with R-devel, ~1 h turnaround):
+
+```r
+devtools::check_win_devel()
+# → submits the package and sends results to m.hoblisch@gmail.com
+# → wait for the email before submitting to CRAN
+```
 
 ## 6. Submission
 
@@ -48,9 +76,27 @@ Step-by-step process before submitting to CRAN. Complete every item in order.
 
 ## 7. Post-Acceptance
 
-- [ ] Create a GitHub Release (tag: `v<version>`, body from `NEWS.md`) — automated via `release.yaml` on tag push
+- [ ] Push a version tag to trigger the automated GitHub Release:
+
+```bash
+git tag v1.x.x
+git push origin v1.x.x
+# release.yaml runs automatically and creates a GitHub Release from NEWS.md
+```
+
 - [ ] Update `cran-comments.md` with acceptance date
-- [ ] Bump version to next development version (e.g., `1.0.0.9000`)
+- [ ] Bump to the next development version:
+
+```r
+usethis::use_dev_version()
+# sets Version to 1.x.x.9000 in DESCRIPTION
+```
+
+- [ ] Commit the version bump:
+
+```
+chore: bump to development version 1.x.x.9000
+```
 
 ---
 
