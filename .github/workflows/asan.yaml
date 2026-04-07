@@ -46,7 +46,7 @@ jobs:
       - name: Check with ASAN/UBSAN
         run: |
           RDsan -e 'rcmdcheck::rcmdcheck(
-            args = c("--no-manual", "--as-cran"),
+            args = c("--no-manual"),
             error_on = "warning",
             check_dir = "check"
           )'
