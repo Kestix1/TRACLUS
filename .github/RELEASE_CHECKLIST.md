@@ -100,7 +100,34 @@ chore: bump to development version 1.x.x.9000
 
 ---
 
-## 8. Post-CRAN (activate when relevant)
+## 8. CI-Workflows reaktivieren (vor CRAN-Submission)
+
+Diese Workflows wurden während der Entwicklung mit privaten Repo-Einschränkungen
+temporär abgeschwächt. Vor der Submission vollständig reaktivieren:
+
+- [ ] **`scorecard.yaml`** — `continue-on-error: true` auf `false` setzen UND
+  `publish_results: false` auf `true` setzen (Scorecard benötigt öffentliches Repo
+  für GraphQL-Zugriff und zum Publizieren der Ergebnisse)
+
+- [ ] **`spelling.yaml`** — Prüfen ob Spell-Check Fehler tatsächlich den CI
+  abbricht (aktuell: `spell_check_package()` gibt nur DataFrame zurück, bricht
+  nicht ab). Ggf. durch Wrapper ersetzen:
+  ```r
+  res <- spelling::spell_check_package()
+  if (nrow(res) > 0) stop(paste("Spelling errors:", paste(res$word, collapse = ", ")))
+  ```
+
+- [ ] **`test-coverage.yaml`** — `CODECOV_TOKEN`-Secret in GitHub Repo-Settings
+  hinterlegen (Settings → Secrets → Actions) und `fail_ci_if_error: false` auf
+  `true` setzen, damit Coverage-Upload wieder blockiert bei Fehler
+
+- [ ] **`asan.yaml`** — `_R_CHECK_FORCE_SUGGESTS_: false` evaluieren: prufen ob
+  `leaflet`, `sf` im `wch1/r-debug`-Container installierbar sind; falls ja,
+  Variable entfernen damit suggested packages ebenfalls unter ASAN getestet werden
+
+---
+
+## 9. Post-CRAN (activate when relevant)
 
 - [ ] **Valgrind** — run `valgrind.yaml` manually (`workflow_dispatch`) once after ASAN/UBSAN is green; too slow for push triggers
 - [ ] **fledge** — activate after first patch release: `usethis::use_package("fledge", type = "Suggests")` + `fledge::fledge()`; automates `NEWS.md` + version bump from Conventional Commits

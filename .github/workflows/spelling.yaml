@@ -35,5 +35,10 @@ jobs:
           needs: spelling
 
       - name: Spell check
-        run: spelling::spell_check_package()
+        run: |
+          res <- spelling::spell_check_package()
+          if (nrow(res) > 0) {
+            print(res)
+            stop("Spelling errors found. Update inst/WORDLIST or fix the typos.")
+          }
         shell: Rscript {0}
