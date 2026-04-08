@@ -41,6 +41,7 @@ jobs:
         run: |
           Rscript -e 'rcmdcheck::rcmdcheck(
             args = c("--use-valgrind", "--no-manual", "--no-vignettes"),
+            build_args = "--no-build-vignettes",
             error_on = "warning",
             check_dir = "check"
           )'
