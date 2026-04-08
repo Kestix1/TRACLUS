@@ -35,15 +35,15 @@ jobs:
 
       - name: Install R dependencies
         run: |
-          Rscript -e 'install.packages(c("remotes", "rcmdcheck"), repos = "https://cloud.r-project.org")'
-          Rscript -e 'remotes::install_deps(dependencies = TRUE, repos = "https://cloud.r-project.org")'
+          Rscript -e 'install.packages(c("remotes", "rcmdcheck", "testthat"), repos = "https://cloud.r-project.org")'
+          Rscript -e 'remotes::install_deps(dependencies = NA, repos = "https://cloud.r-project.org")'
 
       - name: Check with Valgrind
         run: |
           Rscript -e 'rcmdcheck::rcmdcheck(
             args = c("--use-valgrind", "--no-manual", "--no-vignettes"),
             build_args = "--no-build-vignettes",
-            error_on = "warning",
+            error_on = "error",
             check_dir = "check"
           )'
 
