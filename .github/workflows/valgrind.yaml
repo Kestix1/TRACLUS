@@ -36,6 +36,7 @@ jobs:
       - name: Install R dependencies
         run: |
           Rscript -e 'install.packages(c("remotes", "rcmdcheck"), repos = "https://cloud.r-project.org")'
+          Rscript -e 'install.packages("pkgload", repos = "https://cloud.r-project.org")'
           Rscript -e 'install.packages("testthat", repos = "https://cloud.r-project.org")'
           Rscript -e 'remotes::install_deps(dependencies = NA, repos = "https://cloud.r-project.org")'
 
