@@ -31,7 +31,7 @@ jobs:
       - name: Install system dependencies
         run: |
           apt-get update -qq
-          apt-get install -y valgrind libcurl4-openssl-dev libssl-dev libxml2-dev
+          apt-get install -y valgrind cmake libcurl4-openssl-dev libssl-dev libxml2-dev
 
       - name: Install R dependencies
         run: |
@@ -41,16 +41,11 @@ jobs:
       - name: Check with Valgrind
         run: |
           Rscript -e 'rcmdcheck::rcmdcheck(
-            args = c("--use-valgrind", "--no-manual", "--no-vignettes", "--no-tests"),
+            args = c("--use-valgrind", "--no-manual", "--no-vignettes"),
             build_args = "--no-build-vignettes",
-            error_on = "never",
+            error_on = "warning",
             check_dir = "check"
           )'
-          # Fail if Valgrind found actual memory errors (vs. testthat infra issues)
-          if grep -r "ERROR SUMMARY: [^0]" check/ 2>/dev/null; then
-            echo "Valgrind reported memory errors!" && exit 1
-          fi
-          echo "Valgrind: 0 memory errors confirmed."
 
       - name: Upload check results on failure
         if: failure()
