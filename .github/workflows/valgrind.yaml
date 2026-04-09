@@ -5,6 +5,8 @@
 #
 # How to run: Actions → valgrind → Run workflow
 on:
+  push:
+    branches: [ master, main ]
   workflow_dispatch:
 
 name: valgrind
