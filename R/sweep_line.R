@@ -31,7 +31,7 @@ NULL
   sum_dy <- sum(ey - sy)
   magnitude <- sqrt(sum_dx^2 + sum_dy^2)
 
-  if (magnitude < 1e-15) {
+  if (magnitude < .zero_threshold) { # nolint: object_usage_linter.
     # Segments cancel out — fall back to X-axis direction
     warning("Cluster segments cancel out in direction. ",
       "Using X-axis as fallback direction.",
@@ -142,7 +142,7 @@ NULL
 
   # Filter out zero-length segments in the rotated system
   seg_len <- right_x - left_x
-  valid <- seg_len > 1e-15
+  valid <- seg_len > .zero_threshold # nolint: object_usage_linter.
   if (sum(valid) == 0) {
     return(NULL)
   }

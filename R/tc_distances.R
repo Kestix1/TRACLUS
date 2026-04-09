@@ -202,6 +202,11 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
 # Internal R reference implementations — euclidean
 # ============================================================================
 
+# Mirrors C++ ZERO_THRESHOLD and EARTH_RADIUS_M in src/traclus_distances.h
+# and src/traclus_spherical.h.
+.zero_threshold <- 1e-15
+.earth_radius_m <- 6371000.0
+
 #' R reference: euclidean segment length
 #' @param s Start point (length-2 numeric).
 #' @param e End point (length-2 numeric).
@@ -221,7 +226,7 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   dx <- le[1] - ls[1]
   dy <- le[2] - ls[2]
   len_sq <- dx * dx + dy * dy
-  if (len_sq < 1e-15) {
+  if (len_sq < .zero_threshold) {
     return(0.0)
   }
   ((p[1] - ls[1]) * dx + (p[2] - ls[2]) * dy) / len_sq
@@ -265,7 +270,7 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   l1 <- .r_point_to_line_dist(s$sj, s$si, s$ei)
   l2 <- .r_point_to_line_dist(s$ej, s$si, s$ei)
   total <- l1 + l2
-  if (total < 1e-15) {
+  if (total < .zero_threshold) {
     return(0.0)
   }
   (l1^2 + l2^2) / total
@@ -302,10 +307,10 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   len_i <- .r_seg_len_euc(s$si, s$ei)
   len_j <- .r_seg_len_euc(s$sj, s$ej)
 
-  if (len_j < 1e-15) {
+  if (len_j < .zero_threshold) {
     return(0.0)
   }
-  if (len_i < 1e-15) {
+  if (len_i < .zero_threshold) {
     return(len_j)
   }
 
@@ -336,7 +341,7 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
 #' @return Distance in meters (double).
 #' @keywords internal
 .r_haversine <- function(p1, p2) {
-  r_earth_m <- 6371000.0
+  r_earth_m <- .earth_radius_m
   lat1 <- p1[2] * pi / 180
   lat2 <- p2[2] * pi / 180
   dlat <- (p2[2] - p1[2]) * pi / 180
@@ -371,7 +376,7 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
 #' @return Absolute cross-track distance in meters (double).
 #' @keywords internal
 .r_cross_track <- function(p, a, b) {
-  r_earth_m <- 6371000.0
+  r_earth_m <- .earth_radius_m
   d_ap <- .r_haversine(a, p)
   bearing_ap <- .r_bearing(a, p) * pi / 180
   bearing_ab <- .r_bearing(a, b) * pi / 180
@@ -389,7 +394,7 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
 #' @return Signed along-track distance in meters (double).
 #' @keywords internal
 .r_along_track_signed <- function(p, a, b) {
-  r_earth_m <- 6371000.0
+  r_earth_m <- .earth_radius_m
   d_ap <- .r_haversine(a, p)
   d_xt <- .r_cross_track(p, a, b)
 
@@ -397,7 +402,7 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   angular_xt <- d_xt / r_earth_m
 
   cos_xt <- cos(angular_xt)
-  if (abs(cos_xt) < 1e-15) {
+  if (abs(cos_xt) < .zero_threshold) {
     return(0.0)
   }
 
@@ -446,7 +451,7 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   l2 <- .r_cross_track(s$ej, s$si, s$ei)
 
   total <- l1 + l2
-  if (total < 1e-15) {
+  if (total < .zero_threshold) {
     return(0.0)
   }
   (l1^2 + l2^2) / total
@@ -480,10 +485,10 @@ tc_dist_segments <- function(si, ei, sj, ej, w_perp = 1, w_par = 1,
   len_i <- .r_haversine(s$si, s$ei)
   len_j <- .r_haversine(s$sj, s$ej)
 
-  if (len_j < 1e-15) {
+  if (len_j < .zero_threshold) {
     return(0.0)
   }
-  if (len_i < 1e-15) {
+  if (len_i < .zero_threshold) {
     return(len_j)
   }
 

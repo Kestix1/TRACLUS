@@ -263,10 +263,8 @@ This shift works **only** when no trajectory crosses both the prime
 meridian (0°) **and** the anti-meridian (180°). For transpacific routes
 that span from, say, East Asia to the Americas, the shifted coordinates
 may still be discontinuous. A robust solution would require segment-level
-longitude unwrapping, which is not implemented in version 1. This is
-documented honestly — for such datasets, users should consider
-pre-processing their coordinates or splitting trajectories at the
-anti-meridian.
+longitude unwrapping, which is not yet implemented. For such datasets,
+pre-process coordinates or split trajectories at the anti-meridian.
 
 ## Key differences summary
 

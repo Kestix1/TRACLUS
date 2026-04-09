@@ -1,8 +1,12 @@
+# Meters per degree of latitude (and per degree of longitude at the equator).
+# Used in the equirectangular approximation for both projection and inverse.
+.m_per_deg <- 111320
+
 #' Local equirectangular projection to meters
 #'
 #' Projects geographic coordinates (lon/lat in degrees) to a local planar
 #' coordinate system in meters using the equirectangular approximation:
-#' x' = lon * cos(lat_mean) * 111320, y' = lat * 111320.
+#' x' = lon * cos(lat_mean) * .m_per_deg, y' = lat * .m_per_deg.
 #' Accurate for typical TRACLUS cluster sizes (a few degrees).
 #'
 #' @param lon Numeric vector of longitudes in degrees.
@@ -13,8 +17,8 @@
 .equirectangular_proj <- function(lon, lat, lat_mean) {
   cos_lat <- cos(lat_mean * pi / 180)
   list(
-    x = lon * cos_lat * 111320,
-    y = lat * 111320
+    x = lon * cos_lat * .m_per_deg,
+    y = lat * .m_per_deg
   )
 }
 
@@ -32,7 +36,7 @@
 .equirectangular_inverse <- function(x, y, lat_mean) {
   cos_lat <- cos(lat_mean * pi / 180)
   list(
-    lon = x / (cos_lat * 111320),
-    lat = y / 111320
+    lon = x / (cos_lat * .m_per_deg),
+    lat = y / .m_per_deg
   )
 }
