@@ -1,0 +1,12 @@
+pandoc: 3.1.11
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  TRACLUS-get-started: TRACLUS-get-started.html
+  TRACLUS-parameter-guide: TRACLUS-parameter-guide.html
+  TRACLUS-real-world: TRACLUS-real-world.html
+  TRACLUS-spherical-geometry: TRACLUS-spherical-geometry.html
+last_built: 2026-04-09T09:59Z
+urls:
+  reference: https://martinhoblisch.github.io/TRACLUS/reference
+  article: https://martinhoblisch.github.io/TRACLUS/articles
