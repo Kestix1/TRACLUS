@@ -77,8 +77,16 @@ Valgrind check green (see below)
     Option A — GitHub UI (recommended):
       Repo → Actions → R-hub → Run workflow → Run
 
-    Option B — R console (triggers rhub.yaml via the API):
-      rhub::rhub_check()   # opens browser for platform selection
+    Option B — R console (recommended platforms for CRAN submission):
+      rhub::rhub_check()
+      # Select platforms: 1, 4, 5, 6, 8, 18, 33
+      #   1  = linux          (Ubuntu, R release)
+      #   4  = macos          (macOS, R release)
+      #   5  = macos-arm64    (Apple Silicon, R release)
+      #   6  = windows        (Windows, R release)
+      #   8  = atlas          (Linux, ATLAS BLAS/LAPACK)
+      #  18  = clang-asan     (Linux, clang + AddressSanitizer)
+      #  33  = gcc14          (Linux, GCC 14)
 
 **Valgrind** (memory error check, ~30–60 min):
 
